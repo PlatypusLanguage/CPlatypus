@@ -85,7 +85,8 @@ namespace CPlatypus
             }
             if (!File.Exists(file))
             {
-                throw new FileNotFoundException("Platypus language file not found", file);
+                //TODO Notice the user
+                return PlatypusLanguage.DefaultLanguage;
             }
             var language = PlatypusLanguage.FromFile(file, encoding);
             if (!language.IsCorrect)

@@ -25,6 +25,7 @@ namespace CPlatypus.Lexer
     {
         Identifier,
         [TokenGroup(UserDefined)] VarKeyword,
+        [TokenGroup(UserDefined)] StaticKeyword,
         [TokenGroup(UserDefined)] EndKeyword,
         [TokenGroup(UserDefined)] FunctionKeyword,
         [TokenGroup(UserDefined)] ClassKeyword,

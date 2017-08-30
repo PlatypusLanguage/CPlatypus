@@ -1,18 +1,2 @@
-#lang=default#
-+
--
-*
-/
-++
---
-+=
--=
-*=
-/=
-!
-!=
-==
->
-<
->=
-<=
+#lang=french#
+statique nom

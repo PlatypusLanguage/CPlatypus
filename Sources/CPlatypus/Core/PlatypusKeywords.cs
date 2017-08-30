@@ -23,6 +23,7 @@ namespace CPlatypus.Core
     public enum PlatypusKeywords
     {
         [KeywordIndex("var", PlatypusTokenType.VarKeyword)] Var,
+        [KeywordIndex("static", PlatypusTokenType.StaticKeyword)] Static,
         [KeywordIndex("end", PlatypusTokenType.EndKeyword)] End,
         [KeywordIndex("function", PlatypusTokenType.FunctionKeyword)] Function,
         [KeywordIndex("class", PlatypusTokenType.ClassKeyword)] Class,
