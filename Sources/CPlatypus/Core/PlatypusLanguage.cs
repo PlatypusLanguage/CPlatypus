@@ -27,7 +27,7 @@ namespace CPlatypus.Core
 {
     public class PlatypusLanguage : Dictionary<string, string>
     {
-        public static string Pattern { get; } = "(\\w+):(\\w+)";
+        public static string Pattern { get; } = @"(\w+):(\w+)";
 
         public bool IsCorrect
         {

@@ -71,7 +71,7 @@ namespace CPlatypus
 
         public static PlatypusLanguage GetLanguageFromCode(string codeLine, Encoding encoding)
         {
-            var regex = new Regex("#lang=([a-z0-9_\\-\\\\/:]+)#", RegexOptions.IgnoreCase);
+            var regex = new Regex(@"#lang=([-\w_\\\/:\s]+)#", RegexOptions.IgnoreCase);
             var match = regex.Match(codeLine);
             if (!match.Success)
             {
