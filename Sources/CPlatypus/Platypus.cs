@@ -23,6 +23,7 @@ using System.Text.RegularExpressions;
 using CPlatypus.Core;
 using CPlatypus.Framework;
 using CPlatypus.Lexer;
+using CPlatypus.Parser;
 
 namespace CPlatypus
 {
@@ -32,7 +33,8 @@ namespace CPlatypus
         {
         }
 
-        public void InterpretFile(string file, FileMode fileMode = FileMode.Open, PlatypusLexerConfig lexerConfig = null)
+        public void InterpretFile(string file, FileMode fileMode = FileMode.Open,
+            PlatypusLexerConfig lexerConfig = null)
         {
             InterpretSource(Source.FromFile(file, fileMode), lexerConfig);
         }
@@ -56,11 +58,10 @@ namespace CPlatypus
             {
                 var lexer = new PlatypusLexer(source, GetLanguageFromCode(source.PeekFirstLine()), lexerConfig);
 
-                PlatypusToken token;
-                while ((token = lexer.NextToken().ToPlatypusToken()).TokenType != PlatypusTokenType.Eos)
-                {
-                    Console.WriteLine(token);
-                }
+                var parser = new PlatypusParser(lexer);
+
+                Console.WriteLine(
+                    $"Is first token \'static\' keyword : {parser.Match(PlatypusTokenType.StaticKeyword)}");
             }
         }
 
@@ -78,7 +79,9 @@ namespace CPlatypus
                 //TODO Notice the user
                 return PlatypusLanguage.DefaultLanguage;
             }
-            var file = (match.Groups[1].Value.EndsWith(".plang") ? match.Groups[1].Value : match.Groups[1].Value + ".plang");
+            var file = (match.Groups[1].Value.EndsWith(".plang")
+                ? match.Groups[1].Value
+                : $"{match.Groups[1].Value}.plang");
             if (file.Equals("default.plang"))
             {
                 return PlatypusLanguage.DefaultLanguage;

@@ -1,2 +1,2 @@
-#lang=french#
-statique nom
+#lang=default#
+static nom
