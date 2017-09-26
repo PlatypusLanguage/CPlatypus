@@ -16,16 +16,19 @@
  *     along with CPlatypus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using CPlatypus.Framework.Lexer;
 
 namespace CPlatypus.Framework.Parser
 {
     public class TokenBuffer<TToken> : IEnumerable<TToken> where TToken : Token
     {
+        //private readonly TToken[] _buffer;
 
-        private readonly TToken[] _buffer;
+        private readonly FixedSizedQueue<TToken> _queue;
 
         private int _top;
 
@@ -34,24 +37,32 @@ namespace CPlatypus.Framework.Parser
         public TokenBuffer(int capacity)
         {
             Capacity = capacity;
-            _buffer = new TToken[Capacity];
+            _queue = new FixedSizedQueue<TToken>(capacity);
         }
 
         public void Push(TToken item)
         {
-            _buffer[_top] = item;
-            _top = (_top + 1) % _buffer.Length;
+            _queue.Enqueue(item);
         }
 
         public TToken Pop()
         {
-            _top = (_buffer.Length + _top - 1) % _buffer.Length;
-            return _buffer[_top];
+            if (_queue.TryDequeue(out var resultToken))
+            {
+                return resultToken;
+            }
+            // TODO Inform the user better
+            throw new Exception("Impossible to pop !");
         }
 
         public TToken Peek()
         {
-            return _buffer[(_buffer.Length + _top - 1) % _buffer.Length];
+            if (_queue.TryPeek(out var resultToken))
+            {
+                return resultToken;
+            }
+            // TODO Inform the user better
+            throw new Exception("Impossible to peek !");
         }
 
         public TToken this[int index]
@@ -60,7 +71,7 @@ namespace CPlatypus.Framework.Parser
             {
                 if (index < 0) index = 0;
                 if (index > Capacity) index = Capacity - 1;
-                return _buffer [index];
+                return _queue.ElementAt(index);
             }
         }
 

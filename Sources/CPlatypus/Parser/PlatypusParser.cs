@@ -60,32 +60,32 @@ namespace CPlatypus.Parser
 
         public bool Match(PlatypusTokenType tokenType)
         {
-            return base.Match(Convert.ToInt32(tokenType));
+            return base.Match((int)tokenType);
         }
 
         public bool Match(PlatypusTokenType tokenType, string value)
         {
-            return base.Match(Convert.ToInt32(tokenType), value);
+            return base.Match((int)tokenType, value);
         }
 
         public bool Match(int offset, PlatypusTokenType tokenType)
         {
-            return base.Match(offset, Convert.ToInt32(tokenType));
+            return base.Match(offset, (int)tokenType);
         }
 
         public bool Match(int offset, PlatypusTokenType tokenType, string value)
         {
-            return base.Match(offset, Convert.ToInt32(tokenType), value);
+            return base.Match(offset, (int)tokenType, value);
         }
 
         public PlatypusToken Consume(PlatypusTokenType tokenType)
         {
-            return (PlatypusToken) base.Consume(Convert.ToInt32(tokenType));
+            return base.Consume((int)tokenType);
         }
 
         public PlatypusToken Consume(PlatypusTokenType tokenType, string value)
         {
-            return (PlatypusToken) base.Consume(Convert.ToInt32(tokenType), value);
+            return base.Consume((int)tokenType, value);
         }
     }
 }

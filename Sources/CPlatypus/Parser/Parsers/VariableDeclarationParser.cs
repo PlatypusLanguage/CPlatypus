@@ -33,6 +33,11 @@ namespace CPlatypus.Parser.Parsers
             var varKeywordToken = parser.Consume(PlatypusTokenType.VarKeyword);
             var nameToken = parser.Consume(PlatypusTokenType.Identifier);
 
+            if (parser.Match(PlatypusTokenType.EqualAssignOperator))
+            {
+                //TODO if assignment right after variable declaration
+            }
+
             return new VariableDeclarationNode(nameToken.Value, varKeywordToken.SourceLocation);
         }
     }
