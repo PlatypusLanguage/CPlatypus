@@ -16,25 +16,47 @@
  *     along with CPlatypus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+using CPlatypus.Framework.Parser;
+
 namespace CPlatypus.Framework.Lexer
 {
-    public abstract class Lexer
+    public abstract class Lexer<TToken> where TToken : Token
     {
         protected Source Source;
 
-        public Token CurrentToken { get; private set; }
+        protected readonly TokenBuffer<TToken> Buffer;
 
-        protected Lexer(Source source)
+        public TToken CurrentToken => Buffer[0];
+
+        protected Lexer(Source source, int capacity = 1)
         {
             Source = source;
+            Buffer = new TokenBuffer<TToken>(capacity);
         }
 
-        public Token NextToken()
+        public void FillBuffer()
         {
-            return CurrentToken = ExtractToken();
+            for (var i = 0; i < Buffer.Capacity; i++)
+            {
+                ExtractToken(Buffer);
+            }
         }
 
-        protected abstract Token ExtractToken();
+        public TToken NextToken()
+        {
+            return ExtractToken(Buffer);
+        }
+
+        public TToken ConsumeToken()
+        {
+            var token = Buffer.Peek();
+            ExtractToken(Buffer);
+            return token;
+        }
+
+        public TToken this[int index] => Buffer[index];
+
+        protected abstract TToken ExtractToken(TokenBuffer<TToken> buffer);
 
         public bool EndOfLine => Source.EndOfLine;
 

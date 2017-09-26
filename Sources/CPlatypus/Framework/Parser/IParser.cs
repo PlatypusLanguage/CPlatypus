@@ -16,20 +16,15 @@
  *     along with CPlatypus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-using System.Collections.Generic;
+using CPlatypus.Framework.Lexer;
+using CPlatypus.Parser;
 
 namespace CPlatypus.Framework.Parser
 {
-    public abstract class Node<T> where T : Node<T>
+    public interface IParser<TParser, TToken, TNode> where TParser : Parser<TToken, TNode> where TToken : Token where TNode : Node<TNode>
     {
-        public List<T> Children { get; }
+        bool Match(TParser parser);
 
-        public SourceLocation SourceLocation { get; }
-
-        public Node(SourceLocation sourceLocation)
-        {
-            Children = new List<T>();
-            SourceLocation = sourceLocation;
-        }
+        PlatypusNode Parse(TParser parser);
     }
 }

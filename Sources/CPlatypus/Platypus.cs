@@ -58,10 +58,13 @@ namespace CPlatypus
             {
                 var lexer = new PlatypusLexer(source, GetLanguageFromCode(source.PeekFirstLine()), lexerConfig);
 
+                lexer.FillBuffer();
+
                 var parser = new PlatypusParser(lexer);
 
-                Console.WriteLine(
-                    $"Is first token \'static\' keyword : {parser.Match(PlatypusTokenType.StaticKeyword)}");
+                var node = parser.Parse();
+
+                Console.WriteLine(node);
             }
         }
 

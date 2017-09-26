@@ -16,20 +16,30 @@
  *     along with CPlatypus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-using System.Collections.Generic;
+using CPlatypus.Framework;
 
-namespace CPlatypus.Framework.Parser
+namespace CPlatypus.Parser.Nodes
 {
-    public abstract class Node<T> where T : Node<T>
+    public class VariableDeclarationNode : PlatypusNode
     {
-        public List<T> Children { get; }
+        public readonly string Name;
 
-        public SourceLocation SourceLocation { get; }
-
-        public Node(SourceLocation sourceLocation)
+        public VariableDeclarationNode(string name, SourceLocation sourceLocation) : base(sourceLocation)
         {
-            Children = new List<T>();
-            SourceLocation = sourceLocation;
+            Name = name;
+        }
+
+        public override void Accept(IPlatypusVisitor visitor)
+        {
+            visitor.Visit(this);
+        }
+
+        public override void AcceptChildren(IPlatypusVisitor visitor)
+        {
+            foreach (var child in Children)
+            {
+                child.Accept(visitor);
+            }
         }
     }
 }

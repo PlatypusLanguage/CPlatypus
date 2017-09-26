@@ -20,16 +20,17 @@ using System.Collections.Generic;
 using CPlatypus.Core;
 using CPlatypus.Framework;
 using CPlatypus.Framework.Lexer;
+using CPlatypus.Framework.Parser;
 using CPlatypus.Lexer.Matcher;
 
 namespace CPlatypus.Lexer
 {
-    public class PlatypusLexer : Framework.Lexer.Lexer
+    public class PlatypusLexer : Lexer<PlatypusToken>
     {
         private List<IMatcher> _matchers;
         private PlatypusLexerConfig _config;
 
-        public PlatypusLexer(Source source, PlatypusLanguage language, PlatypusLexerConfig config) : base(source)
+        public PlatypusLexer(Source source, PlatypusLanguage language, PlatypusLexerConfig config) : base(source, 4)
         {
             _config = config;
             _matchers = new List<IMatcher>
@@ -59,7 +60,7 @@ namespace CPlatypus.Lexer
             };
         }
 
-        protected override Token ExtractToken()
+        protected override PlatypusToken ExtractToken(TokenBuffer<PlatypusToken> buffer)
         {
             var location = Source.CurrentSourceLocation.Clone();
 
@@ -71,16 +72,25 @@ namespace CPlatypus.Lexer
                 if (token.TokenType == PlatypusTokenType.WhiteSpace && _config.IgnoreWhiteSpaces ||
                     token.TokenType == PlatypusTokenType.Comment && _config.IgnoreComments)
                 {
-                    return ExtractToken();
+                    return ExtractToken(buffer);
                 }
 
-
+                buffer.Push(token);
                 return token;
             }
 
             var unknown = Source.PopChar().ToString();
 
-            return new PlatypusToken(PlatypusTokenType.Unknown, unknown, location);
+            if (_config.IgnoreUnknownTokens)
+            {
+                return ExtractToken(buffer);
+            }
+
+            var unknownToken = new PlatypusToken(PlatypusTokenType.Unknown, unknown, location);
+
+            buffer.Push(unknownToken);
+
+            return unknownToken;
         }
     }
 }

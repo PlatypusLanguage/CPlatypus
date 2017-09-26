@@ -17,21 +17,45 @@
  */
 
 using System;
+using System.Collections.Generic;
+using CPlatypus.Framework;
+using CPlatypus.Framework.Lexer;
 using CPlatypus.Framework.Parser;
 using CPlatypus.Lexer;
+using CPlatypus.Parser.Nodes;
+using CPlatypus.Parser.Parsers;
 
 namespace CPlatypus.Parser
 {
-    public class PlatypusParser : Framework.Parser.Parser
+    public class PlatypusParser : Parser<PlatypusToken, PlatypusNode>
     {
-        
-        public PlatypusParser(Framework.Lexer.Lexer lexer) : base(lexer)
+        private List<IPlatypusParser> _parsers;
+
+        public PlatypusParser(PlatypusLexer lexer) : base(lexer)
         {
+            _parsers = new List<IPlatypusParser>
+            {
+                new VariableDeclarationParser()
+            };
         }
 
-        public override Node Parse(Framework.Lexer.Lexer lexer)
+        public override PlatypusNode Parse()
         {
-            throw new System.NotImplementedException();
+            var currentNode = new CodeNode(new SourceLocation(0, 0));
+
+            while (Lexer.CurrentToken.TokenType != PlatypusTokenType.Eos)
+            {
+                foreach (var parser in _parsers)
+                {
+                    if (parser.Match(this))
+                    {
+                        currentNode.Children.Add(parser.Parse(this));
+                        break;
+                    }
+                }
+            }
+        
+            return currentNode;
         }
 
         public bool Match(PlatypusTokenType tokenType)
@@ -44,6 +68,16 @@ namespace CPlatypus.Parser
             return base.Match(Convert.ToInt32(tokenType), value);
         }
 
+        public bool Match(int offset, PlatypusTokenType tokenType)
+        {
+            return base.Match(offset, Convert.ToInt32(tokenType));
+        }
+
+        public bool Match(int offset, PlatypusTokenType tokenType, string value)
+        {
+            return base.Match(offset, Convert.ToInt32(tokenType), value);
+        }
+
         public PlatypusToken Consume(PlatypusTokenType tokenType)
         {
             return (PlatypusToken) base.Consume(Convert.ToInt32(tokenType));
@@ -51,7 +85,7 @@ namespace CPlatypus.Parser
 
         public PlatypusToken Consume(PlatypusTokenType tokenType, string value)
         {
-            return (PlatypusToken)base.Consume(Convert.ToInt32(tokenType), value);
+            return (PlatypusToken) base.Consume(Convert.ToInt32(tokenType), value);
         }
     }
 }

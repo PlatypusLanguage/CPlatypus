@@ -21,7 +21,7 @@ using static CPlatypus.Lexer.PlatypusTokenTypeGroup;
 
 namespace CPlatypus.Lexer
 {
-    public enum PlatypusTokenType : int
+    public enum PlatypusTokenType
     {
         Identifier,
         [TokenGroup(UserDefined)] VarKeyword,

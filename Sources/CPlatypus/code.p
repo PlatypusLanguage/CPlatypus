@@ -1,2 +1,2 @@
 #lang=default#
-static nom
+var nom

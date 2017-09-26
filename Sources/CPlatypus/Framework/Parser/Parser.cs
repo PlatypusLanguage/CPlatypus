@@ -21,47 +21,55 @@ using System;
 
 namespace CPlatypus.Framework.Parser
 {
-    public abstract class Parser
+    public abstract class Parser<TToken, TNode> where TToken : Token where TNode : Node<TNode>
     {
-        protected Lexer.Lexer Lexer;
+        protected Lexer<TToken> Lexer;
 
-        public Parser(Lexer.Lexer lexer)
+        public Parser(Lexer<TToken> lexer)
         {
-            this.Lexer = lexer;
+            Lexer = lexer;
         }
 
-        public abstract Node Parse(Lexer.Lexer lexer);
+        public abstract TNode Parse();
 
         public bool Match(int tokenType)
         {
-            var token = Lexer.NextToken();
-
-            return token != null && Convert.ToInt32(token.TokenType) == tokenType;
+            return Match(0, tokenType);
         }
 
         public bool Match(int tokenType, string value)
         {
-            var token = Lexer.NextToken();
+            return Match(0, tokenType, value);
+        }
 
+        public bool Match(int offset, int tokenType)
+        {
+            var token = Lexer[offset];
+            return token != null && Convert.ToInt32(token.TokenType) == tokenType;
+        }
+
+        public bool Match(int offset, int tokenType, string value)
+        {
+            var token = Lexer[offset];
             return token != null && Convert.ToInt32(token.TokenType) == tokenType && token.Value.Equals(value);
         }
 
-        public Token Consume(int tokenType)
+        public TToken Consume(int tokenType)
         {
             if (Match(tokenType))
             {
-                return Lexer.CurrentToken;
+                return Lexer.ConsumeToken();
             }
 
             // TODO INFORM THE USER
             return null;
         }
 
-        public Token Consume(int tokenType, string value)
+        public TToken Consume(int tokenType, string value)
         {
             if (Match(tokenType, value))
             {
-                return Lexer.CurrentToken;
+                return Lexer.ConsumeToken();
             }
 
             //  TODO INFORM THE USER
