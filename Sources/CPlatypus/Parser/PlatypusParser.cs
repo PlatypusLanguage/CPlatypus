@@ -19,7 +19,6 @@
 using System;
 using System.Collections.Generic;
 using CPlatypus.Framework;
-using CPlatypus.Framework.Lexer;
 using CPlatypus.Framework.Parser;
 using CPlatypus.Lexer;
 using CPlatypus.Parser.Nodes;
@@ -29,19 +28,22 @@ namespace CPlatypus.Parser
 {
     public class PlatypusParser : Parser<PlatypusToken, PlatypusNode>
     {
-        private List<IPlatypusParser> _parsers;
+        private readonly List<NodeParser> _parsers;
 
         public PlatypusParser(PlatypusLexer lexer) : base(lexer)
         {
-            _parsers = new List<IPlatypusParser>
+            _parsers = new List<NodeParser>
             {
-                new VariableDeclarationParser()
+                VariableDeclarationParser.Instance,
+                FunctionParser.Instance
             };
         }
 
         public override PlatypusNode Parse()
         {
-            var currentNode = new CodeNode(new SourceLocation(0, 0));
+            var topNode = CodeParser.Instance.Parse(this);
+
+            PlatypusNode currentNode = topNode;
 
             while (Lexer.CurrentToken.TokenType != PlatypusTokenType.Eos)
             {
@@ -49,43 +51,55 @@ namespace CPlatypus.Parser
                 {
                     if (parser.Match(this))
                     {
-                        currentNode.Children.Add(parser.Parse(this));
+                        var node = parser.Parse(this);
+                        currentNode.Children.Add(node);
+                        currentNode = node;
                         break;
                     }
                 }
             }
-        
-            return currentNode;
+
+            return topNode;
         }
 
-        public bool Match(PlatypusTokenType tokenType)
+        public bool MatchType(PlatypusTokenType tokenType)
         {
-            return base.Match((int)tokenType);
+            return base.MatchType((int) tokenType);
         }
 
-        public bool Match(PlatypusTokenType tokenType, string value)
+        public bool MatchTypeValue(PlatypusTokenType tokenType, string value)
         {
-            return base.Match((int)tokenType, value);
+            return base.MatchTypeValue((int) tokenType, value);
         }
 
-        public bool Match(int offset, PlatypusTokenType tokenType)
+        public bool MatchType(int offset, PlatypusTokenType tokenType)
         {
-            return base.Match(offset, (int)tokenType);
+            return base.MatchType(offset, (int) tokenType);
         }
 
-        public bool Match(int offset, PlatypusTokenType tokenType, string value)
+        public bool MatchValueType(int offset, PlatypusTokenType tokenType, string value)
         {
-            return base.Match(offset, (int)tokenType, value);
+            return base.MatchTypeValue(offset, (int) tokenType, value);
         }
 
-        public PlatypusToken Consume(PlatypusTokenType tokenType)
+        public PlatypusToken PeekType(PlatypusTokenType tokenType)
         {
-            return base.Consume((int)tokenType);
+            return base.PeekType((int) tokenType);
         }
 
-        public PlatypusToken Consume(PlatypusTokenType tokenType, string value)
+        public PlatypusToken PeekType(int offset, PlatypusTokenType tokenType)
         {
-            return base.Consume((int)tokenType, value);
+            return base.PeekType(offset, (int) tokenType);
+        }
+
+        public PlatypusToken ConsumeType(PlatypusTokenType tokenType)
+        {
+            return base.ConsumeType((int) tokenType);
+        }
+
+        public PlatypusToken ConsumeTypeValue(PlatypusTokenType tokenType, string value)
+        {
+            return base.ConsumeTypeValue((int) tokenType, value);
         }
     }
 }

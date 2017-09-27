@@ -23,5 +23,6 @@ namespace CPlatypus.Lexer
         public bool IgnoreUnknownTokens { get; set; } = true;
         public bool IgnoreComments { get; set; } = true;
         public bool IgnoreWhiteSpaces { get; set; } = true;
+        public byte BufferLookahead { get; set; } = 3;
     }
 }

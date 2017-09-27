@@ -16,36 +16,27 @@
  *     along with CPlatypus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-using CPlatypus.Lexer;
+using System;
 using CPlatypus.Parser.Nodes;
 
 namespace CPlatypus.Parser.Parsers
 {
-    public class VariableDeclarationParser : NodeParser
+    public class CodeParser : NodeParser
     {
-        public static VariableDeclarationParser Instance { get; } = new VariableDeclarationParser();
+        public static CodeParser Instance { get; } = new CodeParser();
 
-        private VariableDeclarationParser()
+        private CodeParser()
         {
         }
 
         public override bool Match(PlatypusParser parser)
         {
-            return parser.MatchType(PlatypusTokenType.VarKeyword) && parser.MatchType(1, PlatypusTokenType.Identifier);
+            throw new Exception("Maybe this shouldn't be used ever ?");
         }
 
         public override PlatypusNode Parse(PlatypusParser parser)
         {
-            var varKeywordToken = parser.ConsumeType(PlatypusTokenType.VarKeyword);
-            var nameNode = IdentifierParser.Instance.Parse(parser) as IdentifierNode;
-
-            // If the identifier is not followed by a assign operator, it consume the identifier
-            if (!parser.MatchType(1, PlatypusTokenType.EqualAssignOperator))
-            {
-                parser.ConsumeType(PlatypusTokenType.Identifier);
-            }
-
-            return new VariableDeclarationNode(nameNode, varKeywordToken.SourceLocation);
+            return new CodeNode(parser.Peek().SourceLocation);
         }
     }
 }

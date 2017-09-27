@@ -22,7 +22,6 @@ namespace CPlatypus.Lexer.Matcher
 {
     public class CommentMatcher : IMatcher
     {
-
         public PlatypusToken Match(SourceLocation location, Source source)
         {
             if (source.PeekChar() != '#')

@@ -30,8 +30,6 @@ namespace CPlatypus.Framework.Parser
 
         private readonly FixedSizedQueue<TToken> _queue;
 
-        private int _top;
-
         public readonly int Capacity;
 
         public TokenBuffer(int capacity)

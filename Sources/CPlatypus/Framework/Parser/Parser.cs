@@ -25,38 +25,64 @@ namespace CPlatypus.Framework.Parser
     {
         protected Lexer<TToken> Lexer;
 
-        public Parser(Lexer<TToken> lexer)
+        protected Parser(Lexer<TToken> lexer)
         {
             Lexer = lexer;
         }
 
         public abstract TNode Parse();
 
-        public bool Match(int tokenType)
+        public bool MatchType(int tokenType)
         {
-            return Match(0, tokenType);
+            return MatchType(0, tokenType);
         }
 
-        public bool Match(int tokenType, string value)
+        public bool MatchTypeValue(int tokenType, string value)
         {
-            return Match(0, tokenType, value);
+            return MatchTypeValue(0, tokenType, value);
         }
 
-        public bool Match(int offset, int tokenType)
+        public bool MatchType(int offset, int tokenType)
         {
             var token = Lexer[offset];
             return token != null && Convert.ToInt32(token.TokenType) == tokenType;
         }
 
-        public bool Match(int offset, int tokenType, string value)
+        public bool MatchTypeValue(int offset, int tokenType, string value)
         {
             var token = Lexer[offset];
             return token != null && Convert.ToInt32(token.TokenType) == tokenType && token.Value.Equals(value);
         }
 
-        public TToken Consume(int tokenType)
+        public TToken Peek()
         {
-            if (Match(tokenType))
+            return Peek(0);
+        }
+
+        public TToken Peek(int offset)
+        {
+            return Lexer[offset];
+        }
+
+        public TToken PeekType(int tokenType)
+        {
+            return PeekType(0, tokenType);
+        }
+
+        public TToken PeekType(int offset, int tokenType)
+        {
+            if (MatchType(offset, tokenType))
+            {
+                return Lexer[offset];
+            }
+
+            // TODO INFORM THE USER
+            return null;
+        }
+
+        public TToken ConsumeType(int tokenType)
+        {
+            if (MatchType(tokenType))
             {
                 return Lexer.ConsumeToken();
             }
@@ -65,9 +91,9 @@ namespace CPlatypus.Framework.Parser
             return null;
         }
 
-        public TToken Consume(int tokenType, string value)
+        public TToken ConsumeTypeValue(int tokenType, string value)
         {
-            if (Match(tokenType, value))
+            if (MatchTypeValue(tokenType, value))
             {
                 return Lexer.ConsumeToken();
             }

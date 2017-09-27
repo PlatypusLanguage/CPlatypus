@@ -22,7 +22,6 @@ namespace CPlatypus.Framework.Lexer
 {
     public abstract class Token
     {
-        
         public Enum TokenType { get; }
         public string Value { get; }
         public SourceLocation SourceLocation { get; }
@@ -36,7 +35,8 @@ namespace CPlatypus.Framework.Lexer
 
         public override string ToString()
         {
-            return $"{nameof(TokenType)}: {TokenType}, {nameof(Value)}: {Value}, {nameof(SourceLocation)}: {SourceLocation}";
+            return
+                $"{nameof(TokenType)}: {TokenType}, {nameof(Value)}: {Value}, {nameof(SourceLocation)}: {SourceLocation}";
         }
     }
 }

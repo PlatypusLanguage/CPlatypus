@@ -1,2 +1,2 @@
 #lang=default#
-var nom
+function test(hello, world)

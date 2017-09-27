@@ -16,15 +16,30 @@
  *     along with CPlatypus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-using CPlatypus.Framework.Lexer;
-using CPlatypus.Parser;
+using CPlatypus.Framework;
 
-namespace CPlatypus.Framework.Parser
+namespace CPlatypus.Parser.Nodes
 {
-    public interface IParser<TParser, TToken, TNode> where TParser : Parser<TToken, TNode> where TToken : Token where TNode : Node<TNode>
+    public class IdentifierNode : PlatypusNode
     {
-        bool Match(TParser parser);
+        public readonly string Value;
 
-        PlatypusNode Parse(TParser parser);
+        public IdentifierNode(string value, SourceLocation sourceLocation) : base(sourceLocation)
+        {
+            Value = value;
+        }
+
+        public override void Accept(IPlatypusVisitor visitor)
+        {
+            visitor.Visit(this);
+        }
+
+        public override void AcceptChildren(IPlatypusVisitor visitor)
+        {
+            foreach (var child in Children)
+            {
+                child.Accept(visitor);
+            }
+        }
     }
 }

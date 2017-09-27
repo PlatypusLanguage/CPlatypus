@@ -16,26 +16,12 @@
  *     along with CPlatypus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-using CPlatypus.Framework;
-
-namespace CPlatypus.Lexer.Matcher
+namespace CPlatypus.Parser
 {
-    public class CharMatcher : IMatcher
+    public abstract class NodeParser
     {
-        private PlatypusTokenType _tokenType;
-        private char _value;
+        public abstract bool Match(PlatypusParser parser);
 
-        public CharMatcher(PlatypusTokenType tokenType, char value)
-        {
-            _tokenType = tokenType;
-            _value = value;
-        }
-
-        public PlatypusToken Match(SourceLocation location, Source source)
-        {
-            return source.PeekChar() != _value
-                ? null
-                : new PlatypusToken(_tokenType, source.PopChar().ToString(), location);
-        }
+        public abstract PlatypusNode Parse(PlatypusParser parser);
     }
 }

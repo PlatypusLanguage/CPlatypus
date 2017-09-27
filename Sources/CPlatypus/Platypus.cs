@@ -56,9 +56,8 @@ namespace CPlatypus
 
             using (source)
             {
-                var lexer = new PlatypusLexer(source, GetLanguageFromCode(source.PeekFirstLine()), lexerConfig);
-
-                lexer.FillBuffer();
+                var lexer = new PlatypusLexer(source, GetLanguageFromCode(source.PeekFirstLine()), lexerConfig)
+                    .InitializeBuffer() as PlatypusLexer;
 
                 var parser = new PlatypusParser(lexer);
 

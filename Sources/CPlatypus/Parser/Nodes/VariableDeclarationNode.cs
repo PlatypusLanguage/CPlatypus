@@ -22,11 +22,11 @@ namespace CPlatypus.Parser.Nodes
 {
     public class VariableDeclarationNode : PlatypusNode
     {
-        public readonly string Name;
+        public IdentifierNode VariableNameNode => Children[0] as IdentifierNode;
 
-        public VariableDeclarationNode(string name, SourceLocation sourceLocation) : base(sourceLocation)
+        public VariableDeclarationNode(IdentifierNode variableNameNode, SourceLocation sourceLocation) : base(sourceLocation)
         {
-            Name = name;
+            Children.Add(variableNameNode);
         }
 
         public override void Accept(IPlatypusVisitor visitor)

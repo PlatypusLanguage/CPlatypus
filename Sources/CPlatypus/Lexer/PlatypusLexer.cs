@@ -27,10 +27,10 @@ namespace CPlatypus.Lexer
 {
     public class PlatypusLexer : Lexer<PlatypusToken>
     {
-        private List<IMatcher> _matchers;
+        private readonly List<IMatcher> _matchers;
         private PlatypusLexerConfig _config;
 
-        public PlatypusLexer(Source source, PlatypusLanguage language, PlatypusLexerConfig config) : base(source, 4)
+        public PlatypusLexer(Source source, PlatypusLanguage language, PlatypusLexerConfig config) : base(source, config.BufferLookahead)
         {
             _config = config;
             _matchers = new List<IMatcher>
@@ -41,7 +41,7 @@ namespace CPlatypus.Lexer
                 new NumberMatcher(),
                 new TextLiteralMatcher(),
                 new CharLiteralMatcher(),
-                
+
                 new CommentMatcher(),
 
                 new OperatorMatcher(),

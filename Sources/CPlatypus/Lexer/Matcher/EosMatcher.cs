@@ -24,7 +24,9 @@ namespace CPlatypus.Lexer.Matcher
     {
         public PlatypusToken Match(SourceLocation location, Source source)
         {
-            return source.PeekChar() != '\0' ? null : new PlatypusToken(PlatypusTokenType.Eos, source.PopChar().ToString(), location);
+            return source.PeekChar() != '\0'
+                ? null
+                : new PlatypusToken(PlatypusTokenType.Eos, source.PopChar().ToString(), location);
         }
     }
 }

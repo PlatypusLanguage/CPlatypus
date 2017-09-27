@@ -16,6 +16,7 @@
  *     along with CPlatypus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+using System;
 using CPlatypus.Framework;
 using CPlatypus.Framework.Parser;
 
@@ -23,7 +24,7 @@ namespace CPlatypus.Parser
 {
     public abstract class PlatypusNode : Node<PlatypusNode>
     {
-        public PlatypusNode(SourceLocation sourceLocation) : base(sourceLocation)
+        protected PlatypusNode(SourceLocation sourceLocation) : base(sourceLocation)
         {
         }
 

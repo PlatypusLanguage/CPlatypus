@@ -28,25 +28,29 @@ namespace CPlatypus.Core
     {
         public static string ToKeywordIndex(this PlatypusKeywords keyword)
         {
-            var attributes = (KeywordIndex[])keyword.GetType().GetField(keyword.ToString()).GetCustomAttributes(typeof(KeywordIndex), false);
+            var attributes = (KeywordIndex[]) keyword.GetType().GetField(keyword.ToString())
+                .GetCustomAttributes(typeof(KeywordIndex), false);
             return attributes.Length > 0 ? attributes[0].Index : string.Empty;
         }
 
         public static PlatypusTokenType GetTokenType(this PlatypusKeywords keyword)
         {
-            var attributes = (KeywordIndex[])keyword.GetType().GetField(keyword.ToString()).GetCustomAttributes(typeof(KeywordIndex), false);
+            var attributes = (KeywordIndex[]) keyword.GetType().GetField(keyword.ToString())
+                .GetCustomAttributes(typeof(KeywordIndex), false);
             return attributes.Length > 0 ? attributes[0].TokenType : PlatypusTokenType.Unknown;
         }
 
         public static bool IsInTokenGroup(this PlatypusTokenType tokenType, PlatypusTokenTypeGroup group)
         {
-            var attributes = (TokenGroup[])tokenType.GetType().GetField(tokenType.ToString()).GetCustomAttributes(typeof(TokenGroup), false);
+            var attributes = (TokenGroup[]) tokenType.GetType().GetField(tokenType.ToString())
+                .GetCustomAttributes(typeof(TokenGroup), false);
             return attributes.Length > 0 && attributes[0].Groups.Contains(group);
         }
 
         public static bool IsInTokenGroups(this PlatypusTokenType tokenType, params PlatypusTokenTypeGroup[] groups)
         {
-            var attributes = (TokenGroup[])tokenType.GetType().GetField(tokenType.ToString()).GetCustomAttributes(typeof(TokenGroup), false);
+            var attributes = (TokenGroup[]) tokenType.GetType().GetField(tokenType.ToString())
+                .GetCustomAttributes(typeof(TokenGroup), false);
             return attributes.Length > 0 && !attributes[0].Groups.Except(groups).Any();
         }
 

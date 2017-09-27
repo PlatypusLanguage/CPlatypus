@@ -23,6 +23,8 @@ namespace CPlatypus.Parser
     public interface IPlatypusVisitor
     {
         void Visit(CodeNode node);
+        void Visit(IdentifierNode node);
+        void Visit(FunctionNode node);
         void Visit(VariableDeclarationNode node);
     }
 }

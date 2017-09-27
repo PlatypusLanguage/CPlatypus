@@ -24,22 +24,23 @@ namespace CPlatypus.Framework.Lexer
     {
         protected Source Source;
 
-        protected readonly TokenBuffer<TToken> Buffer;
+        protected TokenBuffer<TToken> Buffer;
 
         public TToken CurrentToken => Buffer[0];
 
-        protected Lexer(Source source, int capacity = 1)
+        protected Lexer(Source source, byte capacity = 1)
         {
             Source = source;
             Buffer = new TokenBuffer<TToken>(capacity);
         }
 
-        public void FillBuffer()
+        public Lexer<TToken> InitializeBuffer()
         {
             for (var i = 0; i < Buffer.Capacity; i++)
             {
                 ExtractToken(Buffer);
             }
+            return this;
         }
 
         public TToken NextToken()
@@ -61,6 +62,5 @@ namespace CPlatypus.Framework.Lexer
         public bool EndOfLine => Source.EndOfLine;
 
         public bool EndOfStream => Source.EndOfStream;
-
     }
 }
