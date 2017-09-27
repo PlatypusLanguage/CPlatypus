@@ -20,7 +20,7 @@ using CPlatypus.Framework.Parser;
 
 namespace CPlatypus.Framework.Lexer
 {
-    public abstract class Lexer<TToken> where TToken : Token
+    public abstract class Lexer<TToken, TLexer> where TToken : Token where TLexer : Lexer<TToken, TLexer>
     {
         protected Source Source;
 
@@ -34,13 +34,13 @@ namespace CPlatypus.Framework.Lexer
             Buffer = new TokenBuffer<TToken>(capacity);
         }
 
-        public Lexer<TToken> InitializeBuffer()
+        public TLexer InitializeBuffer()
         {
             for (var i = 0; i < Buffer.Capacity; i++)
             {
                 ExtractToken(Buffer);
             }
-            return this;
+            return this as TLexer;
         }
 
         public TToken NextToken()

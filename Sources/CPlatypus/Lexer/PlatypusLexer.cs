@@ -25,7 +25,7 @@ using CPlatypus.Lexer.Matcher;
 
 namespace CPlatypus.Lexer
 {
-    public class PlatypusLexer : Lexer<PlatypusToken>
+    public class PlatypusLexer : Lexer<PlatypusToken, PlatypusLexer>
     {
         private readonly List<IMatcher> _matchers;
         private PlatypusLexerConfig _config;
