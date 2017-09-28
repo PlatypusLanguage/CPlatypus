@@ -32,7 +32,9 @@ namespace CPlatypus.Parser
             Parsers = new List<NodeParser>
             {
                 VariableDeclarationParser.Instance,
-                FunctionParser.Instance
+                FunctionParser.Instance,
+                ClassParser.Instance,
+                ConstructorParser.Instance
             };
         }
 

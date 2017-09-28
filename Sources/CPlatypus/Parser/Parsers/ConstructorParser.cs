@@ -23,25 +23,23 @@ using CPlatypus.Parser.Nodes;
 
 namespace CPlatypus.Parser.Parsers
 {
-    public class FunctionParser : NodeParser
+    public class ConstructorParser : NodeParser
     {
-        public static FunctionParser Instance { get; } = new FunctionParser();
+        public static ConstructorParser Instance { get; } = new ConstructorParser();
 
-        private FunctionParser()
+        private ConstructorParser()
         {
         }
 
         public override bool Match(PlatypusParser parser)
         {
-            return parser.MatchType(PlatypusTokenType.FunctionKeyword) &&
-                   parser.MatchType(1, PlatypusTokenType.Identifier) &&
-                   parser.MatchType(2, PlatypusTokenType.OpenParen);
+            return parser.MatchType(PlatypusTokenType.ConstructorKeyword) &&
+                   parser.MatchType(1, PlatypusTokenType.OpenParen);
         }
 
         public override PlatypusNode Parse(PlatypusParser parser)
         {
-            var functionKeywordToken = parser.ConsumeType(PlatypusTokenType.FunctionKeyword);
-            var nameNode = IdentifierParser.Instance.Parse(parser) as IdentifierNode;
+            var constructorKeywordToken = parser.ConsumeType(PlatypusTokenType.ConstructorKeyword);
 
             parser.ConsumeType(PlatypusTokenType.OpenParen);
 
@@ -68,7 +66,7 @@ namespace CPlatypus.Parser.Parsers
 
             var bodyNode = CodeParser.Instance.ParseTill(parser);
 
-            return new FunctionNode(nameNode, parameters, bodyNode, functionKeywordToken.SourceLocation);
+            return new ConstructorNode(bodyNode, parameters, constructorKeywordToken.SourceLocation);
         }
     }
 }

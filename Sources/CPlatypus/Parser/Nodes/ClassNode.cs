@@ -16,17 +16,33 @@
  *     along with CPlatypus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-using CPlatypus.Parser.Nodes;
+using CPlatypus.Framework;
 
-namespace CPlatypus.Parser
+namespace CPlatypus.Parser.Nodes
 {
-    public interface IPlatypusVisitor
+    public class ClassNode : PlatypusNode
     {
-        void Visit(ClassNode node);
-        void Visit(CodeNode node);
-        void Visit(ConstructorNode node);
-        void Visit(IdentifierNode node);
-        void Visit(FunctionNode node);
-        void Visit(VariableDeclarationNode node);
+        public IdentifierNode Name => Children[0] as IdentifierNode;
+
+        public CodeNode Body => Children[1] as CodeNode;
+
+        public ClassNode(IdentifierNode name, CodeNode body, SourceLocation sourceLocation) : base(sourceLocation)
+        {
+            Children.Add(name);
+            Children.Add(body);
+        }
+
+        public override void Accept(IPlatypusVisitor visitor)
+        {
+            visitor.Visit(this);
+        }
+
+        public override void AcceptChildren(IPlatypusVisitor visitor)
+        {
+            foreach (var child in Children)
+            {
+                child.Accept(visitor);
+            }
+        }
     }
 }

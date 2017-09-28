@@ -1,8 +1,12 @@
 #lang=default#
-function main()
-	var test
-end
+class Human
 
-function other()
-	var bla
+	constructor()
+
+	end
+
+	function Talk()
+
+	end
+
 end

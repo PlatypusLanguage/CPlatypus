@@ -37,7 +37,7 @@ namespace CPlatypus.Parser.Parsers
 
         public override PlatypusNode Parse(PlatypusParser parser)
         {
-            return new CodeNode(parser.Peek().SourceLocation);
+            return ParseTill(parser);
         }
 
         public CodeNode ParseTill(PlatypusParser parser, PlatypusTokenType tokenType = PlatypusTokenType.EndKeyword)
