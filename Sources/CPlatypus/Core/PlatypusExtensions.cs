@@ -18,7 +18,6 @@
 
 using System;
 using System.Linq;
-using System.Reflection;
 using CPlatypus.Framework.Lexer;
 using CPlatypus.Lexer;
 

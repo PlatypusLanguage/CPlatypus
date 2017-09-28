@@ -17,6 +17,7 @@
  */
 
 using System;
+using CPlatypus.Lexer;
 using CPlatypus.Parser.Nodes;
 
 namespace CPlatypus.Parser.Parsers
@@ -37,6 +38,37 @@ namespace CPlatypus.Parser.Parsers
         public override PlatypusNode Parse(PlatypusParser parser)
         {
             return new CodeNode(parser.Peek().SourceLocation);
+        }
+
+        public CodeNode ParseTill(PlatypusParser parser, PlatypusTokenType tokenType = PlatypusTokenType.EndKeyword)
+        {
+            var codeNode = new CodeNode(parser.Peek().SourceLocation);
+
+            while (parser.Lexer.CurrentToken.TokenType != tokenType)
+            {
+                var success = false;
+                foreach (var p in parser.Parsers)
+                {
+                    if (p.Match(parser))
+                    {
+                        var node = p.Parse(parser);
+                        codeNode.Children.Add(node);
+                        success = true;
+                        break;
+                    }
+                }
+                if (!success)
+                {
+                    throw new Exception("Debug parser error #1 : Failed to parse!");
+                }
+            }
+
+            if (parser.Lexer.CurrentToken.TokenType == tokenType)
+            {
+                parser.ConsumeType(tokenType);
+            }
+
+            return codeNode;
         }
     }
 }

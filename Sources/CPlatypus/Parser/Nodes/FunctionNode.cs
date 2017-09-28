@@ -25,13 +25,15 @@ namespace CPlatypus.Parser.Nodes
     {
         public IdentifierNode Name => Children[0] as IdentifierNode;
 
-        public PlatypusNode Body => Children[1];
+        public CodeNode Body => Children[1] as CodeNode;
 
         public List<IdentifierNode> Parameters =>
-            Children.GetRange(2, Children.Count - 3).ConvertAll(x => (IdentifierNode) x);
+            Children.Count > 2
+                ? Children.GetRange(2, Children.Count - 3).ConvertAll(x => (IdentifierNode) x)
+                : new List<IdentifierNode>();
 
 
-        public FunctionNode(IdentifierNode name, List<IdentifierNode> parameters, PlatypusNode body,
+        public FunctionNode(IdentifierNode name, List<IdentifierNode> parameters, CodeNode body,
             SourceLocation sourceLocation) : base(sourceLocation)
         {
             Children.Add(name);

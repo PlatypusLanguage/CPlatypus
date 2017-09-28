@@ -23,7 +23,7 @@ namespace CPlatypus.Framework.Parser
 {
     public abstract class Parser<TToken, TNode> where TToken : Token where TNode : Node<TNode>
     {
-        protected Lexer<TToken> Lexer;
+        public readonly Lexer<TToken> Lexer;
 
         protected Parser(Lexer<TToken> lexer)
         {

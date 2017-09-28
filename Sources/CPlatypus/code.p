@@ -1,2 +1,8 @@
 #lang=default#
-function test(hello, world)
+function main()
+	var test
+end
+
+function other()
+	var bla
+end

@@ -16,23 +16,20 @@
  *     along with CPlatypus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-using System;
 using System.Collections.Generic;
-using CPlatypus.Framework;
 using CPlatypus.Framework.Parser;
 using CPlatypus.Lexer;
-using CPlatypus.Parser.Nodes;
 using CPlatypus.Parser.Parsers;
 
 namespace CPlatypus.Parser
 {
     public class PlatypusParser : Parser<PlatypusToken, PlatypusNode>
     {
-        private readonly List<NodeParser> _parsers;
+        public readonly List<NodeParser> Parsers;
 
         public PlatypusParser(PlatypusLexer lexer) : base(lexer)
         {
-            _parsers = new List<NodeParser>
+            Parsers = new List<NodeParser>
             {
                 VariableDeclarationParser.Instance,
                 FunctionParser.Instance
@@ -41,24 +38,7 @@ namespace CPlatypus.Parser
 
         public override PlatypusNode Parse()
         {
-            var topNode = CodeParser.Instance.Parse(this);
-
-            PlatypusNode currentNode = topNode;
-
-            while (Lexer.CurrentToken.TokenType != PlatypusTokenType.Eos)
-            {
-                foreach (var parser in _parsers)
-                {
-                    if (parser.Match(this))
-                    {
-                        var node = parser.Parse(this);
-                        currentNode.Children.Add(node);
-                        currentNode = node;
-                        break;
-                    }
-                }
-            }
-
+            var topNode = CodeParser.Instance.ParseTill(this, PlatypusTokenType.Eos);
             return topNode;
         }
 

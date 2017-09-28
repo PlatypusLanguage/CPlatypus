@@ -25,10 +25,10 @@ using CPlatypus.Lexer.Matcher;
 
 namespace CPlatypus.Lexer
 {
-    public class PlatypusLexer : Lexer<PlatypusToken, PlatypusLexer>
+    public class PlatypusLexer : Lexer<PlatypusToken>
     {
         private readonly List<IMatcher> _matchers;
-        private PlatypusLexerConfig _config;
+        private readonly PlatypusLexerConfig _config;
 
         public PlatypusLexer(Source source, PlatypusLanguage language, PlatypusLexerConfig config) : base(source, config.BufferLookahead)
         {
@@ -58,6 +58,9 @@ namespace CPlatypus.Lexer
 
                 new EosMatcher()
             };
+
+            //Never forget to initialize the buffer !
+            InitializeBuffer();
         }
 
         protected override PlatypusToken ExtractToken(TokenBuffer<PlatypusToken> buffer)

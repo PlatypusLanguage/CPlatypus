@@ -66,7 +66,9 @@ namespace CPlatypus.Parser.Parsers
 
             parser.ConsumeType(PlatypusTokenType.CloseParen);
 
-            return new FunctionNode(nameNode, parameters, null,
+            var body = CodeParser.Instance.ParseTill(parser);
+
+            return new FunctionNode(nameNode, parameters, body,
                 functionKeywordToken.SourceLocation);
         }
     }
