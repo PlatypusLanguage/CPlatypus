@@ -82,8 +82,8 @@ namespace CPlatypus.Lexer
         [TokenGroup(Literal)] CharLiteral,
         [TokenGroup(Literal)] TextLiteral,
 
-        [TokenGroup(UserDefined, Literal)] TrueLiteral,
-        [TokenGroup(UserDefined, Literal)] FalseLiteral,
+        [TokenGroup(UserDefined, Literal, TrueFalse)] TrueLiteral,
+        [TokenGroup(UserDefined, Literal, TrueFalse)] FalseLiteral,
 
         OpenParen,
         CloseParen,

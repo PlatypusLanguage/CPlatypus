@@ -37,7 +37,7 @@ namespace CPlatypus.Parser.Parsers
         public override PlatypusNode Parse(PlatypusParser parser)
         {
             var varKeywordToken = parser.ConsumeType(PlatypusTokenType.VarKeyword);
-            var nameNode = IdentifierParser.Instance.Parse(parser) as IdentifierNode;
+            var nameNode = IdentifierParser.Instance.ParseWithoutConsume(parser);
 
             // If the identifier is not followed by a assign operator, it consume the identifier
             if (!parser.MatchType(1, PlatypusTokenType.EqualAssignOperator))

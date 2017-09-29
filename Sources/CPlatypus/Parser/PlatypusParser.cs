@@ -17,6 +17,7 @@
  */
 
 using System.Collections.Generic;
+using CPlatypus.Core;
 using CPlatypus.Framework.Parser;
 using CPlatypus.Lexer;
 using CPlatypus.Parser.Parsers;
@@ -34,7 +35,8 @@ namespace CPlatypus.Parser
                 VariableDeclarationParser.Instance,
                 FunctionParser.Instance,
                 ClassParser.Instance,
-                ConstructorParser.Instance
+                ConstructorParser.Instance,
+                ExpressionParser.Instance
             };
         }
 
@@ -42,6 +44,11 @@ namespace CPlatypus.Parser
         {
             var topNode = CodeParser.Instance.ParseTill(this, PlatypusTokenType.Eos);
             return topNode;
+        }
+
+        public bool MatchGroup(PlatypusTokenTypeGroup tokenTypeGroup)
+        {
+            return Peek().IsInTokenGroup(tokenTypeGroup);
         }
 
         public bool MatchType(PlatypusTokenType tokenType)
@@ -62,6 +69,16 @@ namespace CPlatypus.Parser
         public bool MatchValueType(int offset, PlatypusTokenType tokenType, string value)
         {
             return base.MatchTypeValue(offset, (int) tokenType, value);
+        }
+
+        public bool AcceptType(PlatypusTokenType tokenType)
+        {
+            return base.AcceptType((int) tokenType);
+        }
+
+        public bool AcceptTypeValue(PlatypusTokenType tokenType, string value)
+        {
+            return base.AcceptTypeValue((int) tokenType, value);
         }
 
         public PlatypusToken PeekType(PlatypusTokenType tokenType)

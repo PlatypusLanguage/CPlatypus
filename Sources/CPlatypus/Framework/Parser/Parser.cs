@@ -54,6 +54,20 @@ namespace CPlatypus.Framework.Parser
             return token != null && Convert.ToInt32(token.TokenType) == tokenType && token.Value.Equals(value);
         }
 
+        public bool AcceptType(int tokenType)
+        {
+            if (!MatchType(tokenType)) return false;
+            ConsumeType(tokenType);
+            return true;
+        }
+
+        public bool AcceptTypeValue(int tokenType, string value)
+        {
+            if (!MatchTypeValue(tokenType, value)) return false;
+            ConsumeTypeValue(tokenType, value);
+            return true;
+        }
+
         public TToken Peek()
         {
             return Peek(0);

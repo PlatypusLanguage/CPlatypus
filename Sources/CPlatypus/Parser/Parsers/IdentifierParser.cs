@@ -39,5 +39,11 @@ namespace CPlatypus.Parser.Parsers
             var identifierToken = parser.ConsumeType(PlatypusTokenType.Identifier);
             return new IdentifierNode(identifierToken.Value, identifierToken.SourceLocation);
         }
+
+        public IdentifierNode ParseWithoutConsume(PlatypusParser parser)
+        {
+            var identifierToken = parser.PeekType(PlatypusTokenType.Identifier);
+            return new IdentifierNode(identifierToken.Value, identifierToken.SourceLocation);
+        }
     }
 }

@@ -22,11 +22,24 @@ namespace CPlatypus.Parser
 {
     public interface IPlatypusVisitor
     {
+        void Visit(ArgumentListNode node);
+        void Visit(ArrayAccessNode node);
+        void Visit(AttributeAccessNode node);
+        void Visit(BinaryOperationNode node);
+        void Visit(BooleanNode node);
+        void Visit(CharNode node);
         void Visit(ClassNode node);
         void Visit(CodeNode node);
         void Visit(ConstructorNode node);
         void Visit(IdentifierNode node);
+        void Visit(IntegerNode node);
+        void Visit(FloatNode node);
+        void Visit(FunctionCallNode node);
         void Visit(FunctionNode node);
+        void Visit(NewNode node);
+        void Visit(ThisNode node);
+        void Visit(UnaryOperationNode node);
         void Visit(VariableDeclarationNode node);
+        void Visit(StringNode node);
     }
 }

@@ -1,12 +1,12 @@
 #lang=default#
 class Human
 
-	constructor()
+	var name
 
+	constructor(name)
+		this.name = name
 	end
 
-	function Talk()
 
-	end
 
 end

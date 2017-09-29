@@ -28,6 +28,7 @@ namespace CPlatypus.Lexer
         AssignOperator,
         ComparisonOperator,
 
-        Literal
+        Literal,
+        TrueFalse
     }
 }
