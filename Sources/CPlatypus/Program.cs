@@ -20,13 +20,14 @@ using System;
 using CPlatypus.Lexer;
 using Fclp;
 using System.IO;
+using CPlatypus.Parser;
 
 namespace CPlatypus
 {
     public class ApplicationArguments
     {
-        public string File { get; set; }
-        public string Draw { get; set; }
+        public string File { get; set; } = "";
+        public string DotTree { get; set; } = "";
     }
 
 
@@ -40,7 +41,7 @@ namespace CPlatypus
 
             commandLineParser.Setup(arg => arg.File).As('f', "file").Required().WithDescription("Input file to process")
                 .Callback(result => arguments.File = result);
-            commandLineParser.Setup(arg => arg.Draw).As('d', "draw").Callback(result => arguments.Draw = result);
+            commandLineParser.Setup(arg => arg.DotTree).As('d', "dottree").Callback(result => arguments.DotTree = result);
 
             var cmArgs = commandLineParser.Parse(args);
 
@@ -56,6 +57,9 @@ namespace CPlatypus
                 IgnoreComments = true,
                 IgnoreWhiteSpaces = true,
                 IgnoreUnknownTokens = false
+            }, new PlatypusParserConfig
+            {
+                TreeDotFile = arguments.DotTree
             });
         }
     }

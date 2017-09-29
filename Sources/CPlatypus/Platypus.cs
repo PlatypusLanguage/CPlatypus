@@ -34,25 +34,31 @@ namespace CPlatypus
         }
 
         public void InterpretFile(string file, FileMode fileMode = FileMode.Open,
-            PlatypusLexerConfig lexerConfig = null)
+            PlatypusLexerConfig lexerConfig = null, PlatypusParserConfig parserConfig = null)
         {
-            InterpretSource(Source.FromFile(file, fileMode), lexerConfig);
+            InterpretSource(Source.FromFile(file, fileMode), lexerConfig, parserConfig);
         }
 
-        public void InterpretString(string content, PlatypusLexerConfig lexerConfig = null)
+        public void InterpretString(string content, PlatypusLexerConfig lexerConfig = null,
+            PlatypusParserConfig parserConfig = null)
         {
-            InterpretSource(new Source(content), lexerConfig);
+            InterpretSource(new Source(content), lexerConfig, parserConfig);
         }
 
-        public void InterpretString(string content, Encoding encoding, PlatypusLexerConfig lexerConfig = null)
+        public void InterpretString(string content, Encoding encoding, PlatypusLexerConfig lexerConfig = null,
+            PlatypusParserConfig parserConfig = null)
         {
-            InterpretSource(new Source(content, encoding), lexerConfig);
+            InterpretSource(new Source(content, encoding), lexerConfig, parserConfig);
         }
 
-        public void InterpretSource(Source source, PlatypusLexerConfig lexerConfig = null)
+        public void InterpretSource(Source source, PlatypusLexerConfig lexerConfig = null,
+            PlatypusParserConfig parserConfig = null)
         {
             if (lexerConfig == null)
                 lexerConfig = new PlatypusLexerConfig();
+
+            if (parserConfig == null)
+                parserConfig = new PlatypusParserConfig();
 
             using (source)
             {
@@ -62,9 +68,11 @@ namespace CPlatypus
 
                 var node = parser.Parse();
 
-                var drawer = new DotCompiler(node);
+                if (!string.IsNullOrWhiteSpace(parserConfig.TreeDotFile))
+                {
+                    new DotCompiler(node).Compile(parserConfig.TreeDotFile);
+                }
 
-                drawer.Compile("tree.dot");
             }
         }
 
