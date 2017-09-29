@@ -32,8 +32,10 @@ namespace CPlatypus.Parser
         void Visit(CodeNode node, PlatypusNode parent);
         void Visit(ConstructorNode node, PlatypusNode parent);
         void Visit(IdentifierNode node, PlatypusNode parent);
+        void Visit(IfNode node, PlatypusNode parent);
         void Visit(IntegerNode node, PlatypusNode parent);
         void Visit(FloatNode node, PlatypusNode parent);
+        void Visit(ForNode node, PlatypusNode parent);
         void Visit(FunctionCallNode node, PlatypusNode parent);
         void Visit(FunctionNode node, PlatypusNode parent);
         void Visit(NewNode node, PlatypusNode parent);
@@ -42,5 +44,6 @@ namespace CPlatypus.Parser
         void Visit(UnaryOperationNode node, PlatypusNode parent);
         void Visit(VariableDeclarationNode node, PlatypusNode parent);
         void Visit(StringNode node, PlatypusNode parent);
+        void Visit(WhileNode node, PlatypusNode parent);
     }
 }

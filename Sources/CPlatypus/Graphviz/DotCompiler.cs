@@ -119,6 +119,13 @@ namespace CPlatypus.Graphviz
             node.AcceptChildren(this, node);
         }
 
+        public void Visit(IfNode node, PlatypusNode parent)
+        {
+            _builder.AppendNode("node" + node.Id, "If");
+            CreateLink(parent.Id, node.Id);
+            node.AcceptChildren(this, node);
+        }
+
         public void Visit(IntegerNode node, PlatypusNode parent)
         {
             _builder.AppendNode("node" + node.Id, "Integer : " + node.Value, "white", "orange");
@@ -129,6 +136,13 @@ namespace CPlatypus.Graphviz
         public void Visit(FloatNode node, PlatypusNode parent)
         {
             _builder.AppendNode("node" + node.Id, "Float : " + node.Value, "white", "orange");
+            CreateLink(parent.Id, node.Id);
+            node.AcceptChildren(this, node);
+        }
+
+        public void Visit(ForNode node, PlatypusNode parent)
+        {
+            _builder.AppendNode("node" + node.Id, "For");
             CreateLink(parent.Id, node.Id);
             node.AcceptChildren(this, node);
         }
@@ -185,6 +199,13 @@ namespace CPlatypus.Graphviz
         public void Visit(StringNode node, PlatypusNode parent)
         {
             _builder.AppendNode("node" + node.Id, "String : " + node.Value, "white", "orange");
+            CreateLink(parent.Id, node.Id);
+            node.AcceptChildren(this, node);
+        }
+
+        public void Visit(WhileNode node, PlatypusNode parent)
+        {
+            _builder.AppendNode("node" + node.Id, "While");
             CreateLink(parent.Id, node.Id);
             node.AcceptChildren(this, node);
         }

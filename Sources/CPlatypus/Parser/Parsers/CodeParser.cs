@@ -17,6 +17,7 @@
  */
 
 using System;
+using System.Collections.Generic;
 using CPlatypus.Lexer;
 using CPlatypus.Parser.Nodes;
 
@@ -42,9 +43,15 @@ namespace CPlatypus.Parser.Parsers
 
         public CodeNode ParseTill(PlatypusParser parser, PlatypusTokenType tokenType = PlatypusTokenType.EndKeyword)
         {
-            var codeNode = new CodeNode(parser.NextId(), parser.Peek().SourceLocation);
+            return ParseTill(parser, new List<PlatypusTokenType> {tokenType}, out _);
+        }
 
-            while (parser.Lexer.CurrentToken.TokenType != tokenType)
+        public CodeNode ParseTill(PlatypusParser parser, List<PlatypusTokenType> tokenTypes, out PlatypusTokenType tokenType)
+        {
+            var codeNode = new CodeNode(parser.NextId(), parser.Peek().SourceLocation);
+            tokenType = PlatypusTokenType.Unknown;
+
+            while (!tokenTypes.Contains(parser.Lexer.CurrentToken.TokenType))
             {
                 var success = false;
                 foreach (var p in parser.Parsers)
@@ -63,8 +70,9 @@ namespace CPlatypus.Parser.Parsers
                 }
             }
 
-            if (parser.Lexer.CurrentToken.TokenType == tokenType)
+            if (tokenTypes.Contains(parser.Lexer.CurrentToken.TokenType))
             {
+                tokenType = parser.Lexer.CurrentToken.TokenType;
                 parser.ConsumeType(tokenType);
             }
 

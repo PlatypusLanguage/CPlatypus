@@ -1,4 +1,5 @@
 #lang=default#
+
 class Human
 
 	var name

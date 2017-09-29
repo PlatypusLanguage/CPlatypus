@@ -35,6 +35,9 @@ namespace CPlatypus.Parser
             _counter = 0;
             Parsers = new List<NodeParser>
             {
+                IfParser.Instance,
+                WhileParser.Instance,
+                ForParser.Instance,
                 VariableDeclarationParser.Instance,
                 FunctionParser.Instance,
                 ClassParser.Instance,
