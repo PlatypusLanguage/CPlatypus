@@ -65,9 +65,6 @@ namespace CPlatypus
                 var drawer = new DotCompiler(node);
 
                 drawer.Compile("tree.dot");
-
-
-                //Console.WriteLine(node);
             }
         }
 

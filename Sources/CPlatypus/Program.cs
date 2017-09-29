@@ -16,17 +16,42 @@
  *     along with CPlatypus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-using System.IO;
+using System;
 using CPlatypus.Lexer;
+using Fclp;
+using System.IO;
 
 namespace CPlatypus
 {
+    public class ApplicationArguments
+    {
+        public string File { get; set; }
+        public string Draw { get; set; }
+    }
+
+
     internal class Program
     {
         private static void Main(string[] args)
         {
+            var commandLineParser = new FluentCommandLineParser<ApplicationArguments>();
+
+            var arguments = new ApplicationArguments();
+
+            commandLineParser.Setup(arg => arg.File).As('f', "file").Required().WithDescription("Input file to process")
+                .Callback(result => arguments.File = result);
+            commandLineParser.Setup(arg => arg.Draw).As('d', "draw").Callback(result => arguments.Draw = result);
+
+            var cmArgs = commandLineParser.Parse(args);
+
+            if (cmArgs.HasErrors)
+            {
+                Console.WriteLine(cmArgs.ErrorText);
+                return;
+            }
+
             var platypus = new Platypus();
-            platypus.InterpretFile("code.p", FileMode.Open, new PlatypusLexerConfig
+            platypus.InterpretFile(arguments.File, FileMode.Open, new PlatypusLexerConfig
             {
                 IgnoreComments = true,
                 IgnoreWhiteSpaces = true,
