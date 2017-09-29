@@ -28,8 +28,11 @@ namespace CPlatypus.Parser
     {
         public readonly List<NodeParser> Parsers;
 
+        private int _counter;
+
         public PlatypusParser(PlatypusLexer lexer) : base(lexer)
         {
+            _counter = 0;
             Parsers = new List<NodeParser>
             {
                 VariableDeclarationParser.Instance,
@@ -38,6 +41,11 @@ namespace CPlatypus.Parser
                 ConstructorParser.Instance,
                 ExpressionParser.Instance
             };
+        }
+
+        public int NextId()
+        {
+            return _counter++;
         }
 
         public override PlatypusNode Parse()

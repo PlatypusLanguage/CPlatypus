@@ -18,6 +18,7 @@
 
 using System;
 using System.Linq;
+using System.Text;
 using CPlatypus.Framework.Lexer;
 using CPlatypus.Lexer;
 
@@ -108,6 +109,26 @@ namespace CPlatypus.Core
                     return '#';
                 default:
                     return '\0';
+            }
+        }
+
+        public static void AppendNode(this StringBuilder builder, string nodeName, string label,
+            string fontColor = "black", string bgColor = "white")
+        {
+            builder.Append(nodeName + "[style=filled label=\"" + label + "\"fillcolor=\"" + bgColor + "\"fontcolor=\"" +
+                           fontColor + "\"];");
+        }
+
+        public static void AppendNodeLink(this StringBuilder builder, string firstNodeName, string secondNodeName,
+            string label = "")
+        {
+            if (string.IsNullOrEmpty(label))
+            {
+                builder.Append(firstNodeName + "->" + secondNodeName + ";");
+            }
+            else
+            {
+                builder.Append(firstNodeName + "->" + secondNodeName + "[label=\"" + label + "\"];");
             }
         }
     }

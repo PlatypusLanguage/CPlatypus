@@ -24,21 +24,21 @@ namespace CPlatypus.Parser.Nodes
     {
         public IdentifierNode VariableNameNode => Children[0] as IdentifierNode;
 
-        public VariableDeclarationNode(IdentifierNode variableNameNode, SourceLocation sourceLocation) : base(sourceLocation)
+        public VariableDeclarationNode(int id, IdentifierNode variableNameNode, SourceLocation sourceLocation) : base(id, sourceLocation)
         {
             Children.Add(variableNameNode);
         }
 
-        public override void Accept(IPlatypusVisitor visitor)
+        public override void Accept(IPlatypusVisitor visitor, int parentId)
         {
-            visitor.Visit(this);
+            visitor.Visit(this, parentId);
         }
 
-        public override void AcceptChildren(IPlatypusVisitor visitor)
+        public override void AcceptChildren(IPlatypusVisitor visitor, int parentId)
         {
             foreach (var child in Children)
             {
-                child.Accept(visitor);
+                child.Accept(visitor, parentId);
             }
         }
     }

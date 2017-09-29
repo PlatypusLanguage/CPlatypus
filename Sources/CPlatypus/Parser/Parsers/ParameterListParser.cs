@@ -16,36 +16,47 @@
  *     along with CPlatypus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+using System;
 using CPlatypus.Lexer;
 using CPlatypus.Parser.Nodes;
 
 namespace CPlatypus.Parser.Parsers
 {
-    public class ConstructorParser : NodeParser
+    public class ParameterListParser : NodeParser
     {
-        public static ConstructorParser Instance { get; } = new ConstructorParser();
+        public static ParameterListParser Instance { get; } = new ParameterListParser();
 
-        private ConstructorParser()
+        private ParameterListParser()
         {
         }
 
         public override bool Match(PlatypusParser parser)
         {
-            return parser.MatchType(PlatypusTokenType.ConstructorKeyword) &&
-                   parser.MatchType(1, PlatypusTokenType.OpenParen);
+            throw new Exception("This shouldn't be used ever !");
         }
 
         public override PlatypusNode Parse(PlatypusParser parser)
         {
-            var constructorKeywordToken = parser.ConsumeType(PlatypusTokenType.ConstructorKeyword);
-
+            var parameterListNode = new ParameterListNode(parser.NextId(), parser.Peek().SourceLocation);
             parser.ConsumeType(PlatypusTokenType.OpenParen);
-
-            var parameters = ParameterListParser.Instance.Parse(parser) as ParameterListNode;
-
-            var bodyNode = CodeParser.Instance.ParseTill(parser);
-
-            return new ConstructorNode(parser.NextId(), parameters, bodyNode, constructorKeywordToken.SourceLocation);
+            while (!parser.MatchType(PlatypusTokenType.CloseParen))
+            {
+                if (!IdentifierParser.Instance.Match(parser))
+                {
+                    throw new Exception("Debug error # 1");
+                }
+                parameterListNode.Children.Add(IdentifierParser.Instance.Parse(parser));
+                if (parser.MatchType(PlatypusTokenType.Comma))
+                {
+                    parser.ConsumeType(PlatypusTokenType.Comma);
+                }
+                else
+                {
+                    break;
+                }
+            }
+            parser.ConsumeType(PlatypusTokenType.CloseParen);
+            return parameterListNode;
         }
     }
 }

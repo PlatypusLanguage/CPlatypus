@@ -22,20 +22,20 @@ namespace CPlatypus.Parser.Nodes
 {
     public class CodeNode : PlatypusNode
     {
-        public CodeNode(SourceLocation sourceLocation) : base(sourceLocation)
+        public CodeNode(int id, SourceLocation sourceLocation) : base(id, sourceLocation)
         {
         }
 
-        public override void Accept(IPlatypusVisitor visitor)
+        public override void Accept(IPlatypusVisitor visitor, int parentId)
         {
-            visitor.Visit(this);
+            visitor.Visit(this, parentId);
         }
 
-        public override void AcceptChildren(IPlatypusVisitor visitor)
+        public override void AcceptChildren(IPlatypusVisitor visitor, int parentId)
         {
             foreach (var child in Children)
             {
-                child.Accept(visitor);
+                child.Accept(visitor, parentId);
             }
         }
     }

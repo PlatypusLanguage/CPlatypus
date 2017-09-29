@@ -16,12 +16,12 @@
  *     along with CPlatypus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-using System;
 using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
 using CPlatypus.Core;
 using CPlatypus.Framework;
+using CPlatypus.Graphviz;
 using CPlatypus.Lexer;
 using CPlatypus.Parser;
 
@@ -62,7 +62,12 @@ namespace CPlatypus
 
                 var node = parser.Parse();
 
-                Console.WriteLine(node);
+                var drawer = new DotCompiler(node);
+
+                drawer.Compile("tree.dot");
+
+
+                //Console.WriteLine(node);
             }
         }
 

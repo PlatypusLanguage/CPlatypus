@@ -37,13 +37,13 @@ namespace CPlatypus.Parser.Parsers
         public override PlatypusNode Parse(PlatypusParser parser)
         {
             var identifierToken = parser.ConsumeType(PlatypusTokenType.Identifier);
-            return new IdentifierNode(identifierToken.Value, identifierToken.SourceLocation);
+            return new IdentifierNode(parser.NextId(), identifierToken.Value, identifierToken.SourceLocation);
         }
 
         public IdentifierNode ParseWithoutConsume(PlatypusParser parser)
         {
             var identifierToken = parser.PeekType(PlatypusTokenType.Identifier);
-            return new IdentifierNode(identifierToken.Value, identifierToken.SourceLocation);
+            return new IdentifierNode(parser.NextId(), identifierToken.Value, identifierToken.SourceLocation);
         }
     }
 }

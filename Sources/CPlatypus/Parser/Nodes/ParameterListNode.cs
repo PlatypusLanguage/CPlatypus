@@ -16,21 +16,17 @@
  *     along with CPlatypus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+using System.Collections.Generic;
 using CPlatypus.Framework;
 
 namespace CPlatypus.Parser.Nodes
 {
-    public class ConstructorNode : PlatypusNode
+    public class ParameterListNode : PlatypusNode
     {
-        public ParameterListNode Parameters => Children[0] as ParameterListNode;
+        public List<IdentifierNode> Arguments => Children.ConvertAll(a => a as IdentifierNode);
 
-        public CodeNode Body => Children[1] as CodeNode;
-
-        public ConstructorNode(int id, ParameterListNode parameters, CodeNode body, SourceLocation sourceLocation) :
-            base(id, sourceLocation)
+        public ParameterListNode(int id, SourceLocation sourceLocation) : base(id, sourceLocation)
         {
-            Children.Add(parameters);
-            Children.Add(body);
         }
 
         public override void Accept(IPlatypusVisitor visitor, int parentId)

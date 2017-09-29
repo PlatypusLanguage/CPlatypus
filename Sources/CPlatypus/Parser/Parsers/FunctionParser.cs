@@ -16,8 +16,6 @@
  *     along with CPlatypus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-using System;
-using System.Collections.Generic;
 using CPlatypus.Lexer;
 using CPlatypus.Parser.Nodes;
 
@@ -43,32 +41,11 @@ namespace CPlatypus.Parser.Parsers
             var functionKeywordToken = parser.ConsumeType(PlatypusTokenType.FunctionKeyword);
             var nameNode = IdentifierParser.Instance.Parse(parser) as IdentifierNode;
 
-            parser.ConsumeType(PlatypusTokenType.OpenParen);
-
-            var parameters = new List<IdentifierNode>();
-
-            while (!parser.MatchType(PlatypusTokenType.CloseParen))
-            {
-                if (!IdentifierParser.Instance.Match(parser))
-                {
-                    throw new Exception("Debug error # 1");
-                }
-                parameters.Add(IdentifierParser.Instance.Parse(parser) as IdentifierNode);
-                if (parser.MatchType(PlatypusTokenType.Comma))
-                {
-                    parser.ConsumeType(PlatypusTokenType.Comma);
-                }
-                else
-                {
-                    break;
-                }
-            }
-
-            parser.ConsumeType(PlatypusTokenType.CloseParen);
+            var parameters = ParameterListParser.Instance.Parse(parser) as ParameterListNode;
 
             var bodyNode = CodeParser.Instance.ParseTill(parser);
 
-            return new FunctionNode(nameNode, parameters, bodyNode, functionKeywordToken.SourceLocation);
+            return new FunctionNode(parser.NextId(), nameNode, parameters, bodyNode, functionKeywordToken.SourceLocation);
         }
     }
 }

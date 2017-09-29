@@ -24,21 +24,21 @@ namespace CPlatypus.Parser.Nodes
     {
         public readonly string Value;
 
-        public IdentifierNode(string value, SourceLocation sourceLocation) : base(sourceLocation)
+        public IdentifierNode(int id, string value, SourceLocation sourceLocation) : base(id, sourceLocation)
         {
             Value = value;
         }
 
-        public override void Accept(IPlatypusVisitor visitor)
+        public override void Accept(IPlatypusVisitor visitor, int parentId)
         {
-            visitor.Visit(this);
+            visitor.Visit(this, parentId);
         }
 
-        public override void AcceptChildren(IPlatypusVisitor visitor)
+        public override void AcceptChildren(IPlatypusVisitor visitor, int parentId)
         {
             foreach (var child in Children)
             {
-                child.Accept(visitor);
+                child.Accept(visitor, parentId);
             }
         }
     }

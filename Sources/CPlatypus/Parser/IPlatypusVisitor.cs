@@ -22,24 +22,25 @@ namespace CPlatypus.Parser
 {
     public interface IPlatypusVisitor
     {
-        void Visit(ArgumentListNode node);
-        void Visit(ArrayAccessNode node);
-        void Visit(AttributeAccessNode node);
-        void Visit(BinaryOperationNode node);
-        void Visit(BooleanNode node);
-        void Visit(CharNode node);
-        void Visit(ClassNode node);
-        void Visit(CodeNode node);
-        void Visit(ConstructorNode node);
-        void Visit(IdentifierNode node);
-        void Visit(IntegerNode node);
-        void Visit(FloatNode node);
-        void Visit(FunctionCallNode node);
-        void Visit(FunctionNode node);
-        void Visit(NewNode node);
-        void Visit(ThisNode node);
-        void Visit(UnaryOperationNode node);
-        void Visit(VariableDeclarationNode node);
-        void Visit(StringNode node);
+        void Visit(ArgumentListNode node, int parentId);
+        void Visit(ArrayAccessNode node, int parentId);
+        void Visit(AttributeAccessNode node, int parentId);
+        void Visit(BinaryOperationNode node, int parentId);
+        void Visit(BooleanNode node, int parentId);
+        void Visit(CharNode node, int parentId);
+        void Visit(ClassNode node, int parentId);
+        void Visit(CodeNode node, int parentId);
+        void Visit(ConstructorNode node, int parentId);
+        void Visit(IdentifierNode node, int parentId);
+        void Visit(IntegerNode node, int parentId);
+        void Visit(FloatNode node, int parentId);
+        void Visit(FunctionCallNode node, int parentId);
+        void Visit(FunctionNode node, int parentId);
+        void Visit(NewNode node, int parentId);
+        void Visit(ParameterListNode node, int parentId);
+        void Visit(ThisNode node, int parentId);
+        void Visit(UnaryOperationNode node, int parentId);
+        void Visit(VariableDeclarationNode node, int parentId);
+        void Visit(StringNode node, int parentId);
     }
 }

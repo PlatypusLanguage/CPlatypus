@@ -16,7 +16,6 @@
  *     along with CPlatypus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-using System.Collections.Generic;
 using CPlatypus.Framework;
 
 namespace CPlatypus.Parser.Nodes
@@ -25,32 +24,29 @@ namespace CPlatypus.Parser.Nodes
     {
         public IdentifierNode Name => Children[0] as IdentifierNode;
 
-        public CodeNode Body => Children[1] as CodeNode;
+        public ParameterListNode Parameters => Children[1] as ParameterListNode;
 
-        public List<IdentifierNode> Parameters =>
-            Children.Count > 2
-                ? Children.GetRange(2, Children.Count - 3).ConvertAll(x => (IdentifierNode) x)
-                : new List<IdentifierNode>();
+        public CodeNode Body => Children[2] as CodeNode;
 
 
-        public FunctionNode(IdentifierNode name, List<IdentifierNode> parameters, CodeNode body,
-            SourceLocation sourceLocation) : base(sourceLocation)
+        public FunctionNode(int id, IdentifierNode name, ParameterListNode parameters, CodeNode body,
+            SourceLocation sourceLocation) : base(id, sourceLocation)
         {
             Children.Add(name);
+            Children.Add(parameters);
             Children.Add(body);
-            Children.AddRange(parameters);
         }
 
-        public override void Accept(IPlatypusVisitor visitor)
+        public override void Accept(IPlatypusVisitor visitor, int parentId)
         {
-            visitor.Visit(this);
+            visitor.Visit(this, parentId);
         }
 
-        public override void AcceptChildren(IPlatypusVisitor visitor)
+        public override void AcceptChildren(IPlatypusVisitor visitor, int parentId)
         {
             foreach (var child in Children)
             {
-                child.Accept(visitor);
+                child.Accept(visitor, parentId);
             }
         }
     }

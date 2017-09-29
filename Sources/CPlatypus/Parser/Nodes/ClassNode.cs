@@ -26,22 +26,22 @@ namespace CPlatypus.Parser.Nodes
 
         public CodeNode Body => Children[1] as CodeNode;
 
-        public ClassNode(IdentifierNode name, CodeNode body, SourceLocation sourceLocation) : base(sourceLocation)
+        public ClassNode(int id, IdentifierNode name, CodeNode body, SourceLocation sourceLocation) : base(id, sourceLocation)
         {
             Children.Add(name);
             Children.Add(body);
         }
 
-        public override void Accept(IPlatypusVisitor visitor)
+        public override void Accept(IPlatypusVisitor visitor, int parentId)
         {
-            visitor.Visit(this);
+            visitor.Visit(this, parentId);
         }
 
-        public override void AcceptChildren(IPlatypusVisitor visitor)
+        public override void AcceptChildren(IPlatypusVisitor visitor, int parentId)
         {
             foreach (var child in Children)
             {
-                child.Accept(visitor);
+                child.Accept(visitor, parentId);
             }
         }
     }

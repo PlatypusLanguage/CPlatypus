@@ -45,7 +45,7 @@ namespace CPlatypus.Parser.Parsers
                 parser.ConsumeType(PlatypusTokenType.Identifier);
             }
 
-            return new VariableDeclarationNode(nameNode, varKeywordToken.SourceLocation);
+            return new VariableDeclarationNode(parser.NextId(), nameNode, varKeywordToken.SourceLocation);
         }
     }
 }

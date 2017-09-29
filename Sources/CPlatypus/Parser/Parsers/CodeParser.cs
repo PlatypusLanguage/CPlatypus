@@ -42,7 +42,7 @@ namespace CPlatypus.Parser.Parsers
 
         public CodeNode ParseTill(PlatypusParser parser, PlatypusTokenType tokenType = PlatypusTokenType.EndKeyword)
         {
-            var codeNode = new CodeNode(parser.Peek().SourceLocation);
+            var codeNode = new CodeNode(parser.NextId(), parser.Peek().SourceLocation);
 
             while (parser.Lexer.CurrentToken.TokenType != tokenType)
             {

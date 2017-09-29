@@ -40,7 +40,7 @@ namespace CPlatypus.Parser.Parsers
             var classKeywordToken = parser.ConsumeType(PlatypusTokenType.ClassKeyword);
             var nameNode = IdentifierParser.Instance.Parse(parser) as IdentifierNode;
             var bodyNode = CodeParser.Instance.ParseTill(parser);
-            return new ClassNode(nameNode, bodyNode, classKeywordToken.SourceLocation);
+            return new ClassNode(parser.NextId(), nameNode, bodyNode, classKeywordToken.SourceLocation);
         }
     }
 }

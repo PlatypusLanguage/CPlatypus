@@ -1,4 +1,23 @@
-﻿using System;
+﻿/*
+ * Copyright (c) 2017 Platypus Language http://platypus.vfrz.fr/
+ *  This file is part of CPlatypus.
+ *
+ *     CPlatypus is free software: you can redistribute it and/or modify
+ *     it under the terms of the GNU General Public License as published by
+ *     the Free Software Foundation, either version 3 of the License, or
+ *     (at your option) any later version.
+ *
+ *     CPlatypus is distributed in the hope that it will be useful,
+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *     GNU General Public License for more details.
+ *
+ *     You should have received a copy of the GNU General Public License
+ *     along with CPlatypus.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+using System;
+using System.Globalization;
 using CPlatypus.Lexer;
 using CPlatypus.Parser.Nodes;
 
@@ -28,34 +47,39 @@ namespace CPlatypus.Parser.Parsers
 
             // =
             if (parser.AcceptType(PlatypusTokenType.EqualAssignOperator))
-                return new BinaryOperationNode(BinaryOperation.Assignment, left, ParseAssignment(parser),
+                return new BinaryOperationNode(parser.NextId(), BinaryOperation.Assignment, left,
+                    ParseAssignment(parser),
                     parser.Peek().SourceLocation);
 
             // +=
             if (parser.AcceptType(PlatypusTokenType.PlusAssignOperator))
-                return new BinaryOperationNode(BinaryOperation.Assignment, left, new BinaryOperationNode(
-                        BinaryOperation.Addition, left, ParseAssignment(parser),
+                return new BinaryOperationNode(parser.NextId(), BinaryOperation.Assignment, left,
+                    new BinaryOperationNode(
+                        parser.NextId(), BinaryOperation.Addition, left, ParseAssignment(parser),
                         parser.Peek().SourceLocation),
                     parser.Peek().SourceLocation);
 
             // -=
             if (parser.AcceptType(PlatypusTokenType.MinusAssignOperator))
-                return new BinaryOperationNode(BinaryOperation.Assignment, left, new BinaryOperationNode(
-                        BinaryOperation.Subtraction, left, ParseAssignment(parser),
+                return new BinaryOperationNode(parser.NextId(), BinaryOperation.Assignment, left,
+                    new BinaryOperationNode(
+                        parser.NextId(), BinaryOperation.Subtraction, left, ParseAssignment(parser),
                         parser.Peek().SourceLocation),
                     parser.Peek().SourceLocation);
 
             // *=
             if (parser.AcceptType(PlatypusTokenType.MultiplyAssignOperator))
-                return new BinaryOperationNode(BinaryOperation.Assignment, left, new BinaryOperationNode(
-                    BinaryOperation.Multiplication, left, ParseAssignment(parser),
-                    parser.Peek().SourceLocation), parser.Peek().SourceLocation);
+                return new BinaryOperationNode(parser.NextId(), BinaryOperation.Assignment, left,
+                    new BinaryOperationNode(
+                        parser.NextId(), BinaryOperation.Multiplication, left, ParseAssignment(parser),
+                        parser.Peek().SourceLocation), parser.Peek().SourceLocation);
 
             // /=
             if (parser.AcceptType(PlatypusTokenType.DivideAssignOperator))
-                return new BinaryOperationNode(BinaryOperation.Assignment, left, new BinaryOperationNode(
-                    BinaryOperation.Division, left, ParseAssignment(parser),
-                    parser.Peek().SourceLocation), parser.Peek().SourceLocation);
+                return new BinaryOperationNode(parser.NextId(), BinaryOperation.Assignment, left,
+                    new BinaryOperationNode(
+                        parser.NextId(), BinaryOperation.Division, left, ParseAssignment(parser),
+                        parser.Peek().SourceLocation), parser.Peek().SourceLocation);
 
             return left;
         }
@@ -65,7 +89,7 @@ namespace CPlatypus.Parser.Parsers
             var left = ParseLogicalAnd(parser);
             while (parser.AcceptType(PlatypusTokenType.OrOperator))
             {
-                left = new BinaryOperationNode(BinaryOperation.Or, left, ParseLogicalAnd(parser),
+                left = new BinaryOperationNode(parser.NextId(), BinaryOperation.Or, left, ParseLogicalAnd(parser),
                     parser.Peek().SourceLocation);
             }
             return left;
@@ -76,7 +100,7 @@ namespace CPlatypus.Parser.Parsers
             var left = ParseComparison(parser);
             while (parser.AcceptType(PlatypusTokenType.AndOperator))
             {
-                left = new BinaryOperationNode(BinaryOperation.And, left, ParseComparison(parser),
+                left = new BinaryOperationNode(parser.NextId(), BinaryOperation.And, left, ParseComparison(parser),
                     parser.Peek().SourceLocation);
             }
             return left;
@@ -91,34 +115,35 @@ namespace CPlatypus.Parser.Parsers
                 {
                     case PlatypusTokenType.NotEqualOperator:
                         parser.ConsumeType(PlatypusTokenType.NotEqualOperator);
-                        left = new BinaryOperationNode(BinaryOperation.NotEqual, left,
+                        left = new BinaryOperationNode(parser.NextId(), BinaryOperation.NotEqual, left,
                             ParseBinary(parser), parser.Peek().SourceLocation);
                         continue;
                     case PlatypusTokenType.EqualOperator:
                         parser.ConsumeType(PlatypusTokenType.EqualOperator);
-                        left = new BinaryOperationNode(BinaryOperation.Equal, left, ParseBinary(parser),
+                        left = new BinaryOperationNode(parser.NextId(), BinaryOperation.Equal, left,
+                            ParseBinary(parser),
                             parser.Peek().SourceLocation);
                         continue;
                     case PlatypusTokenType.GreaterOperator:
                         parser.ConsumeType(PlatypusTokenType.GreaterOperator);
-                        left = new BinaryOperationNode(BinaryOperation.Greater, left,
+                        left = new BinaryOperationNode(parser.NextId(), BinaryOperation.Greater, left,
                             ParseBinary(parser),
                             parser.Peek().SourceLocation);
                         continue;
                     case PlatypusTokenType.LessOperator:
                         parser.ConsumeType(PlatypusTokenType.LessOperator);
-                        left = new BinaryOperationNode(BinaryOperation.Less, left,
+                        left = new BinaryOperationNode(parser.NextId(), BinaryOperation.Less, left,
                             ParseBinary(parser),
                             parser.Peek().SourceLocation);
                         continue;
                     case PlatypusTokenType.GreaterEqualOperator:
                         parser.ConsumeType(PlatypusTokenType.GreaterEqualOperator);
-                        left = new BinaryOperationNode(BinaryOperation.GreaterEqual, left,
+                        left = new BinaryOperationNode(parser.NextId(), BinaryOperation.GreaterEqual, left,
                             ParseBinary(parser), parser.Peek().SourceLocation);
                         continue;
                     case PlatypusTokenType.LessEqualOperator:
                         parser.ConsumeType(PlatypusTokenType.LessEqualOperator);
-                        left = new BinaryOperationNode(BinaryOperation.LessEqual, left,
+                        left = new BinaryOperationNode(parser.NextId(), BinaryOperation.LessEqual, left,
                             ParseBinary(parser),
                             parser.Peek().SourceLocation);
                         continue;
@@ -139,27 +164,29 @@ namespace CPlatypus.Parser.Parsers
                 {
                     case PlatypusTokenType.PlusOperator:
                         parser.ConsumeType(PlatypusTokenType.PlusOperator);
-                        left = new BinaryOperationNode(BinaryOperation.Addition, left,
+                        left = new BinaryOperationNode(parser.NextId(), BinaryOperation.Addition, left,
                             ParseUnary(parser), parser.Peek().SourceLocation);
                         continue;
                     case PlatypusTokenType.MinusOperator:
                         parser.ConsumeType(PlatypusTokenType.MinusOperator);
-                        left = new BinaryOperationNode(BinaryOperation.Subtraction, left,
+                        left = new BinaryOperationNode(parser.NextId(), BinaryOperation.Subtraction, left,
                             ParseUnary(parser), parser.Peek().SourceLocation);
                         continue;
                     case PlatypusTokenType.MultiplyOperator:
                         parser.ConsumeType(PlatypusTokenType.MultiplyOperator);
-                        left = new BinaryOperationNode(BinaryOperation.Multiplication, left, ParseUnary(parser),
+                        left = new BinaryOperationNode(parser.NextId(), BinaryOperation.Multiplication, left,
+                            ParseUnary(parser),
                             parser.Peek().SourceLocation);
                         continue;
                     case PlatypusTokenType.DivideOperator:
                         parser.ConsumeType(PlatypusTokenType.DivideOperator);
-                        left = new BinaryOperationNode(BinaryOperation.Division, left, ParseUnary(parser),
+                        left = new BinaryOperationNode(parser.NextId(), BinaryOperation.Division, left,
+                            ParseUnary(parser),
                             parser.Peek().SourceLocation);
                         continue;
                     case PlatypusTokenType.IsOperator:
                         parser.ConsumeType(PlatypusTokenType.IsOperator);
-                        left = new BinaryOperationNode(BinaryOperation.Is, left, ParseUnary(parser),
+                        left = new BinaryOperationNode(parser.NextId(), BinaryOperation.Is, left, ParseUnary(parser),
                             parser.Peek().SourceLocation);
                         continue;
                 }
@@ -176,22 +203,22 @@ namespace CPlatypus.Parser.Parsers
                 {
                     case PlatypusTokenType.NotOperator:
                         parser.ConsumeType(PlatypusTokenType.NotOperator);
-                        return new UnaryOperationNode(UnaryOperation.Not, ParseUnary(parser),
+                        return new UnaryOperationNode(parser.NextId(), UnaryOperation.Not, ParseUnary(parser),
                             parser.Peek().SourceLocation);
                     case PlatypusTokenType.PlusPlusOperator:
                         parser.ConsumeType(PlatypusTokenType.PlusPlusOperator);
-                        return new UnaryOperationNode(UnaryOperation.PreIncrement, ParseUnary(parser),
+                        return new UnaryOperationNode(parser.NextId(), UnaryOperation.PreIncrement, ParseUnary(parser),
                             parser.Peek().SourceLocation);
                     case PlatypusTokenType.MinusMinusOperator:
                         parser.ConsumeType(PlatypusTokenType.MinusMinusOperator);
-                        return new UnaryOperationNode(UnaryOperation.PreDecrement, ParseUnary(parser),
+                        return new UnaryOperationNode(parser.NextId(), UnaryOperation.PreDecrement, ParseUnary(parser),
                             parser.Peek().SourceLocation);
                 }
             }
             else if (parser.Peek().TokenType == PlatypusTokenType.MinusOperator)
             {
                 parser.ConsumeType(PlatypusTokenType.MinusOperator);
-                return new UnaryOperationNode(UnaryOperation.Negate, ParseUnary(parser),
+                return new UnaryOperationNode(parser.NextId(), UnaryOperation.Negate, ParseUnary(parser),
                     parser.Peek().SourceLocation);
             }
             return ParseAccess(parser);
@@ -207,27 +234,32 @@ namespace CPlatypus.Parser.Parsers
             if (parser.MatchType(PlatypusTokenType.OpenParen))
             {
                 return ParseAccess(parser,
-                    new FunctionCallNode(left, ArgumentListParser.Instance.Parse(parser) as ArgumentListNode,
+                    new FunctionCallNode(parser.NextId(), left,
+                        ArgumentListParser.Instance.Parse(parser) as ArgumentListNode,
                         parser.Peek().SourceLocation));
             }
             if (parser.AcceptType(PlatypusTokenType.OpenSquare))
             {
                 var expression = Parse(parser);
                 parser.ConsumeType(PlatypusTokenType.CloseSquare);
-                return ParseAccess(parser, new ArrayAccessNode(left, expression, parser.Peek().SourceLocation));
+                return ParseAccess(parser,
+                    new ArrayAccessNode(parser.NextId(), left, expression, parser.Peek().SourceLocation));
             }
             if (parser.AcceptType(PlatypusTokenType.PlusPlusOperator))
             {
-                return new UnaryOperationNode(UnaryOperation.PostIncrement, left, parser.Peek().SourceLocation);
+                return new UnaryOperationNode(parser.NextId(), UnaryOperation.PostIncrement, left,
+                    parser.Peek().SourceLocation);
             }
             if (parser.AcceptType(PlatypusTokenType.MinusMinusOperator))
             {
-                return new UnaryOperationNode(UnaryOperation.PostDecrement, left, parser.Peek().SourceLocation);
+                return new UnaryOperationNode(parser.NextId(), UnaryOperation.PostDecrement, left,
+                    parser.Peek().SourceLocation);
             }
             if (parser.AcceptType(PlatypusTokenType.Dot))
             {
                 var identifierNode = IdentifierParser.Instance.Parse(parser) as IdentifierNode;
-                return ParseAccess(parser, new AttributeAccessNode(left, identifierNode, parser.Peek().SourceLocation));
+                return ParseAccess(parser,
+                    new AttributeAccessNode(parser.NextId(), left, identifierNode, parser.Peek().SourceLocation));
             }
 
             return left;
@@ -238,39 +270,41 @@ namespace CPlatypus.Parser.Parsers
             if (parser.AcceptType(PlatypusTokenType.NewKeyword))
             {
                 // TODO Rework this part
-                return new NewNode(ParseAccess(parser), parser.Peek().SourceLocation);
+                return new NewNode(parser.NextId(), ParseAccess(parser), parser.Peek().SourceLocation);
             }
             if (parser.AcceptType(PlatypusTokenType.ThisKeyword))
             {
-                return new ThisNode(parser.Peek().SourceLocation);
+                return new ThisNode(parser.NextId(), parser.Peek().SourceLocation);
             }
             if (parser.MatchGroup(PlatypusTokenTypeGroup.TrueFalse))
             {
-                return new BooleanNode(parser.MatchType(PlatypusTokenType.TrueLiteral), parser.Peek().SourceLocation);
+                return new BooleanNode(parser.NextId(), true, parser.Peek().SourceLocation);
             }
             if (parser.MatchType(PlatypusTokenType.Identifier))
             {
-                return new IdentifierNode(parser.ConsumeType(PlatypusTokenType.Identifier).Value,
+                return new IdentifierNode(parser.NextId(), parser.ConsumeType(PlatypusTokenType.Identifier).Value,
                     parser.Peek().SourceLocation);
             }
             if (parser.MatchType(PlatypusTokenType.RealLiteral))
             {
-                return new FloatNode(float.Parse(parser.ConsumeType(PlatypusTokenType.RealLiteral).Value),
-                    parser.Peek().SourceLocation);
+                return new FloatNode(parser.NextId(),
+                    float.Parse(parser.ConsumeType(PlatypusTokenType.RealLiteral).Value,
+                        CultureInfo.InvariantCulture.NumberFormat), parser.Peek().SourceLocation);
             }
             if (parser.MatchType(PlatypusTokenType.IntegerLiteral))
             {
-                return new IntegerNode(int.Parse(parser.ConsumeType(PlatypusTokenType.IntegerLiteral).Value),
-                    parser.Peek().SourceLocation);
+                return new IntegerNode(parser.NextId(),
+                    int.Parse(parser.ConsumeType(PlatypusTokenType.IntegerLiteral).Value,
+                        CultureInfo.InvariantCulture.NumberFormat), parser.Peek().SourceLocation);
             }
             if (parser.MatchType(PlatypusTokenType.TextLiteral))
             {
-                return new StringNode(parser.ConsumeType(PlatypusTokenType.TextLiteral).Value,
+                return new StringNode(parser.NextId(), parser.ConsumeType(PlatypusTokenType.TextLiteral).Value,
                     parser.Peek().SourceLocation);
             }
             if (parser.MatchType(PlatypusTokenType.CharLiteral))
             {
-                return new CharNode(parser.ConsumeType(PlatypusTokenType.CharLiteral).Value[0],
+                return new CharNode(parser.NextId(), parser.ConsumeType(PlatypusTokenType.CharLiteral).Value[0],
                     parser.Peek().SourceLocation);
             }
             if (parser.AcceptType(PlatypusTokenType.OpenParen))
