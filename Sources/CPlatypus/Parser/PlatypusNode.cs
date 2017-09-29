@@ -30,8 +30,8 @@ namespace CPlatypus.Parser
             Id = id;
         }
 
-        public abstract void Accept(IPlatypusVisitor visitor, int parentId);
+        public abstract void Accept(IPlatypusVisitor visitor, PlatypusNode parent);
 
-        public abstract void AcceptChildren(IPlatypusVisitor visitor, int parentId);
+        public abstract void AcceptChildren(IPlatypusVisitor visitor, PlatypusNode parent);
     }
 }

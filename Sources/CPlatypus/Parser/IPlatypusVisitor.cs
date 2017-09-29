@@ -22,25 +22,25 @@ namespace CPlatypus.Parser
 {
     public interface IPlatypusVisitor
     {
-        void Visit(ArgumentListNode node, int parentId);
-        void Visit(ArrayAccessNode node, int parentId);
-        void Visit(AttributeAccessNode node, int parentId);
-        void Visit(BinaryOperationNode node, int parentId);
-        void Visit(BooleanNode node, int parentId);
-        void Visit(CharNode node, int parentId);
-        void Visit(ClassNode node, int parentId);
-        void Visit(CodeNode node, int parentId);
-        void Visit(ConstructorNode node, int parentId);
-        void Visit(IdentifierNode node, int parentId);
-        void Visit(IntegerNode node, int parentId);
-        void Visit(FloatNode node, int parentId);
-        void Visit(FunctionCallNode node, int parentId);
-        void Visit(FunctionNode node, int parentId);
-        void Visit(NewNode node, int parentId);
-        void Visit(ParameterListNode node, int parentId);
-        void Visit(ThisNode node, int parentId);
-        void Visit(UnaryOperationNode node, int parentId);
-        void Visit(VariableDeclarationNode node, int parentId);
-        void Visit(StringNode node, int parentId);
+        void Visit(ArgumentListNode node, PlatypusNode parent);
+        void Visit(ArrayAccessNode node, PlatypusNode parent);
+        void Visit(AttributeAccessNode node, PlatypusNode parent);
+        void Visit(BinaryOperationNode node, PlatypusNode parent);
+        void Visit(BooleanNode node, PlatypusNode parent);
+        void Visit(CharNode node, PlatypusNode parent);
+        void Visit(ClassNode node, PlatypusNode parent);
+        void Visit(CodeNode node, PlatypusNode parent);
+        void Visit(ConstructorNode node, PlatypusNode parent);
+        void Visit(IdentifierNode node, PlatypusNode parent);
+        void Visit(IntegerNode node, PlatypusNode parent);
+        void Visit(FloatNode node, PlatypusNode parent);
+        void Visit(FunctionCallNode node, PlatypusNode parent);
+        void Visit(FunctionNode node, PlatypusNode parent);
+        void Visit(NewNode node, PlatypusNode parent);
+        void Visit(ParameterListNode node, PlatypusNode parent);
+        void Visit(ThisNode node, PlatypusNode parent);
+        void Visit(UnaryOperationNode node, PlatypusNode parent);
+        void Visit(VariableDeclarationNode node, PlatypusNode parent);
+        void Visit(StringNode node, PlatypusNode parent);
     }
 }

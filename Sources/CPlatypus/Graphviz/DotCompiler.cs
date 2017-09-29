@@ -41,7 +41,7 @@ namespace CPlatypus.Graphviz
             // header
             _builder.Append("digraph g{\nnode[shape=rect,height=0];\n");
 
-            _tree.Accept(this, 0);
+            _tree.Accept(this, _tree);
 
             // footer
             _builder.Append("}");
@@ -49,144 +49,144 @@ namespace CPlatypus.Graphviz
             File.WriteAllText(fileName, _builder.ToString());
         }
 
-        public void Visit(ArgumentListNode node, int parentId)
+        public void Visit(ArgumentListNode node, PlatypusNode parent)
         {
             _builder.AppendNode("node" + node.Id, "Argument List");
-            CreateLink(parentId, node.Id);
-            node.AcceptChildren(this, node.Id);
+            CreateLink(parent.Id, node.Id);
+            node.AcceptChildren(this, node);
         }
 
-        public void Visit(ArrayAccessNode node, int parentId)
+        public void Visit(ArrayAccessNode node, PlatypusNode parent)
         {
             _builder.AppendNode("node" + node.Id, "Array Access");
-            CreateLink(parentId, node.Id);
-            node.AcceptChildren(this, node.Id);
+            CreateLink(parent.Id, node.Id);
+            node.AcceptChildren(this, node);
         }
 
-        public void Visit(AttributeAccessNode node, int parentId)
+        public void Visit(AttributeAccessNode node, PlatypusNode parent)
         {
             _builder.AppendNode("node" + node.Id, "Attribute Access");
-            CreateLink(parentId, node.Id);
-            node.AcceptChildren(this, node.Id);
+            CreateLink(parent.Id, node.Id);
+            node.AcceptChildren(this, node);
         }
 
-        public void Visit(BinaryOperationNode node, int parentId)
+        public void Visit(BinaryOperationNode node, PlatypusNode parent)
         {
             _builder.AppendNode("node" + node.Id, "Binary Operation : " + node.OperationType, "white", "red3");
-            CreateLink(parentId, node.Id);
-            node.AcceptChildren(this, node.Id);
+            CreateLink(parent.Id, node.Id);
+            node.AcceptChildren(this, node);
         }
 
-        public void Visit(BooleanNode node, int parentId)
+        public void Visit(BooleanNode node, PlatypusNode parent)
         {
             _builder.AppendNode("node" + node.Id, "Boolean : " + node.Value, "white", "orange");
-            CreateLink(parentId, node.Id);
-            node.AcceptChildren(this, node.Id);
+            CreateLink(parent.Id, node.Id);
+            node.AcceptChildren(this, node);
         }
 
-        public void Visit(CharNode node, int parentId)
+        public void Visit(CharNode node, PlatypusNode parent)
         {
             _builder.AppendNode("node" + node.Id, "Char : " + node.Value, "white", "orange");
-            CreateLink(parentId, node.Id);
-            node.AcceptChildren(this, node.Id);
+            CreateLink(parent.Id, node.Id);
+            node.AcceptChildren(this, node);
         }
 
-        public void Visit(ClassNode node, int parentId)
+        public void Visit(ClassNode node, PlatypusNode parent)
         {
             _builder.AppendNode("node" + node.Id, "Class", "white", "cyan3");
-            CreateLink(parentId, node.Id);
-            node.AcceptChildren(this, node.Id);
+            CreateLink(parent.Id, node.Id);
+            node.AcceptChildren(this, node);
         }
 
-        public void Visit(CodeNode node, int parentId)
+        public void Visit(CodeNode node, PlatypusNode parent)
         {
             _builder.AppendNode("node" + node.Id, "Code (Body)", "white", "cornflowerblue");
-            CreateLink(parentId, node.Id);
-            node.AcceptChildren(this, node.Id);
+            CreateLink(parent.Id, node.Id);
+            node.AcceptChildren(this, node);
         }
 
-        public void Visit(ConstructorNode node, int parentId)
+        public void Visit(ConstructorNode node, PlatypusNode parent)
         {
             _builder.AppendNode("node" + node.Id, "Constructor", "white", "cyan3");
-            CreateLink(parentId, node.Id);
-            node.AcceptChildren(this, node.Id);
+            CreateLink(parent.Id, node.Id);
+            node.AcceptChildren(this, node);
         }
 
-        public void Visit(IdentifierNode node, int parentId)
+        public void Visit(IdentifierNode node, PlatypusNode parent)
         {
             _builder.AppendNode("node" + node.Id, "Identifier : " + node.Value, "white", "steelblue");
-            CreateLink(parentId, node.Id);
-            node.AcceptChildren(this, node.Id);
+            CreateLink(parent.Id, node.Id);
+            node.AcceptChildren(this, node);
         }
 
-        public void Visit(IntegerNode node, int parentId)
+        public void Visit(IntegerNode node, PlatypusNode parent)
         {
             _builder.AppendNode("node" + node.Id, "Integer : " + node.Value, "white", "orange");
-            CreateLink(parentId, node.Id);
-            node.AcceptChildren(this, node.Id);
+            CreateLink(parent.Id, node.Id);
+            node.AcceptChildren(this, node);
         }
 
-        public void Visit(FloatNode node, int parentId)
+        public void Visit(FloatNode node, PlatypusNode parent)
         {
             _builder.AppendNode("node" + node.Id, "Float : " + node.Value, "white", "orange");
-            CreateLink(parentId, node.Id);
-            node.AcceptChildren(this, node.Id);
+            CreateLink(parent.Id, node.Id);
+            node.AcceptChildren(this, node);
         }
 
-        public void Visit(FunctionCallNode node, int parentId)
+        public void Visit(FunctionCallNode node, PlatypusNode parent)
         {
             _builder.AppendNode("node" + node.Id, "Function Call", "white", "orange");
-            CreateLink(parentId, node.Id);
-            node.AcceptChildren(this, node.Id);
+            CreateLink(parent.Id, node.Id);
+            node.AcceptChildren(this, node);
         }
 
-        public void Visit(FunctionNode node, int parentId)
+        public void Visit(FunctionNode node, PlatypusNode parent)
         {
             _builder.AppendNode("node" + node.Id, "Function", "white", "mediumseagreen");
-            CreateLink(parentId, node.Id);
-            node.AcceptChildren(this, node.Id);
+            CreateLink(parent.Id, node.Id);
+            node.AcceptChildren(this, node);
         }
 
-        public void Visit(NewNode node, int parentId)
+        public void Visit(NewNode node, PlatypusNode parent)
         {
             _builder.AppendNode("node" + node.Id, "New");
-            CreateLink(parentId, node.Id);
-            node.AcceptChildren(this, node.Id);
+            CreateLink(parent.Id, node.Id);
+            node.AcceptChildren(this, node);
         }
 
-        public void Visit(ParameterListNode node, int parentId)
+        public void Visit(ParameterListNode node, PlatypusNode parent)
         {
             _builder.AppendNode("node" + node.Id, "Parameters");
-            CreateLink(parentId, node.Id);
-            node.AcceptChildren(this, node.Id);
+            CreateLink(parent.Id, node.Id);
+            node.AcceptChildren(this, node);
         }
 
-        public void Visit(ThisNode node, int parentId)
+        public void Visit(ThisNode node, PlatypusNode parent)
         {
             _builder.AppendNode("node" + node.Id, "This");
-            CreateLink(parentId, node.Id);
-            node.AcceptChildren(this, node.Id);
+            CreateLink(parent.Id, node.Id);
+            node.AcceptChildren(this, node);
         }
 
-        public void Visit(UnaryOperationNode node, int parentId)
+        public void Visit(UnaryOperationNode node, PlatypusNode parent)
         {
             _builder.AppendNode("node" + node.Id, "Unary Operation : " + node.OperationType, "white", "red3");
-            CreateLink(parentId, node.Id);
-            node.AcceptChildren(this, node.Id);
+            CreateLink(parent.Id, node.Id);
+            node.AcceptChildren(this, node);
         }
 
-        public void Visit(VariableDeclarationNode node, int parentId)
+        public void Visit(VariableDeclarationNode node, PlatypusNode parent)
         {
             _builder.AppendNode("node" + node.Id, "Variable Declaration", "white", "limegreen");
-            CreateLink(parentId, node.Id);
-            node.AcceptChildren(this, node.Id);
+            CreateLink(parent.Id, node.Id);
+            node.AcceptChildren(this, node);
         }
 
-        public void Visit(StringNode node, int parentId)
+        public void Visit(StringNode node, PlatypusNode parent)
         {
             _builder.AppendNode("node" + node.Id, "String : " + node.Value, "white", "orange");
-            CreateLink(parentId, node.Id);
-            node.AcceptChildren(this, node.Id);
+            CreateLink(parent.Id, node.Id);
+            node.AcceptChildren(this, node);
         }
 
         private void CreateLink(int first, int second, string label = "")

@@ -32,16 +32,16 @@ namespace CPlatypus.Parser.Nodes
             Children.Add(attribute);
         }
 
-        public override void Accept(IPlatypusVisitor visitor, int parentId)
+        public override void Accept(IPlatypusVisitor visitor, PlatypusNode parent)
         {
-            visitor.Visit(this, parentId);
+            visitor.Visit(this, parent);
         }
 
-        public override void AcceptChildren(IPlatypusVisitor visitor, int parentId)
+        public override void AcceptChildren(IPlatypusVisitor visitor, PlatypusNode parent)
         {
             foreach (var child in Children)
             {
-                child.Accept(visitor, parentId);
+                child.Accept(visitor, parent);
             }
         }
     }
