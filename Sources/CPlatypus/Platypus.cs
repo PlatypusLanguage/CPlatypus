@@ -16,6 +16,7 @@
  *     along with CPlatypus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+using System;
 using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -24,6 +25,7 @@ using CPlatypus.Framework;
 using CPlatypus.Graphviz;
 using CPlatypus.Lexer;
 using CPlatypus.Parser;
+using CPlatypus.Semantic;
 
 namespace CPlatypus
 {
@@ -66,13 +68,18 @@ namespace CPlatypus
 
                 var parser = new PlatypusParser(lexer);
 
-                var node = parser.Parse();
+                var ast = parser.Parse();
 
                 if (!string.IsNullOrWhiteSpace(parserConfig.TreeDotFile))
                 {
-                    new DotCompiler(node).Compile(parserConfig.TreeDotFile);
+                    new DotCompiler(ast).Compile(parserConfig.TreeDotFile);
                 }
 
+                var semanticAnalyzer = new SemanticAnalyzer(ast);
+
+                var symbolTable = semanticAnalyzer.Analyze();
+
+                Console.WriteLine(symbolTable);
             }
         }
 

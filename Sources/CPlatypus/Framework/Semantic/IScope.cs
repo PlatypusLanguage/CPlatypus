@@ -16,23 +16,19 @@
  *     along with CPlatypus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-using System.Collections.Generic;
-using CPlatypus.Framework.Semantic;
-
-namespace CPlatypus.Framework.Parser
+namespace CPlatypus.Framework.Semantic
 {
-    public abstract class Node<T> where T : Node<T>
+    public interface IScope
     {
-        public List<T> Children { get; }
+        void Insert(Symbol symbol);
 
-        public SourceLocation SourceLocation { get; }
+        Symbol Lookup(string name);
+        T Lookup<T>(string name) where T : Symbol;
 
-        public IScope Scope { get; set; }
+        Symbol LookupLocal(string name);
+        T LookupLocal<T>(string name) where T : Symbol;
 
-        public Node(SourceLocation sourceLocation)
-        {
-            Children = new List<T>();
-            SourceLocation = sourceLocation;
-        }
+        string GetName();
+        IScope GetParentScope();
     }
 }

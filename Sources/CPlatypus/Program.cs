@@ -20,6 +20,7 @@ using System;
 using CPlatypus.Lexer;
 using Fclp;
 using System.IO;
+using CPlatypus.Framework.Semantic;
 using CPlatypus.Parser;
 
 namespace CPlatypus
@@ -35,6 +36,18 @@ namespace CPlatypus
     {
         private static void Main(string[] args)
         {
+            /*var symbolTable = new SymbolTable();
+
+            symbolTable.CurrentScope.Insert(new Symbol("hello"));
+
+            symbolTable.PushScope();
+
+            symbolTable.CurrentScope.Insert(new Symbol("world"));
+
+            symbolTable.PopScope();
+
+            Console.WriteLine(symbolTable);*/
+
             var commandLineParser = new FluentCommandLineParser<ApplicationArguments>();
 
             var arguments = new ApplicationArguments();

@@ -16,35 +16,25 @@
  *     along with CPlatypus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-using System;
-using CPlatypus.Framework;
-
-namespace CPlatypus.Parser.Nodes
+namespace CPlatypus.Framework.Semantic
 {
-    public class WhileNode : PlatypusNode
+    public class SymbolTable
     {
-        public PlatypusNode Condition => Children[0];
+        public IScope CurrentScope { get; private set; }
 
-        public CodeNode Body => Children[1] as CodeNode;
-
-        public WhileNode(int id, PlatypusNode condition, CodeNode body, SourceLocation sourceLocation) : base(id,
-            sourceLocation)
+        public SymbolTable()
         {
-            Children.Add(condition);
-            Children.Add(body);
+            CurrentScope = new GlobalScope();
         }
 
-        public override void Accept(IPlatypusVisitor visitor, PlatypusNode parent)
+        public void PushScope(IScope scope)
         {
-            visitor.Visit(this, parent);
+            CurrentScope = scope;
         }
 
-        public override void AcceptChildren(IPlatypusVisitor visitor, PlatypusNode parent)
+        public void PopScope()
         {
-            foreach (var child in Children)
-            {
-                child?.Accept(visitor, parent);
-            }
+            CurrentScope = CurrentScope.GetParentScope();
         }
     }
 }
