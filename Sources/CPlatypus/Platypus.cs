@@ -21,6 +21,7 @@ using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
 using CPlatypus.Core;
+using CPlatypus.Execution;
 using CPlatypus.Framework;
 using CPlatypus.Graphviz;
 using CPlatypus.Lexer;
@@ -79,7 +80,11 @@ namespace CPlatypus
 
                 var symbolTable = semanticAnalyzer.Analyze();
 
-                Console.WriteLine(symbolTable);
+                var executor = new PlatypusExecutor(ast);
+
+                executor.Execute();
+
+                Console.WriteLine("Finished ! (Working probably)");
             }
         }
 

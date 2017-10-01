@@ -16,30 +16,13 @@
  *     along with CPlatypus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-using CPlatypus.Framework;
+using CPlatypus.Execution.Object;
+using CPlatypus.Parser;
 
-namespace CPlatypus.Parser.Nodes
+namespace CPlatypus.Execution
 {
-    public class ReturnNode : PlatypusNode
+    public abstract class NodeExecutor
     {
-        public PlatypusNode Expression => Children[0];
-
-        public ReturnNode(int id, PlatypusNode expression, SourceLocation sourceLocation) : base(id, sourceLocation)
-        {
-            Children.Add(expression);
-        }
-
-        public override void Accept(IPlatypusVisitor visitor, PlatypusNode parent)
-        {
-            visitor.Visit(this, parent);
-        }
-
-        public override void AcceptChildren(IPlatypusVisitor visitor, PlatypusNode parent)
-        {
-            foreach (var child in Children)
-            {
-                child.Accept(visitor, parent);
-            }
-        }
+        public abstract PlatypusObject Execute(PlatypusNode node, ExecutionContext context);
     }
 }
