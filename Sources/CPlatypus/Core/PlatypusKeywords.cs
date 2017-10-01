@@ -36,6 +36,7 @@ namespace CPlatypus.Core
         [KeywordIndex("is", PlatypusTokenType.IsOperator)] Is,
         [KeywordIndex("or", PlatypusTokenType.OrOperator)] Or,
         [KeywordIndex("and", PlatypusTokenType.AndOperator)] And,
+        [KeywordIndex("return", PlatypusTokenType.ReturnKeyword)] Return,
         [KeywordIndex("if", PlatypusTokenType.IfKeyword)] If,
         [KeywordIndex("else", PlatypusTokenType.ElseKeyword)] Else,
         [KeywordIndex("while", PlatypusTokenType.WhileKeyword)] While,

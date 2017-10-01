@@ -173,6 +173,12 @@ namespace CPlatypus.Semantic
             node.AcceptChildren(this, node);
         }
 
+        public void Visit(ReturnNode node, PlatypusNode parent)
+        {
+            node.Scope = _symbolTable.CurrentScope;
+            node.AcceptChildren(this, node);
+        }
+
         public void Visit(ThisNode node, PlatypusNode parent)
         {
             node.Scope = _symbolTable.CurrentScope;

@@ -197,6 +197,13 @@ namespace CPlatypus.Graphviz
             node.AcceptChildren(this, node);
         }
 
+        public void Visit(ReturnNode node, PlatypusNode parent)
+        {
+            _builder.AppendNode("node" + node.Id, "Return");
+            CreateLink(parent, node);
+            node.AcceptChildren(this, node);
+        }
+
         public void Visit(ThisNode node, PlatypusNode parent)
         {
             _builder.AppendNode("node" + node.Id, "This");

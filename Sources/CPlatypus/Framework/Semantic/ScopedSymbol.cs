@@ -54,6 +54,18 @@ namespace CPlatypus.Framework.Semantic
             return Lookup(name) as T;
         }
 
+        public T LookupType<T>(string name) where T : Symbol
+        {
+            var result = _symbols.ContainsKey(name) ? _symbols[name] : null;
+
+            if (!(result is T) && _parentScope != null)
+            {
+                return _parentScope.LookupType<T>(name);
+            }
+
+            return result as T;
+        }
+
         public Symbol LookupLocal(string name)
         {
             return _symbols.ContainsKey(name) ? _symbols[name] : null;

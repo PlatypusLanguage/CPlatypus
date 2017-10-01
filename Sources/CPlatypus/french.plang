@@ -12,6 +12,7 @@ false:faux
 is:est
 or:ou
 and:et
+return:retourner
 if:si
 else:sinon
 while:tantque

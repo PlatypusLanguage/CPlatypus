@@ -24,6 +24,7 @@ namespace CPlatypus.Framework.Semantic
 
         Symbol Lookup(string name);
         T Lookup<T>(string name) where T : Symbol;
+        T LookupType<T>(string name) where T : Symbol;
 
         Symbol LookupLocal(string name);
         T LookupLocal<T>(string name) where T : Symbol;

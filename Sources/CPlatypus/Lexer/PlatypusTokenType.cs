@@ -34,6 +34,7 @@ namespace CPlatypus.Lexer
         [TokenGroup(UserDefined)] NewKeyword,
         [TokenGroup(UserDefined)] ImportKeyword,
 
+        [TokenGroup(UserDefined)] ReturnKeyword,
         [TokenGroup(UserDefined)] IfKeyword,
         [TokenGroup(UserDefined)] ElseKeyword,
         [TokenGroup(UserDefined)] WhileKeyword,
