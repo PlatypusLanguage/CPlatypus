@@ -24,19 +24,16 @@ namespace CPlatypus.Execution
 {
     public class PlatypusExecutor : IPlatypusVisitor
     {
-        private PlatypusNode _ast;
-
         private ExecutionContext _ctx;
 
-        public PlatypusExecutor(PlatypusNode ast)
+        public PlatypusExecutor()
         {
-            _ast = ast;
             _ctx = new ExecutionContext();
         }
 
-        public void Execute()
+        public void Execute(PlatypusNode ast)
         {
-            _ast.Accept(this, null);
+            ast.Accept(this, null);
         }
 
         public void Visit(ArgumentListNode node, PlatypusNode parent)
@@ -53,7 +50,7 @@ namespace CPlatypus.Execution
 
         public void Visit(BinaryOperationNode node, PlatypusNode parent)
         {
-            BinaryOperationExecutor.Instance.Execute(node, _ctx);
+            BinaryOperationExecutor.Instance.Execute(node, _ctx.CurrentContext, _ctx.GlobalContext);
         }
 
         public void Visit(BooleanNode node, PlatypusNode parent)
@@ -99,7 +96,7 @@ namespace CPlatypus.Execution
 
         public void Visit(FunctionCallNode node, PlatypusNode parent)
         {
-            ExpressionExecutor.Instance.Execute(node, _ctx);
+            ExpressionExecutor.Instance.Execute(node, _ctx.CurrentContext, _ctx.GlobalContext);
         }
 
         public void Visit(FunctionNode node, PlatypusNode parent)
@@ -128,7 +125,7 @@ namespace CPlatypus.Execution
 
         public void Visit(VariableDeclarationNode node, PlatypusNode parent)
         {
-            VariableDeclarationExecutor.Instance.Execute(node, _ctx);
+            VariableDeclarationExecutor.Instance.Execute(node, _ctx.CurrentContext, _ctx.GlobalContext);
         }
 
         public void Visit(StringNode node, PlatypusNode parent)

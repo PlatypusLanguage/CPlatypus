@@ -23,7 +23,7 @@ namespace CPlatypus.Parser.Nodes
 {
     public class ParameterListNode : PlatypusNode
     {
-        public List<IdentifierNode> Arguments => Children.ConvertAll(a => a as IdentifierNode);
+        public List<IdentifierNode> Parameters => Children.ConvertAll(a => a as IdentifierNode);
 
         public ParameterListNode(int id, SourceLocation sourceLocation) : base(id, sourceLocation)
         {

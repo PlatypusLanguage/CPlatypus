@@ -22,7 +22,7 @@ namespace CPlatypus.Execution.Object
     {
         public string Value { get; }
 
-        public PlatypusString(string value, ExecutionContext context) : base(context)
+        public PlatypusString(string value, Context enclosingContext) : base(enclosingContext)
         {
             Value = value;
         }

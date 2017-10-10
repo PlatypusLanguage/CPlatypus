@@ -39,10 +39,11 @@ namespace CPlatypus.Execution
             set => _value = value;
         }
 
-        public PlatypusVariable(string name, ExecutionContext context, PlatypusObject value = null) : base(context)
+        public PlatypusVariable(string name, Context enclosingContext, PlatypusObject value = null) : base(
+            enclosingContext)
         {
             Name = name;
-            _value = value ?? new PlatypusNull(null);
+            _value = value ?? PlatypusNull.Instance;
         }
     }
 }

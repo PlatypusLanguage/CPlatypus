@@ -165,9 +165,9 @@ namespace CPlatypus.Semantic
         public void Visit(ParameterListNode node, PlatypusNode parent)
         {
             node.Scope = _symbolTable.CurrentScope;
-            foreach (var argument in node.Arguments)
+            foreach (var parameter in node.Parameters)
             {
-                _symbolTable.CurrentScope.Insert(new PlatypusParameterSymbol(node, argument,
+                _symbolTable.CurrentScope.Insert(new PlatypusParameterSymbol(node, parameter,
                     _symbolTable.CurrentScope));
             }
             node.AcceptChildren(this, node);

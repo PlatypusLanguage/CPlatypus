@@ -20,13 +20,13 @@ namespace CPlatypus.Execution.Object
 {
     public abstract class PlatypusObject
     {
-        public Context Context { get; }
+        public Context ObjectContext { get; }
 
-        public PlatypusObject(ExecutionContext context)
+        public PlatypusObject(Context enclosingContext)
         {
-            if (context != null)
+            if (enclosingContext != null)
             {
-                Context = new Context("Object Context", context.GlobalContext);
+                ObjectContext = new Context("Object Context", enclosingContext);
             }
         }
     }

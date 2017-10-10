@@ -19,18 +19,47 @@
 using CPlatypus.Execution.Object;
 using CPlatypus.Parser;
 using CPlatypus.Parser.Nodes;
+using CPlatypus.Semantic;
 
 namespace CPlatypus.Execution.Executors
 {
     public class FunctionExecutor : NodeExecutor
     {
-        public override PlatypusObject Execute(PlatypusNode node, ExecutionContext context)
+        public static FunctionExecutor Instance { get; } = new FunctionExecutor();
+
+        private FunctionExecutor()
         {
-            if (node is FunctionNode)
+        }
+
+        public override PlatypusObject Execute(PlatypusNode node, Context context, Context globalContext)
+        {
+            if (node is FunctionCallNode functionCallNode)
             {
-                
+                var executionContext = ExpressionExecutor.Instance.ResolveContext(functionCallNode.Target, context);
+                var symbol = ExpressionExecutor.Instance.ResolveSymbol(functionCallNode.Target);
+                if (symbol is PlatypusFunctionSymbol functionSymbol)
+                {
+                    var ctx = new Context("Function Context", executionContext);
+                    for (var i = 0; i < functionSymbol.Node.ParameterList.Parameters.Count; i++)
+                    {
+                        var argumentValue = ExpressionExecutor.Instance.Execute(
+                            functionCallNode.ArgumentList.Arguments[i], context,
+                            globalContext);
+
+                        var argumentVariable = new PlatypusVariable(
+                            functionSymbol.Node.ParameterList.Parameters[i].Value,
+                            ctx, argumentValue);
+
+                        ctx.Add(argumentVariable);
+                    }
+                    return BodyExecutor.Instance.Execute(functionSymbol.Node.Body, ctx, globalContext);
+                }
+                else
+                {
+                    // TODO Throw error
+                }
             }
-            return new PlatypusNull(null); // Should never happen
+            return PlatypusNull.Instance; // Should never happen
         }
     }
 }

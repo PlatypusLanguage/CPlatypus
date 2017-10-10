@@ -16,12 +16,10 @@
  *     along with CPlatypus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-using System;
 using CPlatypus.Execution.Object;
 using CPlatypus.Framework.Semantic;
 using CPlatypus.Parser;
 using CPlatypus.Parser.Nodes;
-using CPlatypus.Semantic;
 
 namespace CPlatypus.Execution.Executors
 {
@@ -33,7 +31,7 @@ namespace CPlatypus.Execution.Executors
         {
         }
 
-        public override PlatypusObject Execute(PlatypusNode node, ExecutionContext context)
+        public override PlatypusObject Execute(PlatypusNode node, Context context, Context globalContext)
         {
             if (node is IdentifierNode identifierNode)
             {
@@ -41,38 +39,45 @@ namespace CPlatypus.Execution.Executors
             }
             if (node is StringNode stringNode)
             {
-                return new PlatypusString(stringNode.Value, context);
+                return new PlatypusString(stringNode.Value, globalContext);
             }
-            if (node is FunctionCallNode functionCallNode)
+            if (node is BooleanNode booleanNode)
             {
-                var symbol = ResolveSymbol(functionCallNode.Target);
-                var functionContext = ResolveContext(functionCallNode.Target, context);
-                if (symbol is PlatypusFunctionSymbol functionSymbol)
-                {
-                    Console.WriteLine(functionContext);
-                }
-                else
-                {
-                    // TODO Throw error
-                }
+                return new PlatypusBoolean(booleanNode.Value, globalContext);
             }
-            return new PlatypusNull(null);
+            if (node is IntegerNode integerNode)
+            {
+                return new PlatypusInteger(integerNode.Value, globalContext);
+            }
+            if (node is FloatNode floatNode)
+            {
+                return new PlatypusFloat(floatNode.Value, globalContext);
+            }
+            if (node is CharNode charNode)
+            {
+                return new PlatypusChar(charNode.Value, globalContext);
+            }
+            if (node is FunctionCallNode)
+            {
+                return FunctionExecutor.Instance.Execute(node, context, globalContext);
+            }
+            return PlatypusNull.Instance;
         }
 
-        private Context ResolveContext(PlatypusNode node, ExecutionContext context)
+        public Context ResolveContext(PlatypusNode node, Context context)
         {
             if (node is IdentifierNode)
             {
-                return context.CurrentContext;
+                return context;
             }
             return ResolveContextInternal(node, context);
         }
 
-        private Context ResolveContextInternal(PlatypusNode node, ExecutionContext context)
+        private Context ResolveContextInternal(PlatypusNode node, Context context)
         {
             if (node is IdentifierNode identifierNode)
             {
-                return context.Get(identifierNode.Value).Context;
+                return context.Get(identifierNode.Value).ObjectContext;
             }
             if (node is AttributeAccessNode attributeAccessNode)
             {
@@ -81,7 +86,7 @@ namespace CPlatypus.Execution.Executors
             return null; //Should never happen
         }
 
-        private Symbol ResolveSymbol(PlatypusNode node)
+        public Symbol ResolveSymbol(PlatypusNode node)
         {
             if (node is IdentifierNode identifierNode)
             {

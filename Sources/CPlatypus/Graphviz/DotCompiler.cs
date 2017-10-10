@@ -17,233 +17,318 @@
  */
 
 using System.IO;
-using System.Text;
 using CPlatypus.Parser;
 using CPlatypus.Parser.Nodes;
+using DotNetGraph;
 
 namespace CPlatypus.Graphviz
 {
-    internal static class DotCompilerExtensions
-    {
-        public static void AppendNode(this StringBuilder builder, string nodeName, string label,
-            string fontColor = "black", string bgColor = "white")
-        {
-            builder.Append(nodeName + "[style=filled label=\"" + label + "\"fillcolor=\"" + bgColor + "\"fontcolor=\"" +
-                           fontColor + "\"];");
-        }
-
-        public static void AppendNodeLink(this StringBuilder builder, string firstNodeName, string secondNodeName,
-            string label = "")
-        {
-            if (string.IsNullOrEmpty(label))
-            {
-                builder.Append(firstNodeName + "->" + secondNodeName + ";");
-            }
-            else
-            {
-                builder.Append(firstNodeName + "->" + secondNodeName + "[label=\"" + label + "\"];");
-            }
-        }
-    }
-
     public class DotCompiler : IPlatypusVisitor
     {
-        private StringBuilder _builder;
-
         private readonly PlatypusNode _tree;
+
+        private readonly DotGraph _graph;
 
         public DotCompiler(PlatypusNode tree)
         {
             _tree = tree;
+            _graph = new DotGraph("g", true);
         }
 
         public void Compile(string fileName)
         {
-            _builder = new StringBuilder();
-            // header
-            _builder.Append("digraph g{\nnode[shape=rect,height=0];\n");
-
             _tree.Accept(this, null);
 
-            // footer
-            _builder.Append("}");
-
-            File.WriteAllText(fileName, _builder.ToString());
+            File.WriteAllText(fileName, _graph.Compile(false));
         }
 
         public void Visit(ArgumentListNode node, PlatypusNode parent)
         {
-            _builder.AppendNode("node" + node.Id, "Argument List");
+            _graph.Add(new DotNode("node" + node.Id)
+            {
+                Label = "Argument List"
+            });
             CreateLink(parent, node);
             node.AcceptChildren(this, node);
         }
 
         public void Visit(ArrayAccessNode node, PlatypusNode parent)
         {
-            _builder.AppendNode("node" + node.Id, "Array Access");
+            _graph.Add(new DotNode("node" + node.Id)
+            {
+                Label = "Array Access"
+            });
             CreateLink(parent, node);
             node.AcceptChildren(this, node);
         }
 
         public void Visit(AttributeAccessNode node, PlatypusNode parent)
         {
-            _builder.AppendNode("node" + node.Id, "Attribute Access");
+            _graph.Add(new DotNode("node" + node.Id)
+            {
+                Label = "Attribute Access"
+            });
             CreateLink(parent, node);
             node.AcceptChildren(this, node);
         }
 
         public void Visit(BinaryOperationNode node, PlatypusNode parent)
         {
-            _builder.AppendNode("node" + node.Id, "Binary Operation : " + node.OperationType, "white", "red3");
+            _graph.Add(new DotNode("node" + node.Id)
+            {
+                Label = "Binary Operation : " + node.OperationType,
+                FontColor = DotColor.White,
+                FillColor = DotColor.Red3,
+                Style = DotNodeStyle.Filled
+            });
             CreateLink(parent, node);
             node.AcceptChildren(this, node);
         }
 
         public void Visit(BooleanNode node, PlatypusNode parent)
         {
-            _builder.AppendNode("node" + node.Id, "Boolean : " + node.Value, "white", "orange");
+            _graph.Add(new DotNode("node" + node.Id)
+            {
+                Label = "Boolean : " + node.Value,
+                FontColor = DotColor.White,
+                FillColor = DotColor.Orange,
+                Style = DotNodeStyle.Filled
+            });
             CreateLink(parent, node);
             node.AcceptChildren(this, node);
         }
 
         public void Visit(CharNode node, PlatypusNode parent)
         {
-            _builder.AppendNode("node" + node.Id, "Char : " + node.Value, "white", "orange");
+            _graph.Add(new DotNode("node" + node.Id)
+            {
+                Label = "Char : " + node.Value,
+                FontColor = DotColor.White,
+                FillColor = DotColor.Orange,
+                Style = DotNodeStyle.Filled
+            });
             CreateLink(parent, node);
             node.AcceptChildren(this, node);
         }
 
         public void Visit(ClassNode node, PlatypusNode parent)
         {
-            _builder.AppendNode("node" + node.Id, "Class", "white", "cyan3");
+            _graph.Add(new DotNode("node" + node.Id)
+            {
+                Label = "Class : " + node.Name,
+                FontColor = DotColor.White,
+                FillColor = DotColor.Cyan3,
+                Style = DotNodeStyle.Filled
+            });
             CreateLink(parent, node);
             node.AcceptChildren(this, node);
         }
 
         public void Visit(CodeNode node, PlatypusNode parent)
         {
-            _builder.AppendNode("node" + node.Id, "Code (Body)", "white", "cornflowerblue");
+            _graph.Add(new DotNode("node" + node.Id)
+            {
+                Label = "Code (Body)",
+                FontColor = DotColor.White,
+                FillColor = DotColor.Cornflowerblue,
+                Style = DotNodeStyle.Filled
+            });
             CreateLink(parent, node);
             node.AcceptChildren(this, node);
         }
 
         public void Visit(ConstructorNode node, PlatypusNode parent)
         {
-            _builder.AppendNode("node" + node.Id, "Constructor", "white", "cyan3");
+            _graph.Add(new DotNode("node" + node.Id)
+            {
+                Label = "Constructor",
+                FontColor = DotColor.White,
+                FillColor = DotColor.Cyan3,
+                Style = DotNodeStyle.Filled
+            });
             CreateLink(parent, node);
             node.AcceptChildren(this, node);
         }
 
         public void Visit(IdentifierNode node, PlatypusNode parent)
         {
-            _builder.AppendNode("node" + node.Id, "Identifier : " + node.Value, "white", "steelblue");
+            _graph.Add(new DotNode("node" + node.Id)
+            {
+                Label = "Identifier : " + node.Value,
+                FontColor = DotColor.White,
+                FillColor = DotColor.Steelblue,
+                Style = DotNodeStyle.Filled
+            });
             CreateLink(parent, node);
             node.AcceptChildren(this, node);
         }
 
         public void Visit(IfNode node, PlatypusNode parent)
         {
-            _builder.AppendNode("node" + node.Id, "If");
+            _graph.Add(new DotNode("node" + node.Id)
+            {
+                Label = "If",
+            });
             CreateLink(parent, node);
             node.AcceptChildren(this, node);
         }
 
         public void Visit(IntegerNode node, PlatypusNode parent)
         {
-            _builder.AppendNode("node" + node.Id, "Integer : " + node.Value, "white", "orange");
+            _graph.Add(new DotNode("node" + node.Id)
+            {
+                Label = "Integer : " + node.Value,
+                FontColor = DotColor.White,
+                FillColor = DotColor.Orange,
+                Style = DotNodeStyle.Filled
+            });
             CreateLink(parent, node);
             node.AcceptChildren(this, node);
         }
 
         public void Visit(FloatNode node, PlatypusNode parent)
         {
-            _builder.AppendNode("node" + node.Id, "Float : " + node.Value, "white", "orange");
+            _graph.Add(new DotNode("node" + node.Id)
+            {
+                Label = "Float : " + node.Value,
+                FontColor = DotColor.White,
+                FillColor = DotColor.Orange,
+                Style = DotNodeStyle.Filled
+            });
             CreateLink(parent, node);
             node.AcceptChildren(this, node);
         }
 
         public void Visit(ForNode node, PlatypusNode parent)
         {
-            _builder.AppendNode("node" + node.Id, "For");
+            _graph.Add(new DotNode("node" + node.Id)
+            {
+                Label = "For"
+            });
             CreateLink(parent, node);
             node.AcceptChildren(this, node);
         }
 
         public void Visit(FunctionCallNode node, PlatypusNode parent)
         {
-            _builder.AppendNode("node" + node.Id, "Function Call", "white", "orange");
+            _graph.Add(new DotNode("node" + node.Id)
+            {
+                Label = "Function Call",
+                FontColor = DotColor.White,
+                FillColor = DotColor.Orange,
+                Style = DotNodeStyle.Filled
+            });
             CreateLink(parent, node);
             node.AcceptChildren(this, node);
         }
 
         public void Visit(FunctionNode node, PlatypusNode parent)
         {
-            _builder.AppendNode("node" + node.Id, "Function", "white", "mediumseagreen");
+            _graph.Add(new DotNode("node" + node.Id)
+            {
+                Label = "Function",
+                FontColor = DotColor.White,
+                FillColor = DotColor.Mediumseagreen,
+                Style = DotNodeStyle.Filled
+            });
             CreateLink(parent, node);
             node.AcceptChildren(this, node);
         }
 
         public void Visit(NewNode node, PlatypusNode parent)
         {
-            _builder.AppendNode("node" + node.Id, "New");
+            _graph.Add(new DotNode("node" + node.Id)
+            {
+                Label = "New"
+            });
             CreateLink(parent, node);
             node.AcceptChildren(this, node);
         }
 
         public void Visit(ParameterListNode node, PlatypusNode parent)
         {
-            _builder.AppendNode("node" + node.Id, "Parameters");
+            _graph.Add(new DotNode("node" + node.Id)
+            {
+                Label = "Parameters"
+            });
             CreateLink(parent, node);
             node.AcceptChildren(this, node);
         }
 
         public void Visit(ReturnNode node, PlatypusNode parent)
         {
-            _builder.AppendNode("node" + node.Id, "Return");
+            _graph.Add(new DotNode("node" + node.Id)
+            {
+                Label = "Return"
+            });
             CreateLink(parent, node);
             node.AcceptChildren(this, node);
         }
 
         public void Visit(ThisNode node, PlatypusNode parent)
         {
-            _builder.AppendNode("node" + node.Id, "This");
+            _graph.Add(new DotNode("node" + node.Id)
+            {
+                Label = "This"
+            });
             CreateLink(parent, node);
             node.AcceptChildren(this, node);
         }
 
         public void Visit(UnaryOperationNode node, PlatypusNode parent)
         {
-            _builder.AppendNode("node" + node.Id, "Unary Operation : " + node.OperationType, "white", "red3");
+            _graph.Add(new DotNode("node" + node.Id)
+            {
+                Label = "Unary Operation : " + node.OperationType,
+                FontColor = DotColor.White,
+                FillColor = DotColor.Red3,
+                Style = DotNodeStyle.Filled
+            });
             CreateLink(parent, node);
             node.AcceptChildren(this, node);
         }
 
         public void Visit(VariableDeclarationNode node, PlatypusNode parent)
         {
-            _builder.AppendNode("node" + node.Id, "Variable Declaration", "white", "limegreen");
+            _graph.Add(new DotNode("node" + node.Id)
+            {
+                Label = "Variable Declaration",
+                FontColor = DotColor.White,
+                FillColor = DotColor.Limegreen,
+                Style = DotNodeStyle.Filled
+            });
             CreateLink(parent, node);
             node.AcceptChildren(this, node);
         }
 
         public void Visit(StringNode node, PlatypusNode parent)
         {
-            _builder.AppendNode("node" + node.Id, "String : " + node.Value, "white", "orange");
+            _graph.Add(new DotNode("node" + node.Id)
+            {
+                Label = "String : " + node.Value,
+                FontColor = DotColor.White,
+                FillColor = DotColor.Orange,
+                Style = DotNodeStyle.Filled
+            });
             CreateLink(parent, node);
             node.AcceptChildren(this, node);
         }
 
         public void Visit(WhileNode node, PlatypusNode parent)
         {
-            _builder.AppendNode("node" + node.Id, "While");
+            _graph.Add(new DotNode("node" + node.Id)
+            {
+                Label = "While"
+            });
             CreateLink(parent, node);
             node.AcceptChildren(this, node);
         }
 
-        private void CreateLink(PlatypusNode first, PlatypusNode second, string label = "")
+        private void CreateLink(PlatypusNode first, PlatypusNode second)
         {
             if (first != null && second != null && first != second)
             {
-                _builder.AppendNodeLink("node" + first.Id, "node" + second.Id, label);
+                _graph.Add(new DotArrow("node" + first.Id, "node" + second.Id));
             }
         }
     }

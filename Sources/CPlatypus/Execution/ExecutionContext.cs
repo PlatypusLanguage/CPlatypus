@@ -30,9 +30,9 @@ namespace CPlatypus.Execution
             CurrentContext = GlobalContext;
         }
 
-        public void Add(string name, PlatypusVariable variable)
+        public void Add(PlatypusVariable variable)
         {
-            CurrentContext.Add(name, variable);
+            CurrentContext.Add(variable);
         }
 
         public PlatypusVariable Get(string name)

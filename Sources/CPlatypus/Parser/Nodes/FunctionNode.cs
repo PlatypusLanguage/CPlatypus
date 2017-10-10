@@ -24,7 +24,7 @@ namespace CPlatypus.Parser.Nodes
     {
         public IdentifierNode Name => Children[0] as IdentifierNode;
 
-        public ParameterListNode Parameters => Children[1] as ParameterListNode;
+        public ParameterListNode ParameterList => Children[1] as ParameterListNode;
 
         public CodeNode Body => Children[2] as CodeNode;
 

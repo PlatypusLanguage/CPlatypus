@@ -35,9 +35,9 @@ namespace CPlatypus.Execution
             _variables = new Dictionary<string, PlatypusVariable>();
         }
 
-        public void Add(string name, PlatypusVariable variable)
+        public void Add(PlatypusVariable variable)
         {
-            _variables[name] = variable;
+            _variables[variable.Name] = variable;
         }
 
         public PlatypusVariable Get(string name)

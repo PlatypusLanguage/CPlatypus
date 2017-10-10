@@ -31,14 +31,14 @@ namespace CPlatypus.Execution.Executors
         {
         }
 
-        public override PlatypusObject Execute(PlatypusNode node, ExecutionContext context)
+        public override PlatypusObject Execute(PlatypusNode node, Context context, Context globalContext)
         {
             if (node is BinaryOperationNode binaryOperationNode)
             {
                 switch (binaryOperationNode.OperationType)
                 {
                     case BinaryOperation.Assignment:
-                        return ExecuteAssignment(binaryOperationNode, context);
+                        return ExecuteAssignment(binaryOperationNode, context, globalContext);
                     case BinaryOperation.Addition:
                         break;
                     case BinaryOperation.Subtraction:
@@ -69,17 +69,17 @@ namespace CPlatypus.Execution.Executors
                         throw new ArgumentOutOfRangeException();
                 }
             }
-            return new PlatypusNull(null); // Should never happen
+            return PlatypusNull.Instance; // Should never happen
         }
 
-        private PlatypusObject ExecuteAssignment(BinaryOperationNode node, ExecutionContext context)
+        private PlatypusObject ExecuteAssignment(BinaryOperationNode node, Context context, Context globalContext)
         {
-            var left = ExpressionExecutor.Instance.Execute(node.Left, context);
+            var left = ExpressionExecutor.Instance.Execute(node.Left, context, globalContext);
             if (left is PlatypusVariable variable)
             {
-                variable.Value = ExpressionExecutor.Instance.Execute(node.Right, context);
+                variable.Value = ExpressionExecutor.Instance.Execute(node.Right, context, globalContext);
             }
-            return new PlatypusNull(null);
+            return PlatypusNull.Instance;
         }
     }
 }

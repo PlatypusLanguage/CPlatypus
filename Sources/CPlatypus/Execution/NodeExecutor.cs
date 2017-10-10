@@ -23,6 +23,6 @@ namespace CPlatypus.Execution
 {
     public abstract class NodeExecutor
     {
-        public abstract PlatypusObject Execute(PlatypusNode node, ExecutionContext context);
+        public abstract PlatypusObject Execute(PlatypusNode node, Context context, Context globalContext);
     }
 }

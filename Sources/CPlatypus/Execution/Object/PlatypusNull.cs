@@ -20,7 +20,9 @@ namespace CPlatypus.Execution.Object
 {
     public class PlatypusNull : PlatypusObject
     {
-        public PlatypusNull(ExecutionContext context) : base(context)
+        public static PlatypusNull Instance { get; } = new PlatypusNull(null);
+
+        private PlatypusNull(Context enclosingContext) : base(enclosingContext)
         {
         }
     }

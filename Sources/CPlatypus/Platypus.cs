@@ -80,9 +80,9 @@ namespace CPlatypus
 
                 var symbolTable = semanticAnalyzer.Analyze();
 
-                var executor = new PlatypusExecutor(ast);
+                var executor = new PlatypusExecutor();
 
-                executor.Execute();
+                executor.Execute(ast);
 
                 Console.WriteLine("Finished ! (Working probably)");
             }
