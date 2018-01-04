@@ -50,7 +50,7 @@ namespace CPlatypus.Execution
 
         public void Visit(BinaryOperationNode node, PlatypusNode parent)
         {
-            BinaryOperationExecutor.Instance.Execute(node, _ctx.CurrentContext, _ctx.GlobalContext);
+            BinaryOperationExecutor.Instance.Execute(node, _ctx.CurrentContext);
         }
 
         public void Visit(BooleanNode node, PlatypusNode parent)
@@ -96,7 +96,7 @@ namespace CPlatypus.Execution
 
         public void Visit(FunctionCallNode node, PlatypusNode parent)
         {
-            ExpressionExecutor.Instance.Execute(node, _ctx.CurrentContext, _ctx.GlobalContext);
+            ExpressionExecutor.Instance.Execute(node, _ctx.CurrentContext);
         }
 
         public void Visit(FunctionNode node, PlatypusNode parent)
@@ -125,7 +125,7 @@ namespace CPlatypus.Execution
 
         public void Visit(VariableDeclarationNode node, PlatypusNode parent)
         {
-            VariableDeclarationExecutor.Instance.Execute(node, _ctx.CurrentContext, _ctx.GlobalContext);
+            VariableDeclarationExecutor.Instance.Execute(node, _ctx.CurrentContext);
         }
 
         public void Visit(StringNode node, PlatypusNode parent)

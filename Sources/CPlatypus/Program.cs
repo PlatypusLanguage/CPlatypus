@@ -31,7 +31,6 @@ namespace CPlatypus
         public string DotTree { get; set; } = "";
     }
 
-
     internal class Program
     {
         private static void Main(string[] args)

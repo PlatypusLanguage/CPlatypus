@@ -31,14 +31,14 @@ namespace CPlatypus.Execution.Executors
         {
         }
 
-        public override PlatypusObject Execute(PlatypusNode node, Context context, Context globalContext)
+        public override PlatypusObject Execute(PlatypusNode node, Context context)
         {
             if (node is BinaryOperationNode binaryOperationNode)
             {
                 switch (binaryOperationNode.OperationType)
                 {
                     case BinaryOperation.Assignment:
-                        return ExecuteAssignment(binaryOperationNode, context, globalContext);
+                        return ExecuteAssignment(binaryOperationNode, context);
                     case BinaryOperation.Addition:
                         break;
                     case BinaryOperation.Subtraction:
@@ -72,12 +72,13 @@ namespace CPlatypus.Execution.Executors
             return PlatypusNull.Instance; // Should never happen
         }
 
-        private PlatypusObject ExecuteAssignment(BinaryOperationNode node, Context context, Context globalContext)
+        private PlatypusObject ExecuteAssignment(BinaryOperationNode node, Context context)
         {
-            var left = ExpressionExecutor.Instance.Execute(node.Left, context, globalContext);
-            if (left is PlatypusVariable variable)
+            var name = ExpressionExecutor.Instance.ResolveSymbol(node.Left).Name;
+            var ctx = ExpressionExecutor.Instance.ResolveContext(node.Left, context);
+            if (!(name is null))
             {
-                variable.Value = ExpressionExecutor.Instance.Execute(node.Right, context, globalContext);
+                ctx?.Set(name, ExpressionExecutor.Instance.Execute(node.Right, context));
             }
             return PlatypusNull.Instance;
         }

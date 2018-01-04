@@ -31,7 +31,7 @@ namespace CPlatypus.Execution.Executors
         {
         }
 
-        public override PlatypusObject Execute(PlatypusNode node, Context context, Context globalContext)
+        public override PlatypusObject Execute(PlatypusNode node, Context context)
         {
             if (node is FunctionCallNode functionCallNode)
             {
@@ -43,16 +43,11 @@ namespace CPlatypus.Execution.Executors
                     for (var i = 0; i < functionSymbol.Node.ParameterList.Parameters.Count; i++)
                     {
                         var argumentValue = ExpressionExecutor.Instance.Execute(
-                            functionCallNode.ArgumentList.Arguments[i], context,
-                            globalContext);
+                            functionCallNode.ArgumentList.Arguments[i], context);
 
-                        var argumentVariable = new PlatypusVariable(
-                            functionSymbol.Node.ParameterList.Parameters[i].Value,
-                            ctx, argumentValue);
-
-                        ctx.Add(argumentVariable);
+                        ctx.Add(functionSymbol.Node.ParameterList.Parameters[i].Value, argumentValue);
                     }
-                    return BodyExecutor.Instance.Execute(functionSymbol.Node.Body, ctx, globalContext);
+                    return BodyExecutor.Instance.Execute(functionSymbol.Node.Body, ctx);
                 }
                 else
                 {

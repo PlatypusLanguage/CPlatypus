@@ -76,9 +76,11 @@ namespace CPlatypus
                     new DotCompiler(ast).Compile(parserConfig.TreeDotFile);
                 }
 
-                var semanticAnalyzer = new SemanticAnalyzer(ast);
+                /*var semanticAnalyzer = new SemanticAnalyzer(ast);
 
-                var symbolTable = semanticAnalyzer.Analyze();
+                var symbolTable = semanticAnalyzer.Analyze();*/
+
+                new SemanticAnalyzer(ast).Analyze();
 
                 var executor = new PlatypusExecutor();
 

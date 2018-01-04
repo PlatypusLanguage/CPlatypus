@@ -12,7 +12,7 @@ namespace CPlatypus.Execution.Executors
         {
         }
 
-        public override PlatypusObject Execute(PlatypusNode node, Context context, Context globalContext)
+        public override PlatypusObject Execute(PlatypusNode node, Context context)
         {
             if (node is CodeNode codeNode)
             {
@@ -20,15 +20,15 @@ namespace CPlatypus.Execution.Executors
                 {
                     if (n is VariableDeclarationNode)
                     {
-                        VariableDeclarationExecutor.Instance.Execute(n, context, globalContext);
+                        VariableDeclarationExecutor.Instance.Execute(n, context);
                     }
                     else if (n is BinaryOperationNode)
                     {
-                        BinaryOperationExecutor.Instance.Execute(n, context, globalContext);
+                        BinaryOperationExecutor.Instance.Execute(n, context);
                     }
                     else if (n is ReturnNode returnNode)
                     {
-                        return ExpressionExecutor.Instance.Execute(returnNode.Expression, context, globalContext);
+                        return ExpressionExecutor.Instance.Execute(returnNode.Expression, context);
                     }
                 }
             }

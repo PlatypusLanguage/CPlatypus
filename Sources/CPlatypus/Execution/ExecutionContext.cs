@@ -20,24 +20,12 @@ namespace CPlatypus.Execution
 {
     public class ExecutionContext
     {
-        public Context GlobalContext { get; }
-
         public Context CurrentContext { get; private set; }
 
         public ExecutionContext()
         {
-            GlobalContext = new Context("Global Context", null);
-            CurrentContext = GlobalContext;
-        }
-
-        public void Add(PlatypusVariable variable)
-        {
-            CurrentContext.Add(variable);
-        }
-
-        public PlatypusVariable Get(string name)
-        {
-            return CurrentContext.Get(name);
+            var globalContext = new Context("Global Context", null);
+            CurrentContext = globalContext;
         }
 
         public void EnterScope(string name = "Context")

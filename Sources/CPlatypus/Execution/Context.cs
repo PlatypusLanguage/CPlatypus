@@ -17,6 +17,7 @@
  */
 
 using System.Collections.Generic;
+using CPlatypus.Execution.Object;
 
 namespace CPlatypus.Execution
 {
@@ -26,21 +27,40 @@ namespace CPlatypus.Execution
 
         public Context Parent { get; }
 
-        private readonly Dictionary<string, PlatypusVariable> _variables;
+        private readonly Dictionary<string, PlatypusObject> _variables;
 
         public Context(string name, Context parent)
         {
             Name = name;
             Parent = parent;
-            _variables = new Dictionary<string, PlatypusVariable>();
+            _variables = new Dictionary<string, PlatypusObject>();
         }
 
-        public void Add(PlatypusVariable variable)
+        public Context GlobalContext
         {
-            _variables[variable.Name] = variable;
+            get
+            {
+                var ctx = this;
+                while (ctx.Parent != null)
+                {
+                    ctx = ctx.Parent;
+                }
+
+                return ctx;
+            }
         }
 
-        public PlatypusVariable Get(string name)
+        public void Add(string name, PlatypusObject value = null)
+        {
+            _variables.Add(name, value);
+        }
+
+        public void Set(string name, PlatypusObject value)
+        {
+            _variables[name] = value;
+        }
+
+        public PlatypusObject Get(string name)
         {
             if (_variables.ContainsKey(name))
             {
@@ -52,8 +72,12 @@ namespace CPlatypus.Execution
                 return Parent.Get(name);
             }
 
-            return new PlatypusVariable("__null", null);
+            return PlatypusNull.Instance;
         }
 
+        public bool Contains(string name)
+        {
+            return _variables.ContainsKey(name);
+        }
     }
 }

@@ -31,58 +31,64 @@ namespace CPlatypus.Execution.Executors
         {
         }
 
-        public override PlatypusObject Execute(PlatypusNode node, Context context, Context globalContext)
+        public override PlatypusObject Execute(PlatypusNode node, Context context)
         {
             if (node is IdentifierNode identifierNode)
             {
                 return context.Get(identifierNode.Value);
             }
+
             if (node is StringNode stringNode)
             {
-                return new PlatypusString(stringNode.Value, globalContext);
+                return new PlatypusString(stringNode.Value, context.GlobalContext);
             }
+
             if (node is BooleanNode booleanNode)
             {
-                return new PlatypusBoolean(booleanNode.Value, globalContext);
+                return new PlatypusBoolean(booleanNode.Value, context.GlobalContext);
             }
+
             if (node is IntegerNode integerNode)
             {
-                return new PlatypusInteger(integerNode.Value, globalContext);
+                return new PlatypusInteger(integerNode.Value, context.GlobalContext);
             }
+
             if (node is FloatNode floatNode)
             {
-                return new PlatypusFloat(floatNode.Value, globalContext);
+                return new PlatypusFloat(floatNode.Value, context.GlobalContext);
             }
+
             if (node is CharNode charNode)
             {
-                return new PlatypusChar(charNode.Value, globalContext);
+                return new PlatypusChar(charNode.Value, context.GlobalContext);
             }
+
             if (node is FunctionCallNode)
             {
-                return FunctionExecutor.Instance.Execute(node, context, globalContext);
+                return FunctionExecutor.Instance.Execute(node, context);
             }
+
             return PlatypusNull.Instance;
         }
 
         public Context ResolveContext(PlatypusNode node, Context context)
         {
-            if (node is IdentifierNode)
-            {
-                return context;
-            }
-            return ResolveContextInternal(node, context);
-        }
-
-        private Context ResolveContextInternal(PlatypusNode node, Context context)
-        {
             if (node is IdentifierNode identifierNode)
             {
-                return context.Get(identifierNode.Value).ObjectContext;
+                if (context.Contains(identifierNode.Value))
+                {
+                    return context;
+                }
+
+                return ResolveContext(node, context.Parent);
             }
+
             if (node is AttributeAccessNode attributeAccessNode)
             {
-                return ResolveContextInternal(attributeAccessNode.Left, context);
+                var ctx = ResolveContext(attributeAccessNode.Left, context);
+                return ResolveContext(attributeAccessNode.Attribute, ctx);
             }
+
             return null; //Should never happen
         }
 
@@ -92,10 +98,12 @@ namespace CPlatypus.Execution.Executors
             {
                 return ResolveScope(identifierNode).Lookup(identifierNode.Value);
             }
+
             if (node is AttributeAccessNode attributeAccessNode)
             {
                 return ResolveScope(attributeAccessNode).Lookup(attributeAccessNode.Attribute.Value);
             }
+
             return null; //Should never happen
         }
 
@@ -105,10 +113,12 @@ namespace CPlatypus.Execution.Executors
             {
                 return identifierNode.Scope;
             }
+
             if (node is AttributeAccessNode attributeAccessNode)
             {
                 return ResolveScope(attributeAccessNode.Left);
             }
+
             return null; //Should never happen
         }
     }
