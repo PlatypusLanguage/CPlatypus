@@ -20,7 +20,7 @@ namespace CPlatypus.Framework.Semantic
 {
     public class GlobalScope : BaseScope
     {
-        public GlobalScope() : base(null, "Global Scope")
+        public GlobalScope() : base(null, "global_scope")
         {
             
         }

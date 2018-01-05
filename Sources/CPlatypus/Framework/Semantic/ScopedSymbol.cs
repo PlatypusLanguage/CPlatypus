@@ -26,7 +26,7 @@ namespace CPlatypus.Framework.Semantic
 
         private readonly IScope _parentScope;
 
-        protected ScopedSymbol(string name = "Scoped Symbol", IScope parentScope = null) : base(name, parentScope)
+        protected ScopedSymbol(string name = "scoped_symbol", IScope parentScope = null) : base(name, parentScope)
         {
             _parentScope = parentScope;
             _symbols = new Dictionary<string, Symbol>();

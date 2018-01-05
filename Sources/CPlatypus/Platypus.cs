@@ -71,6 +71,8 @@ namespace CPlatypus
 
                 var ast = parser.Parse();
 
+                new SemanticAnalyzer(ast).Analyze();
+
                 if (!string.IsNullOrWhiteSpace(parserConfig.TreeDotFile))
                 {
                     new DotCompiler(ast).Compile(parserConfig.TreeDotFile);
@@ -80,11 +82,7 @@ namespace CPlatypus
 
                 var symbolTable = semanticAnalyzer.Analyze();*/
 
-                new SemanticAnalyzer(ast).Analyze();
-
-                var executor = new PlatypusExecutor();
-
-                executor.Execute(ast);
+                new PlatypusExecutor().Execute(ast);
 
                 Console.WriteLine("Finished ! (Working probably)");
             }

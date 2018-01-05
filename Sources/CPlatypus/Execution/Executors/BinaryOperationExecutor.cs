@@ -31,16 +31,16 @@ namespace CPlatypus.Execution.Executors
         {
         }
 
-        public override PlatypusObject Execute(PlatypusNode node, Context context)
+        public override PlatypusObject Execute(PlatypusNode node, Context currentContext)
         {
             if (node is BinaryOperationNode binaryOperationNode)
             {
                 switch (binaryOperationNode.OperationType)
                 {
                     case BinaryOperation.Assignment:
-                        return ExecuteAssignment(binaryOperationNode, context);
+                        return ExecuteAssignment(binaryOperationNode, currentContext);
                     case BinaryOperation.Addition:
-                        break;
+                        return ExecuteAddition(binaryOperationNode, currentContext);
                     case BinaryOperation.Subtraction:
                         break;
                     case BinaryOperation.Multiplication:
@@ -80,6 +80,19 @@ namespace CPlatypus.Execution.Executors
             {
                 ctx?.Set(name, ExpressionExecutor.Instance.Execute(node.Right, context));
             }
+            return PlatypusNull.Instance;
+        }
+
+        private PlatypusObject ExecuteAddition(BinaryOperationNode node, Context context)
+        {
+            var left = ExpressionExecutor.Instance.Execute(node.Left, context);
+            var right = ExpressionExecutor.Instance.Execute(node.Right, context);
+
+            if (left is PlatypusInteger leftInteger && right is PlatypusInteger rightInteger)
+            {
+                return new PlatypusInteger(leftInteger.Value + rightInteger.Value, context);
+            }
+            
             return PlatypusNull.Instance;
         }
     }

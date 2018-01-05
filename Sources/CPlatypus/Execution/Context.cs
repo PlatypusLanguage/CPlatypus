@@ -75,9 +75,24 @@ namespace CPlatypus.Execution
             return PlatypusNull.Instance;
         }
 
-        public bool Contains(string name)
+        public bool ContainsLocal(string name)
         {
             return _variables.ContainsKey(name);
+        }
+
+        public bool Contains(string name)
+        {
+            if (_variables.ContainsKey(name))
+            {
+                return true;
+            }
+
+            if (Parent != null)
+            {
+                return Parent.Contains(name);
+            }
+
+            return false;
         }
     }
 }

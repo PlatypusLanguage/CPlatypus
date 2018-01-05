@@ -25,7 +25,7 @@ namespace CPlatypus.Semantic
     {
         public FunctionNode Node { get; }
 
-        public PlatypusFunctionSymbol(FunctionNode node, IScope parentScope) : base(node.Name.Value, parentScope)
+        public PlatypusFunctionSymbol(FunctionNode node, IScope parentScope) : base("f_" + node.Name.Value + "_" + node.GetHashCode(), parentScope)
         {
             Node = node;
         }

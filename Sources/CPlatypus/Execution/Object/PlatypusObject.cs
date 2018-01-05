@@ -22,12 +22,9 @@ namespace CPlatypus.Execution.Object
     {
         public Context ObjectContext { get; }
 
-        public PlatypusObject(Context enclosingContext)
+        public PlatypusObject(Context globalContext)
         {
-            if (enclosingContext != null)
-            {
-                ObjectContext = new Context("Object Context", enclosingContext);
-            }
+            ObjectContext = new Context("Object Context", globalContext);
         }
     }
 }

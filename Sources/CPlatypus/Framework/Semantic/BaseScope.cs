@@ -28,7 +28,7 @@ namespace CPlatypus.Framework.Semantic
 
         private readonly string _name;
 
-        protected BaseScope(IScope parentScope = null, string name = "Base Scope")
+        protected BaseScope(IScope parentScope = null, string name = "base_scope")
         {
             _parentScope = parentScope;
             _name = name;

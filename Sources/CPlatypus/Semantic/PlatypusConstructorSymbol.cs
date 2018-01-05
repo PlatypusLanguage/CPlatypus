@@ -25,7 +25,7 @@ namespace CPlatypus.Semantic
     {
         public ConstructorNode Node { get; }
 
-        public PlatypusConstructorSymbol(ConstructorNode node, IScope parentScope) : base("__constructor", parentScope)
+        public PlatypusConstructorSymbol(ConstructorNode node, IScope parentScope) : base("c_" + node.GetHashCode(), parentScope)
         {
             Node = node;
         }

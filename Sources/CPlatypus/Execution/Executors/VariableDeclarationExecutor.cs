@@ -30,11 +30,11 @@ namespace CPlatypus.Execution.Executors
         {
         }
 
-        public override PlatypusObject Execute(PlatypusNode node, Context context)
+        public override PlatypusObject Execute(PlatypusNode node, Context currentContext)
         {
             if (node is VariableDeclarationNode variableDeclarationNode)
             {
-                context.Add(variableDeclarationNode.VariableNameNode.Value);
+                currentContext.Add(variableDeclarationNode.VariableNameNode.Value);
             }
             return PlatypusNull.Instance; // Should never happen
         }

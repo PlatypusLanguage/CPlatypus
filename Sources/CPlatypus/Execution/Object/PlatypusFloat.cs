@@ -1,4 +1,6 @@
-﻿namespace CPlatypus.Execution.Object
+﻿using System.Globalization;
+
+namespace CPlatypus.Execution.Object
 {
     public class PlatypusFloat : PlatypusObject
     {
@@ -7,6 +9,11 @@
         public PlatypusFloat(float value, Context enclosingContext) : base(enclosingContext)
         {
             Value = value;
+        }
+
+        public override string ToString()
+        {
+            return Value.ToString(CultureInfo.CurrentCulture);
         }
     }
 }
