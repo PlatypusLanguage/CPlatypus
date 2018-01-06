@@ -42,6 +42,7 @@ namespace CPlatypus.Parser
                 FunctionParser.Instance,
                 ReturnParser.Instance,
                 ClassParser.Instance,
+                ModuleParser.Instance,
                 ConstructorParser.Instance,
                 ExpressionParser.Instance
             };

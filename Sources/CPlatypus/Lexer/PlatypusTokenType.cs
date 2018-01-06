@@ -29,6 +29,7 @@ namespace CPlatypus.Lexer
         [TokenGroup(UserDefined)] EndKeyword,
         [TokenGroup(UserDefined)] FunctionKeyword,
         [TokenGroup(UserDefined)] ClassKeyword,
+        [TokenGroup(UserDefined)] ModuleKeyword,
         [TokenGroup(UserDefined)] ConstructorKeyword,
         [TokenGroup(UserDefined)] ThisKeyword,
         [TokenGroup(UserDefined)] NewKeyword,

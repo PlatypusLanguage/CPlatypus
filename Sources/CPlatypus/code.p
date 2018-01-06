@@ -1,28 +1,8 @@
 #lang=default#
 
-class Human
+print("Enter your name :")
 
-	var name
-	var age
+var name = read()
 
-	constructor(name, age)
-		this.name = name
-		this.age = age
-	end
+print("Hello, " + name + "!")
 
-	function presentation()
-		print("Hello, my name is " + name + "and i'm " + age + "year(s) old !")
-	end
-
-	function sayHello(anotherHuman)
-		print(name + " said Hello to " + anotherHuman.name)
-	end
-
-end
-
-var alvin = new Human("Alvin")
-var valentin = new Human("Valentin")
-
-alvin.presentation()
-
-valentin.sayHello(alvin)

@@ -1,50 +1,28 @@
-﻿using System;
-using CPlatypus.Execution.Executors;
-using CPlatypus.Execution.Object;
-using CPlatypus.Execution.StandardLibrary;
-using CPlatypus.Execution.StandardLibrary.IO;
-using CPlatypus.Execution.StandardLibrary.Types;
-using CPlatypus.Parser;
+﻿using CPlatypus.Parser;
 using CPlatypus.Parser.Nodes;
-using CPlatypus.Semantic;
 
-namespace CPlatypus.Execution
+namespace CPlatypus.Semantic
 {
-    public class PlatypusExecutor : IPlatypusVisitor
+    public class PlatypusAnalyzer : IPlatypusVisitor
     {
-        private PlatypusModuleSymbol _moduleSymbol;
+        private readonly PlatypusNode _ast;
 
-        private PlatypusContext _context;
-        
-        public PlatypusExecutor(PlatypusModuleSymbol globalModuleSymbol = null)
+        private PlatypusSymbol _currentSymbol;
+
+        public PlatypusAnalyzer(PlatypusNode ast)
         {
-            _moduleSymbol = globalModuleSymbol ?? PlatypusModuleSymbol.CreateGlobalModule();
-            
-            _context = new PlatypusContext("Global Context", null);
-
-            
-            // Inject standard library classes and functions
-            
-            InjectClass(new PlatypusInteger());
-            InjectClass(new PlatypusString());
-            
-            InjectFunction(new PlatypusPrintFunction());
-            InjectFunction(new PlatypusReadFunction());
+            _ast = ast;
         }
 
-        public void InjectClass(PlatypusClass clazz)
+        public PlatypusModuleSymbol Analyze()
         {
-            _moduleSymbol.Add(clazz.ToSymbol(_moduleSymbol));
-        }
+            var globalModule = PlatypusModuleSymbol.CreateGlobalModule();
 
-        public void InjectFunction(PlatypusFunction function)
-        {
-            _moduleSymbol.Add(function.ToSymbol(_moduleSymbol));
-        }
+            _currentSymbol = globalModule;
+            
+            _ast.Accept(this, _ast);
 
-        public void Execute(PlatypusNode ast)
-        {
-            ast.Accept(this, null);
+            return globalModule;
         }
 
         public void Visit(ArgumentListNode node, PlatypusNode parent)
@@ -64,7 +42,7 @@ namespace CPlatypus.Execution
 
         public void Visit(BinaryOperationNode node, PlatypusNode parent)
         {
-            BinaryOperationExecutor.Instance.Execute(node, _context, _moduleSymbol);
+            
         }
 
         public void Visit(BooleanNode node, PlatypusNode parent)
@@ -79,7 +57,13 @@ namespace CPlatypus.Execution
 
         public void Visit(ClassNode node, PlatypusNode parent)
         {
+            var clazz = new PlatypusClassSymbol(node, _currentSymbol);
+            _currentSymbol.Add(clazz);
+            _currentSymbol = clazz;
             
+            node.AcceptChildren(this, node);
+
+            _currentSymbol = clazz.Parent;
         }
 
         public void Visit(CodeNode node, PlatypusNode parent)
@@ -119,17 +103,29 @@ namespace CPlatypus.Execution
 
         public void Visit(FunctionCallNode node, PlatypusNode parent)
         {
-            FunctionExecutor.Instance.Execute(node, _context, _moduleSymbol);
+            
         }
 
         public void Visit(FunctionNode node, PlatypusNode parent)
         {
+            var function = new PlatypusFunctionSymbol(node, _currentSymbol);
+            _currentSymbol.Add(function);
+            _currentSymbol = function;
             
+            node.AcceptChildren(this, node);
+
+            _currentSymbol = function.Parent;
         }
 
         public void Visit(ModuleNode node, PlatypusNode parent)
         {
+            var module = new PlatypusModuleSymbol(node, _currentSymbol);
+            _currentSymbol.Add(module);
+            _currentSymbol = module;
+            
             node.AcceptChildren(this, node);
+
+            _currentSymbol = module.Parent;
         }
 
         public void Visit(NewNode node, PlatypusNode parent)
@@ -159,7 +155,7 @@ namespace CPlatypus.Execution
 
         public void Visit(VariableDeclarationNode node, PlatypusNode parent)
         {
-            VariableDeclarationExecutor.Instance.Execute(node, _context, _moduleSymbol);
+            
         }
 
         public void Visit(StringNode node, PlatypusNode parent)

@@ -1,14 +1,14 @@
 ﻿/*
- * Copyright (c) 2017 Platypus Language http://platypus.vfrz.fr/
- *  This file is part of CPlatypus.
+ * Copyrighvoid (c) 2017 Platypus Language http://platypus.vfrz.fr/
+ *  This file is parvoid of CPlatypus.
  *
- *     CPlatypus is free software: you can redistribute it and/or modify
- *     it under the terms of the GNU General Public License as published by
+ *     CPlatypus is free software: you can redistribute ivoid and/or modify
+ *     ivoid under the terms of the GNU General Public License as published by
  *     the Free Software Foundation, either version 3 of the License, or
- *     (at your option) any later version.
+ *     (avoid your option) any later version.
  *
- *     CPlatypus is distributed in the hope that it will be useful,
- *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *     CPlatypus is distributed in the hope thavoid ivoid will be useful,
+ *     buvoid WITHOUvoid ANY WARRANTY; withouvoid even the implied warranty of
  *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  *     GNU General Public License for more details.
  *
@@ -38,6 +38,7 @@ namespace CPlatypus.Parser
         void Visit(ForNode node, PlatypusNode parent);
         void Visit(FunctionCallNode node, PlatypusNode parent);
         void Visit(FunctionNode node, PlatypusNode parent);
+        void Visit(ModuleNode node, PlatypusNode parent);
         void Visit(NewNode node, PlatypusNode parent);
         void Visit(ParameterListNode node, PlatypusNode parent);
         void Visit(ReturnNode node, PlatypusNode parent);

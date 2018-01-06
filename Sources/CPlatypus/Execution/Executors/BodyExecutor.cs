@@ -1,6 +1,9 @@
 ﻿using CPlatypus.Execution.Object;
+using CPlatypus.Execution.StandardLibrary;
+using CPlatypus.Execution.StandardLibrary.Types;
 using CPlatypus.Parser;
 using CPlatypus.Parser.Nodes;
+using CPlatypus.Semantic;
 
 namespace CPlatypus.Execution.Executors
 {
@@ -12,7 +15,8 @@ namespace CPlatypus.Execution.Executors
         {
         }
 
-        public override PlatypusObject Execute(PlatypusNode node, Context currentContext)
+        public override PlatypusInstance Execute(PlatypusNode node, PlatypusContext currentContext,
+            PlatypusSymbol currentSymbol)
         {
             if (node is CodeNode codeNode)
             {
@@ -20,19 +24,20 @@ namespace CPlatypus.Execution.Executors
                 {
                     if (n is VariableDeclarationNode)
                     {
-                        VariableDeclarationExecutor.Instance.Execute(n, currentContext);
+                        VariableDeclarationExecutor.Instance.Execute(n, currentContext, currentSymbol);
                     }
                     else if (n is BinaryOperationNode)
                     {
-                        BinaryOperationExecutor.Instance.Execute(n, currentContext);
+                        BinaryOperationExecutor.Instance.Execute(n, currentContext, currentSymbol);
                     }
                     else if (n is ReturnNode returnNode)
                     {
-                        return ExpressionExecutor.Instance.Execute(returnNode.Expression, currentContext);
+                        return ExpressionExecutor.Instance.Execute(returnNode.Expression, currentContext, currentSymbol);
                     }
                 }
             }
-            return PlatypusNull.Instance;
+
+            return PlatypusNullInstance.Instance;
         }
     }
 }

@@ -22,10 +22,13 @@ using System.Text;
 using System.Text.RegularExpressions;
 using CPlatypus.Core;
 using CPlatypus.Execution;
+using CPlatypus.Execution.Object;
+using CPlatypus.Execution.StandardLibrary;
 using CPlatypus.Framework;
 using CPlatypus.Graphviz;
 using CPlatypus.Lexer;
 using CPlatypus.Parser;
+using CPlatypus.Parser.Nodes;
 using CPlatypus.Semantic;
 
 namespace CPlatypus
@@ -71,20 +74,24 @@ namespace CPlatypus
 
                 var ast = parser.Parse();
 
-                new SemanticAnalyzer(ast).Analyze();
-
                 if (!string.IsNullOrWhiteSpace(parserConfig.TreeDotFile))
                 {
                     new DotCompiler(ast).Compile(parserConfig.TreeDotFile);
                 }
+                
+                var analyzer = new PlatypusAnalyzer(ast);
 
-                /*var semanticAnalyzer = new SemanticAnalyzer(ast);
+                var globalModule = analyzer.Analyze();
 
-                var symbolTable = semanticAnalyzer.Analyze();*/
+                var executor = new PlatypusExecutor(globalModule);
+                
+                executor.Execute(ast);
 
-                new PlatypusExecutor().Execute(ast);
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine("========================");
+                Console.WriteLine("Executed without error !");
+                Console.ResetColor();
 
-                Console.WriteLine("Finished ! (Working probably)");
             }
         }
 

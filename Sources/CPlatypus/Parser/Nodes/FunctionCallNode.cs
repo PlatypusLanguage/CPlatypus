@@ -16,19 +16,40 @@
  *     along with CPlatypus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+using System;
 using CPlatypus.Framework;
 
 namespace CPlatypus.Parser.Nodes
 {
     public class FunctionCallNode : PlatypusNode
     {
-        public PlatypusNode Target => Children[0];
+        public IdentifierNode FunctionName => Children[0] as IdentifierNode;
 
-        public ArgumentListNode ArgumentList => Children[1] as ArgumentListNode;
+        public PlatypusNode TargetNode => Children[1];
 
-        public FunctionCallNode(int id, PlatypusNode target, ArgumentListNode arguments, SourceLocation sourceLocation) : base(id, sourceLocation)
+        public bool HasTarget => TargetNode != null;
+
+        public ArgumentListNode ArgumentList => Children[2] as ArgumentListNode;
+
+        public FunctionCallNode(int id, PlatypusNode target, ArgumentListNode arguments, SourceLocation sourceLocation)
+            : base(id, sourceLocation)
         {
-            Children.Add(target);
+            if (target is IdentifierNode)
+            {
+                Children.Add(target);
+                Children.Add(null);
+            }
+            else if (target is AttributeAccessNode attributeAccessNode)
+            {
+                Children.Add(attributeAccessNode.Attribute);
+                Children.Add(attributeAccessNode.Left);
+            }
+            else
+            {
+                //TODO THROW EXCEPTION
+                Console.WriteLine("PROBLEM !!!");
+            }
+            
             Children.Add(arguments);
         }
 
@@ -41,7 +62,7 @@ namespace CPlatypus.Parser.Nodes
         {
             foreach (var child in Children)
             {
-                child.Accept(visitor, parent);
+                child?.Accept(visitor, parent);
             }
         }
     }
