@@ -28,6 +28,7 @@ namespace CPlatypus
     {
         public string File { get; set; } = "";
         public string DotTree { get; set; } = "";
+        public bool IgnoreUnknownTokens { get; set; }
     }
 
     internal class Program
@@ -41,6 +42,8 @@ namespace CPlatypus
             commandLineParser.Setup(arg => arg.File).As('f', "file").Required().WithDescription("Input file to process")
                 .Callback(result => arguments.File = result);
             commandLineParser.Setup(arg => arg.DotTree).As('d', "dottree").Callback(result => arguments.DotTree = result);
+            commandLineParser.Setup(arg => arg.IgnoreUnknownTokens).As("iut")
+                .Callback(result => arguments.IgnoreUnknownTokens = result);
 
             var cmArgs = commandLineParser.Parse(args);
 
@@ -55,7 +58,7 @@ namespace CPlatypus
             {
                 IgnoreComments = true,
                 IgnoreWhiteSpaces = true,
-                IgnoreUnknownTokens = false
+                IgnoreUnknownTokens = arguments.IgnoreUnknownTokens
             }, new PlatypusParserConfig
             {
                 TreeDotFile = arguments.DotTree

@@ -41,7 +41,16 @@ namespace CPlatypus.Execution.Object
 
         public abstract PlatypusInstance PlusOperator(PlatypusContext currentContext, Symbol currentSymbol,
             params object[] args);
+        
+        public abstract PlatypusInstance MinusOperator(PlatypusContext currentContext, Symbol currentSymbol,
+            params object[] args);
 
+        public abstract PlatypusInstance DivideOperator(PlatypusContext currentContext, Symbol currentSymbol,
+            params object[] args);
+        
+        public abstract PlatypusInstance MultiplyOperator(PlatypusContext currentContext, Symbol currentSymbol,
+            params object[] args);
+        
         public abstract PlatypusInstance ToStringInstance(PlatypusContext currentContext, Symbol currentSymbol,
             params object[] args);
 

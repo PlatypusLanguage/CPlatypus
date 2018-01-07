@@ -58,11 +58,33 @@ namespace CPlatypus.Execution.Executors
                         ExpressionExecutor.Instance.Execute(right, currentContext, currentSymbol));
                 }
 
-                if (binaryOperationNode.OperationType == BinaryOperation.Addition)
+                var op = binaryOperationNode.OperationType;
+
+                if (op == BinaryOperation.Addition || op == BinaryOperation.Subtraction ||
+                    op == BinaryOperation.Division || op == BinaryOperation.Multiplication)
                 {
                     var l = ExpressionExecutor.Instance.Execute(left, currentContext, currentSymbol);
                     var r = ExpressionExecutor.Instance.Execute(right, currentContext, currentSymbol);
-                    return l.Symbol.Get<PlatypusFunctionSymbol>("_plusoperator")
+
+                    var opString = "";
+
+                    switch (op)
+                    {
+                        case BinaryOperation.Addition:
+                            opString = "_plusoperator";
+                            break;
+                        case BinaryOperation.Subtraction:
+                            opString = "_minusoperator";
+                            break;
+                        case BinaryOperation.Multiplication:
+                            opString = "_multiplyoperator";
+                            break;
+                        case BinaryOperation.Division:
+                            opString = "_divideoperator";
+                            break;
+                    }
+                    
+                    return l.Symbol.Get<PlatypusFunctionSymbol>(opString)
                         .Execute(currentContext, currentSymbol, l, r);
                 }
             }

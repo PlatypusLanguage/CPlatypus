@@ -68,7 +68,7 @@ namespace CPlatypus.Execution
             return _fields[name] = obj;
         }
         
-        public T Set<T>(string name, T instance) where T : class
+        public T Set<T>(string name, T instance)
         {
             return (T)(_fields[name] = instance);
         }
@@ -78,9 +78,9 @@ namespace CPlatypus.Execution
             return GetLocal(name) ?? Parent?.GetLocal(name);
         }
 
-        public T Get<T>(string name) where T : class
+        public T Get<T>(string name)
         {
-            return GetLocal<T>(name) ?? Parent?.GetLocal<T>(name);
+            return GetLocal(name) is null ? Parent.GetLocal<T>(name) : default(T);
         }
 
         public object GetLocal(string name)
@@ -88,9 +88,9 @@ namespace CPlatypus.Execution
             return _fields.ContainsKey(name) ? _fields[name] : null;
         }
         
-        public T GetLocal<T>(string name) where T : class
+        public T GetLocal<T>(string name)
         {
-            return _fields.ContainsKey(name) ? (T)_fields[name] : null;
+            return _fields.ContainsKey(name) ? (T)_fields[name] : default(T);
         }
         
         public bool ContainsLocal(string name)

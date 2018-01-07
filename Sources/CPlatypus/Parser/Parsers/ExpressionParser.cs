@@ -313,7 +313,11 @@ namespace CPlatypus.Parser.Parsers
                 parser.ConsumeType(PlatypusTokenType.CloseParen);
                 return expression;
             }
-
+            if (parser.MatchType(PlatypusTokenType.Unknown))
+            {
+                throw new Exception("Unknown token found : " + parser.ConsumeType(PlatypusTokenType.Unknown));
+            }
+            
             throw new Exception("Not reachable normally ?");
         }
     }

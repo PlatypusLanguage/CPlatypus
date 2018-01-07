@@ -16,6 +16,7 @@
  *     along with CPlatypus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+using System;
 using CPlatypus.Semantic;
 
 namespace CPlatypus.Execution.Object
@@ -30,6 +31,33 @@ namespace CPlatypus.Execution.Object
         {
             Symbol = symbol;
             Context = new PlatypusContext(symbol is null ? "c_null" : "c_" + symbol.Name, parentContext);
+        }
+
+        public bool HasValue => Context.ContainsLocal("_value");
+
+        public void SetValue(object value)
+        {
+            Context.Set("_value", value);
+        }
+        
+        public object GetValue()
+        {
+            if (HasValue)
+            {
+                return Context.GetLocal("_value");
+            }
+
+            throw new Exception("IMPOSSIBLE EXCEPTION");
+        }
+
+        public T GetValue<T>()
+        {
+            if (HasValue)
+            {
+                return Context.GetLocal<T>("_value");
+            }
+
+            throw new Exception("IMPOSSIBLE EXCEPTION");
         }
 
         public override string ToString()

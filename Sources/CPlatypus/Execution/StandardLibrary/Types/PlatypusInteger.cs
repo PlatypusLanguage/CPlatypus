@@ -36,7 +36,7 @@ namespace CPlatypus.Execution.StandardLibrary.Types
         {
             var instance = new PlatypusInstance(currentSymbol.TopSymbol.Get<PlatypusClassSymbol>(Name),
                 currentContext);
-            instance.Context.Add("_value", Convert.ToInt32(args[0]));
+            instance.SetValue(Convert.ToInt32(args[0]));
             return instance;
         }
 
@@ -58,17 +58,35 @@ namespace CPlatypus.Execution.StandardLibrary.Types
             if (left.Symbol.Name == Name && right.Symbol.Name == Name)
             {
                 return Create(currentContext, currentSymbol,
-                    Convert.ToInt32(left.Context.GetLocal("_value")) +
-                    Convert.ToInt32(right.Context.GetLocal("_value")));
+                    Convert.ToInt32(left.GetValue()) +
+                    Convert.ToInt32(right.GetValue()));
             }
 
             return PlatypusString.Singleton.Create(
                 currentContext, currentSymbol,
                 (left.Symbol.Get<PlatypusFunctionSymbol>("_tostring")
-                    .Execute(currentContext, currentSymbol, left)).Context.GetLocal<string>("_value") +
+                    .Execute(currentContext, currentSymbol, left)).GetValue<string>() +
                 (right.Symbol.Get<PlatypusFunctionSymbol>("_tostring")
-                    .Execute(currentContext, currentSymbol, right)).Context.GetLocal<string>("_value")
+                    .Execute(currentContext, currentSymbol, right)).GetValue<string>()
             );
+        }
+
+        [PlatypusFunction("_minusoperator")]
+        public override PlatypusInstance MinusOperator(PlatypusContext currentContext, Symbol currentSymbol, params object[] args)
+        {
+            throw new NotImplementedException();
+        }
+
+        [PlatypusFunction("_divideoperator")]
+        public override PlatypusInstance DivideOperator(PlatypusContext currentContext, Symbol currentSymbol, params object[] args)
+        {
+            throw new NotImplementedException();
+        }
+
+        [PlatypusFunction("_multiplyoperator")]
+        public override PlatypusInstance MultiplyOperator(PlatypusContext currentContext, Symbol currentSymbol, params object[] args)
+        {
+            throw new NotImplementedException();
         }
 
         [PlatypusFunction("_tostring")]
@@ -80,7 +98,7 @@ namespace CPlatypus.Execution.StandardLibrary.Types
 
             if (arg.Symbol.Name == Name)
             {
-                return PlatypusString.Singleton.Create(currentContext, currentSymbol, arg.Context.GetLocal("_value").ToString());
+                return PlatypusString.Singleton.Create(currentContext, currentSymbol, arg.GetValue().ToString());
             }
 
             return PlatypusString.Singleton.Create(currentContext, currentSymbol);
