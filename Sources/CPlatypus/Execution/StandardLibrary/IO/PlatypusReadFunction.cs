@@ -25,7 +25,9 @@ namespace CPlatypus.Execution.StandardLibrary.IO
 {
     public class PlatypusReadFunction : PlatypusFunction
     {
-        public PlatypusReadFunction() : base("read", "Read")
+        public static PlatypusReadFunction Singleton { get; } = new PlatypusReadFunction();
+        
+        private PlatypusReadFunction() : base("read", "Read")
         {
         }
         

@@ -43,8 +43,8 @@ namespace CPlatypus.Execution
             InjectClass(PlatypusInteger.Singleton);
             InjectClass(PlatypusString.Singleton);
             
-            InjectFunction(new PlatypusPrintFunction());
-            InjectFunction(new PlatypusReadFunction());
+            InjectFunction(PlatypusPrintFunction.Singleton);
+            InjectFunction(PlatypusReadFunction.Singleton);
         }
 
         public void InjectClass(PlatypusClass clazz)

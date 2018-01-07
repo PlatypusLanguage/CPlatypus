@@ -24,7 +24,7 @@ using CPlatypus.Semantic;
 namespace CPlatypus.Execution.StandardLibrary.Types
 {
     public class PlatypusString : PlatypusClass
-    {
+    {        
         public static PlatypusString Singleton { get; } = new PlatypusString();
         
         private PlatypusString() : base("String")
@@ -70,7 +70,7 @@ namespace CPlatypus.Execution.StandardLibrary.Types
         {
             var arg = (PlatypusInstance) args[0];
 
-            if (arg.Symbol.Name is "String")
+            if (arg.Symbol.Name == Name)
             {
                 return arg;
             }

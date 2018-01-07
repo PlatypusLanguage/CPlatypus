@@ -1,13 +1,14 @@
 #lang=default#
 
-function test()
-    return hello()
+function test() 
     function hello()
-        return "Hello" + world()
-        function world()
-            return " world !"
+        return "Hello, " + readname() + " !"
+        function readname()
+            return read()
         end
     end
+    print("Enter your name :")
+    return hello()
 end
 
 print(test())

@@ -26,7 +26,7 @@ namespace CPlatypus.Execution.StandardLibrary.Types
     public class PlatypusInteger : PlatypusClass
     {
         public static PlatypusInteger Singleton { get; } = new PlatypusInteger();
-
+        
         private PlatypusInteger() : base("Integer")
         {
         }
@@ -44,7 +44,7 @@ namespace CPlatypus.Execution.StandardLibrary.Types
         public override PlatypusInstance Constructor(PlatypusContext currentContext, Symbol currentSymbol,
             params object[] args)
         {
-            var value = args.Length > 0 ? Convert.ToInt32(args[0]) : 0;
+            var value = args.Length > 0 ? args[0] : 0;
             return Create(currentContext, currentSymbol, value);
         }
 
@@ -55,7 +55,7 @@ namespace CPlatypus.Execution.StandardLibrary.Types
             var left = (PlatypusInstance) args[0];
             var right = (PlatypusInstance) args[1];
 
-            if (left.Symbol.Name is "Integer" && right.Symbol.Name is "Integer")
+            if (left.Symbol.Name == Name && right.Symbol.Name == Name)
             {
                 return Create(currentContext, currentSymbol,
                     Convert.ToInt32(left.Context.GetLocal("_value")) +
@@ -78,7 +78,7 @@ namespace CPlatypus.Execution.StandardLibrary.Types
         {
             var arg = (PlatypusInstance) args[0];
 
-            if (arg.Symbol.Name is "Integer")
+            if (arg.Symbol.Name == Name)
             {
                 return PlatypusString.Singleton.Create(currentContext, currentSymbol, arg.Context.GetLocal("_value").ToString());
             }

@@ -26,7 +26,9 @@ namespace CPlatypus.Execution.StandardLibrary.IO
 {
     public class PlatypusPrintFunction : PlatypusFunction
     {
-        public PlatypusPrintFunction() : base("print", "Print")
+        public static PlatypusPrintFunction Singleton { get; } = new PlatypusPrintFunction();
+        
+        private PlatypusPrintFunction() : base("print", "Print")
         {
         }
         
