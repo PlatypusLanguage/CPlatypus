@@ -37,8 +37,8 @@ namespace CPlatypus.Execution.StandardLibrary.Types
             return new PlatypusStringInstance(value, currentSymbol, currentContext);
         }
 
-        [PlatypusFunction("_addition")]
-        public override PlatypusInstance Addition(PlatypusContext currentContext, Symbol currentSymbol,
+        [PlatypusFunction("_plusoperator")]
+        public override PlatypusInstance PlusOperator(PlatypusContext currentContext, Symbol currentSymbol,
             params object[] args)
         {
             var left = (PlatypusInstance) args[0];

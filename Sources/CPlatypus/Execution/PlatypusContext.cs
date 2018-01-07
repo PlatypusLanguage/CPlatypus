@@ -17,7 +17,7 @@
  */
 
 using System.Collections.Generic;
-using CPlatypus.Execution.Object;
+using CPlatypus.Execution.StandardLibrary.Types;
 
 namespace CPlatypus.Execution
 {
@@ -27,7 +27,7 @@ namespace CPlatypus.Execution
 
         public PlatypusContext Parent { get; }
 
-        private readonly Dictionary<string, PlatypusInstance> _variables;
+        private readonly Dictionary<string, object> _fields;
 
         public PlatypusContext GlobalContext
         {
@@ -47,53 +47,65 @@ namespace CPlatypus.Execution
         {
             Name = name;
             Parent = parent;
-            _variables = new Dictionary<string, PlatypusInstance>();
+            _fields = new Dictionary<string, object>();
         }
 
-        public void Add(string name)
+        public object Add(string name)
         {
-            _variables.Add(name, null);
+            _fields.Add(name, PlatypusNullInstance.Instance);
+            return PlatypusNullInstance.Instance;
         }
 
-        public void Add(string name, PlatypusInstance instance)
+        public object Add(string name, object instance)
         {
             Add(name);
             Set(name, instance);
+            return instance;
         }
 
-        public PlatypusInstance Set(string name, PlatypusInstance instance)
+        public object Set(string name, object obj)
         {
-            return _variables[name] = instance;
+            return _fields[name] = obj;
+        }
+        
+        public T Set<T>(string name, T instance) where T : class
+        {
+            return (T)(_fields[name] = instance);
         }
 
-        public PlatypusInstance Get(string name)
+        public object Get(string name)
         {
             return GetLocal(name) ?? Parent?.GetLocal(name);
         }
 
-        public PlatypusInstance GetLocal(string name)
+        public T Get<T>(string name) where T : class
         {
-            return _variables.ContainsKey(name) ? _variables[name] : null;
+            return GetLocal<T>(name) ?? Parent?.GetLocal<T>(name);
+        }
+
+        public object GetLocal(string name)
+        {
+            return _fields.ContainsKey(name) ? _fields[name] : null;
+        }
+        
+        public T GetLocal<T>(string name) where T : class
+        {
+            return _fields.ContainsKey(name) ? (T)_fields[name] : null;
         }
         
         public bool ContainsLocal(string name)
         {
-            return _variables.ContainsKey(name);
+            return _fields.ContainsKey(name);
         }
 
         public bool Contains(string name)
         {
-            if (_variables.ContainsKey(name))
+            if (ContainsLocal(name))
             {
                 return true;
             }
 
-            if (Parent != null)
-            {
-                return Parent.Contains(name);
-            }
-
-            return false;
+            return Parent != null && Parent.Contains(name);
         }
     }
 }

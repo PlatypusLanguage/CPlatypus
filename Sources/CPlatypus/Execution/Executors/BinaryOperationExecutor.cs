@@ -62,7 +62,7 @@ namespace CPlatypus.Execution.Executors
                 {
                     var l = ExpressionExecutor.Instance.Execute(left, currentContext, currentSymbol);
                     var r = ExpressionExecutor.Instance.Execute(right, currentContext, currentSymbol);
-                    return l.Symbol.Get<PlatypusFunctionSymbol>("_addition")
+                    return l.Symbol.Get<PlatypusFunctionSymbol>("_plusoperator")
                         .Execute(currentContext, currentSymbol, l, r);
                 }
             }

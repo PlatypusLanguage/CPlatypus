@@ -28,6 +28,8 @@ namespace CPlatypus.Framework.Semantic
 
         public Symbol Parent { get; }
 
+        public Symbol TopSymbol => Parent is null ? this : Parent.TopSymbol;
+
         public Symbol(Symbol parent)
         {
             Symbols = new Dictionary<string, Symbol>();
@@ -39,13 +41,11 @@ namespace CPlatypus.Framework.Semantic
             Symbols.Add(symbol.Name, symbol);
         }
 
-
         public T GetLocal<T>(string name) where T : Symbol
         {
             if (!Symbols.ContainsKey(name)) return null;
-            
-            var symbol = Symbols[name];
-            if (symbol is T platypusSymbol)
+
+            if (Symbols[name] is T platypusSymbol)
             {
                 return platypusSymbol;
             }
@@ -57,10 +57,10 @@ namespace CPlatypus.Framework.Semantic
             //TODO : THROW ERROR
             return null;
         }
-        
+
         public T Get<T>(string name) where T : Symbol
         {
-            return GetLocal<T>(name) ?? Parent?.GetLocal<T>(name);
+            return GetLocal<T>(name) ?? Parent?.Get<T>(name);
         }
     }
 }

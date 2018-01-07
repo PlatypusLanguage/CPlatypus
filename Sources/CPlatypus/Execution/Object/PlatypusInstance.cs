@@ -24,12 +24,12 @@ namespace CPlatypus.Execution.Object
     {
         public PlatypusClassSymbol Symbol { get; }
         
-        public PlatypusContext InstanceContext { get; }
+        public PlatypusContext Context { get; }
 
         public PlatypusInstance(PlatypusClassSymbol symbol, PlatypusContext parentContext)
         {
             Symbol = symbol;
-            InstanceContext = new PlatypusContext(symbol is null ? "c_null" : "c_" + symbol.Name, parentContext);
+            Context = new PlatypusContext(symbol is null ? "c_null" : "c_" + symbol.Name, parentContext);
         }
     }
 }

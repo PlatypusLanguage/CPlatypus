@@ -27,7 +27,7 @@ namespace CPlatypus.Execution.StandardLibrary.Types
         public string Value { get; }
 
         public PlatypusStringInstance(string value, Symbol currentSymbol, PlatypusContext parentContext) : base(
-            currentSymbol.Get<PlatypusClassSymbol>("String"), parentContext)
+            currentSymbol.TopSymbol.Get<PlatypusClassSymbol>("String"), parentContext)
         {
             Value = value;
         }

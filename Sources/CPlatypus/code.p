@@ -1,8 +1,13 @@
 #lang=default#
 
-print("Enter your name :")
+function test()
+    return hello()
+    function hello()
+        return "Hello" + world()
+        function world()
+            return " world !"
+        end
+    end
+end
 
-var name = read()
-
-print("Hello, " + name + "!")
-
+print(test())

@@ -53,7 +53,7 @@ namespace CPlatypus.Semantic
                 return FunctionTarget.Execute(currentContext, currentSymbol, args);
             }
 
-            return FunctionExecutor.Instance.Execute(FunctionNode, currentContext, currentSymbol);
+            return FunctionCallExecutor.Instance.Execute(FunctionNode, currentContext, currentSymbol);
         }
     }
 }

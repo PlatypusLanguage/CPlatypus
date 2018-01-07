@@ -19,6 +19,7 @@
 using System;
 using CPlatypus.Execution.Object;
 using CPlatypus.Framework.Semantic;
+using CPlatypus.Semantic;
 
 namespace CPlatypus.Execution.StandardLibrary.Types
 {
@@ -28,16 +29,23 @@ namespace CPlatypus.Execution.StandardLibrary.Types
         {
         }
 
+        public static PlatypusInstance Create(int value, PlatypusContext currentContext, Symbol currentSymbol)
+        {
+            var instance = new PlatypusInstance(currentSymbol.TopSymbol.Get<PlatypusClassSymbol>("Integer"), currentContext);
+            instance.Context.Add("value", value);
+            return instance;
+        }
+
         [PlatypusFunction("_constructor")]
         public override PlatypusInstance Constructor(PlatypusContext currentContext, Symbol currentSymbol,
             params object[] args)
         {
             var value = args.Length > 0 ? Convert.ToInt32(args[0]) : 0;
-            return new PlatypusIntegerInstance(value, currentSymbol, currentContext);
+            return Create(value, currentContext, currentSymbol);
         }
 
-        [PlatypusFunction("_addition")]
-        public override PlatypusInstance Addition(PlatypusContext currentContext, Symbol currentSymbol,
+        [PlatypusFunction("_plusoperator")]
+        public override PlatypusInstance PlusOperator(PlatypusContext currentContext, Symbol currentSymbol,
             params object[] args)
         {
             var left = args[0];

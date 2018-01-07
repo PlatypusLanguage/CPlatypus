@@ -37,8 +37,7 @@ namespace CPlatypus.Execution.Executors
         {
             if (node is VariableDeclarationNode variableDeclarationNode)
             {
-                currentContext.Add(variableDeclarationNode.VariableNameNode.Value);
-                return currentContext.GetLocal(variableDeclarationNode.VariableNameNode.Value);
+                return currentContext.Add(variableDeclarationNode.VariableNameNode.Value) as PlatypusInstance;
             }
 
             return PlatypusNullInstance.Instance;

@@ -26,11 +26,11 @@ using CPlatypus.Semantic;
 
 namespace CPlatypus.Execution.Executors
 {
-    public class FunctionExecutor : NodeExecutor
+    public class FunctionCallExecutor : NodeExecutor
     {
-        public static FunctionExecutor Instance { get; } = new FunctionExecutor();
+        public static FunctionCallExecutor Instance { get; } = new FunctionCallExecutor();
 
-        private FunctionExecutor()
+        private FunctionCallExecutor()
         {
         }
 
@@ -55,36 +55,39 @@ namespace CPlatypus.Execution.Executors
                     executionSymbol = currentSymbol;
                 }
 
-                var functionContext = new PlatypusContext("Function Context", executionContext);
-
                 if (executionContext != null)
                 {
                     var functionSymbol =
                         executionSymbol.Get<PlatypusFunctionSymbol>(functionCallNode.FunctionName.Value);
 
-                    var args = new List<object>();
-
-                    if (functionSymbol.ExternFunction)
+                    if (functionSymbol != null)
                     {
-                        foreach (var arg in functionCallNode.ArgumentList.Arguments)
-                        {
-                            args.Add(ExpressionExecutor.Instance.Execute(arg, currentContext, currentSymbol));
-                        }
+                        var functionContext = new PlatypusContext("Function Context", executionContext);
+                    
+                        var args = new List<object>();
 
-                        return functionSymbol.Execute(functionContext, currentSymbol, args.ToArray());
-                    }
-                    else
-                    {
-                        for (var i = 0; i < functionSymbol.FunctionNode.ParameterList.Parameters.Count; i++)
+                        if (functionSymbol.ExternFunction)
                         {
-                            var argumentValue = ExpressionExecutor.Instance.Execute(
-                                functionCallNode.ArgumentList.Arguments[i], currentContext, currentSymbol);
-                            var name = functionSymbol.FunctionNode.ParameterList.Parameters[i].Value;
-                            functionContext.Add(name, argumentValue);
-                        }
+                            foreach (var arg in functionCallNode.ArgumentList.Arguments)
+                            {
+                                args.Add(ExpressionExecutor.Instance.Execute(arg, currentContext, currentSymbol));
+                            }
 
-                        return BodyExecutor.Instance.Execute(functionSymbol.FunctionNode.Body, currentContext,
-                            currentSymbol);
+                            return functionSymbol.Execute(functionContext, functionSymbol, args.ToArray());
+                        }
+                        else
+                        {
+                            for (var i = 0; i < functionSymbol.FunctionNode.ParameterList.Parameters.Count; i++)
+                            {
+                                var argumentValue = ExpressionExecutor.Instance.Execute(
+                                    functionCallNode.ArgumentList.Arguments[i], currentContext, currentSymbol);
+                                var name = functionSymbol.FunctionNode.ParameterList.Parameters[i].Value;
+                                functionContext.Add(name, argumentValue);
+                            }
+
+                            return BodyExecutor.Instance.Execute(functionSymbol.FunctionNode.Body, functionContext,
+                                functionSymbol);
+                        }
                     }
                 }
             }

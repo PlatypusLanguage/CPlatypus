@@ -27,7 +27,7 @@ namespace CPlatypus.Execution.StandardLibrary.Types
         public int Value { get; }
 
         public PlatypusIntegerInstance(int value, Symbol currentSymbol, PlatypusContext parentContext) : base(
-            currentSymbol.Get<PlatypusClassSymbol>("Integer"), parentContext)
+            currentSymbol.TopSymbol.Get<PlatypusClassSymbol>("Integer"), parentContext)
         {
             Value = value;
         }

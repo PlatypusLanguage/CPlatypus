@@ -38,7 +38,11 @@ namespace CPlatypus.Execution.Executors
         {
             if (node is IdentifierNode identifierNode)
             {
-                return currentContext.Get(identifierNode.Value);
+                var value = currentContext.Get(identifierNode.Value);
+                if (value is PlatypusInstance platypusInstance)
+                {
+                    return platypusInstance;
+                }
             }
 
             if (node is IntegerNode integerNode)
@@ -55,7 +59,7 @@ namespace CPlatypus.Execution.Executors
 
             if (node is FunctionCallNode functionCallNode)
             {
-                return FunctionExecutor.Instance.Execute(functionCallNode, currentContext, currentSymbol);
+                return FunctionCallExecutor.Instance.Execute(functionCallNode, currentContext, currentSymbol);
             }
 
             if (node is BinaryOperationNode binaryOperationNode)
@@ -98,7 +102,7 @@ namespace CPlatypus.Execution.Executors
             {
                 if (context.Contains(identifierNode.Value))
                 {
-                    return context.Get(identifierNode.Value).InstanceContext;
+                    return (context.Get(identifierNode.Value) as PlatypusInstance)?.InstanceContext;
                 }
 
                 return null;
@@ -106,7 +110,7 @@ namespace CPlatypus.Execution.Executors
 
             if (node is FunctionCallNode functionCallNode)
             {
-                return FunctionExecutor.Instance.Execute(functionCallNode, context, symbol).InstanceContext;
+                return FunctionCallExecutor.Instance.Execute(functionCallNode, context, symbol).InstanceContext;
             }
 
             if (node is AttributeAccessNode attributeAccessNode)

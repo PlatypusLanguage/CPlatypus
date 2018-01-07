@@ -47,6 +47,10 @@ namespace CPlatypus.Execution.Executors
                     {
                         BinaryOperationExecutor.Instance.Execute(n, currentContext, currentSymbol);
                     }
+                    else if (n is FunctionCallNode)
+                    {
+                        FunctionCallExecutor.Instance.Execute(n, currentContext, currentSymbol);
+                    }
                     else if (n is ReturnNode returnNode)
                     {
                         return ExpressionExecutor.Instance.Execute(returnNode.Expression, currentContext, currentSymbol);
