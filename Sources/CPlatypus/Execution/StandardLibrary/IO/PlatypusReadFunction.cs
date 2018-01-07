@@ -32,7 +32,7 @@ namespace CPlatypus.Execution.StandardLibrary.IO
         public PlatypusInstance Read(PlatypusContext currentContext, Symbol currentSymbol,
             params object[] args)
         {
-            return new PlatypusStringInstance(Console.ReadLine(), currentSymbol, currentContext);
+            return PlatypusString.Singleton.Create(currentContext, currentSymbol, Console.ReadLine());
         }
     }
 }

@@ -25,14 +25,18 @@ namespace CPlatypus.Execution.StandardLibrary.Types
 {
     public class PlatypusInteger : PlatypusClass
     {
-        public PlatypusInteger() : base("Integer")
+        public static PlatypusInteger Singleton { get; } = new PlatypusInteger();
+
+        private PlatypusInteger() : base("Integer")
         {
         }
 
-        public static PlatypusInstance Create(int value, PlatypusContext currentContext, Symbol currentSymbol)
+        public override PlatypusInstance Create(PlatypusContext currentContext, Symbol currentSymbol,
+            params object[] args)
         {
-            var instance = new PlatypusInstance(currentSymbol.TopSymbol.Get<PlatypusClassSymbol>("Integer"), currentContext);
-            instance.Context.Add("value", value);
+            var instance = new PlatypusInstance(currentSymbol.TopSymbol.Get<PlatypusClassSymbol>(Name),
+                currentContext);
+            instance.Context.Add("_value", Convert.ToInt32(args[0]));
             return instance;
         }
 
@@ -41,37 +45,45 @@ namespace CPlatypus.Execution.StandardLibrary.Types
             params object[] args)
         {
             var value = args.Length > 0 ? Convert.ToInt32(args[0]) : 0;
-            return Create(value, currentContext, currentSymbol);
+            return Create(currentContext, currentSymbol, value);
         }
 
         [PlatypusFunction("_plusoperator")]
         public override PlatypusInstance PlusOperator(PlatypusContext currentContext, Symbol currentSymbol,
             params object[] args)
         {
-            var left = args[0];
-            var right = args[1];
+            var left = (PlatypusInstance) args[0];
+            var right = (PlatypusInstance) args[1];
 
-            if (left is PlatypusIntegerInstance leftInteger && right is PlatypusIntegerInstance rightInteger)
+            if (left.Symbol.Name is "Integer" && right.Symbol.Name is "Integer")
             {
-                return new PlatypusIntegerInstance(leftInteger.Value + rightInteger.Value,
-                    currentSymbol, currentContext);
+                return Create(currentContext, currentSymbol,
+                    Convert.ToInt32(left.Context.GetLocal("_value")) +
+                    Convert.ToInt32(right.Context.GetLocal("_value")));
             }
 
-            return PlatypusNullInstance.Instance;
+            return PlatypusString.Singleton.Create(
+                currentContext, currentSymbol,
+                (left.Symbol.Get<PlatypusFunctionSymbol>("_tostring")
+                    .Execute(currentContext, currentSymbol, left)).Context.GetLocal<string>("_value") +
+                (right.Symbol.Get<PlatypusFunctionSymbol>("_tostring")
+                    .Execute(currentContext, currentSymbol, right)).Context.GetLocal<string>("_value")
+            );
         }
 
         [PlatypusFunction("_tostring")]
-        public override PlatypusStringInstance ToStringInstance(PlatypusContext currentContext,
+        public override PlatypusInstance ToStringInstance(PlatypusContext currentContext,
             Symbol currentSymbol,
             params object[] args)
         {
-            if (args[0] is PlatypusIntegerInstance platypusIntegerInstance)
+            var arg = (PlatypusInstance) args[0];
+
+            if (arg.Symbol.Name is "Integer")
             {
-                return new PlatypusStringInstance(platypusIntegerInstance.ToString(),
-                    currentSymbol, currentContext);
+                return PlatypusString.Singleton.Create(currentContext, currentSymbol, arg.Context.GetLocal("_value").ToString());
             }
 
-            return new PlatypusStringInstance("", currentSymbol, currentContext);
+            return PlatypusString.Singleton.Create(currentContext, currentSymbol);
         }
     }
 }

@@ -23,13 +23,19 @@ namespace CPlatypus.Execution.Object
     public class PlatypusInstance
     {
         public PlatypusClassSymbol Symbol { get; }
-        
+
         public PlatypusContext Context { get; }
 
         public PlatypusInstance(PlatypusClassSymbol symbol, PlatypusContext parentContext)
         {
             Symbol = symbol;
             Context = new PlatypusContext(symbol is null ? "c_null" : "c_" + symbol.Name, parentContext);
+        }
+
+        public override string ToString()
+        {
+            return (Symbol.GetLocal<PlatypusFunctionSymbol>("_tostring")
+                .Execute(Context, Symbol, this)).Context.GetLocal<string>("_value");
         }
     }
 }

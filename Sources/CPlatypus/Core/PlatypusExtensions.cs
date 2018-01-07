@@ -28,7 +28,7 @@ namespace CPlatypus.Core
 {
     public static class PlatypusExtensions
     {
-        public static string Join(this object[] objects)
+        public static string JoinToString(this object[] objects)
         {
             if (objects.Length == 0)
             {

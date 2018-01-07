@@ -33,7 +33,7 @@ namespace CPlatypus.Execution.StandardLibrary.IO
         public PlatypusInstance Print(PlatypusContext currentContext, Symbol currentSymbol,
             params object[] args)
         {
-            Console.WriteLine(args.Join());
+            Console.WriteLine(args.JoinToString());
             return PlatypusNullInstance.Instance;
         }
     }

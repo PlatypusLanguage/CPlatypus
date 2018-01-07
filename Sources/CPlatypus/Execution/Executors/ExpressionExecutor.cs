@@ -102,7 +102,7 @@ namespace CPlatypus.Execution.Executors
             {
                 if (context.Contains(identifierNode.Value))
                 {
-                    return (context.Get(identifierNode.Value) as PlatypusInstance)?.InstanceContext;
+                    return (context.Get(identifierNode.Value) as PlatypusInstance)?.Context;
                 }
 
                 return null;
@@ -110,7 +110,7 @@ namespace CPlatypus.Execution.Executors
 
             if (node is FunctionCallNode functionCallNode)
             {
-                return FunctionCallExecutor.Instance.Execute(functionCallNode, context, symbol).InstanceContext;
+                return FunctionCallExecutor.Instance.Execute(functionCallNode, context, symbol).Context;
             }
 
             if (node is AttributeAccessNode attributeAccessNode)

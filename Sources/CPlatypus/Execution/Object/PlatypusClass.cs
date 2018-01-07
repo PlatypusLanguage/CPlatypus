@@ -16,11 +16,9 @@
  *     along with CPlatypus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using CPlatypus.Core;
-using CPlatypus.Execution.StandardLibrary.Types;
 using CPlatypus.Framework.Semantic;
 using CPlatypus.Semantic;
 
@@ -30,13 +28,13 @@ namespace CPlatypus.Execution.Object
     {
         public string Name;
 
-        protected Dictionary<string, object> Fields;
-
         public PlatypusClass(string name)
         {
             Name = name;
-            Fields = new Dictionary<string, object>();
         }
+
+        public abstract PlatypusInstance Create(PlatypusContext currentContext, Symbol currentSymbol,
+            params object[] args);
 
         public abstract PlatypusInstance Constructor(PlatypusContext currentContext, Symbol currentSymbol,
             params object[] args);
@@ -44,7 +42,7 @@ namespace CPlatypus.Execution.Object
         public abstract PlatypusInstance PlusOperator(PlatypusContext currentContext, Symbol currentSymbol,
             params object[] args);
 
-        public abstract PlatypusStringInstance ToStringInstance(PlatypusContext currentContext, Symbol currentSymbol,
+        public abstract PlatypusInstance ToStringInstance(PlatypusContext currentContext, Symbol currentSymbol,
             params object[] args);
 
         public PlatypusClassSymbol ToSymbol(Symbol parent)

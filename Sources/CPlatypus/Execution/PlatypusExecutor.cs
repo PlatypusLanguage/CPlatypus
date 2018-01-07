@@ -40,8 +40,8 @@ namespace CPlatypus.Execution
 
             // Inject standard library classes and functions
             
-            InjectClass(new PlatypusInteger());
-            InjectClass(new PlatypusString());
+            InjectClass(PlatypusInteger.Singleton);
+            InjectClass(PlatypusString.Singleton);
             
             InjectFunction(new PlatypusPrintFunction());
             InjectFunction(new PlatypusReadFunction());

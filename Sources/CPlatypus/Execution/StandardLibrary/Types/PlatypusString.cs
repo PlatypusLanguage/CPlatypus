@@ -25,16 +25,26 @@ namespace CPlatypus.Execution.StandardLibrary.Types
 {
     public class PlatypusString : PlatypusClass
     {
-        public PlatypusString() : base("String")
+        public static PlatypusString Singleton { get; } = new PlatypusString();
+        
+        private PlatypusString() : base("String")
         {
+        }
+
+        public override PlatypusInstance Create(PlatypusContext currentContext, Symbol currentSymbol,
+            params object[] args)
+        {
+            var instance = new PlatypusInstance(currentSymbol.TopSymbol.Get<PlatypusClassSymbol>(Name),
+                currentContext);
+            instance.Context.Add("_value", args[0] as string ?? "");
+            return instance;
         }
 
         [PlatypusFunction("_constructor")]
         public override PlatypusInstance Constructor(PlatypusContext currentContext, Symbol currentSymbol,
             params object[] args)
         {
-            var value = args.Join();
-            return new PlatypusStringInstance(value, currentSymbol, currentContext);
+            return Create(currentContext, currentSymbol, args.JoinToString());
         }
 
         [PlatypusFunction("_plusoperator")]
@@ -44,25 +54,28 @@ namespace CPlatypus.Execution.StandardLibrary.Types
             var left = (PlatypusInstance) args[0];
             var right = (PlatypusInstance) args[1];
 
-            return new PlatypusStringInstance(
-                ((PlatypusStringInstance) left.Symbol.Get<PlatypusFunctionSymbol>("_tostring")
-                    .Execute(currentContext, currentSymbol, left)).Value +
-                ((PlatypusStringInstance) right.Symbol.Get<PlatypusFunctionSymbol>("_tostring")
-                    .Execute(currentContext, currentSymbol, right)).Value,
-                currentSymbol, currentContext);
+            return Create(
+                currentContext, currentSymbol,
+                (left.Symbol.Get<PlatypusFunctionSymbol>("_tostring")
+                    .Execute(currentContext, currentSymbol, left)).Context.GetLocal<string>("_value") +
+                (right.Symbol.Get<PlatypusFunctionSymbol>("_tostring")
+                    .Execute(currentContext, currentSymbol, right)).Context.GetLocal<string>("_value")
+            );
         }
 
         [PlatypusFunction("_tostring")]
-        public override PlatypusStringInstance ToStringInstance(PlatypusContext currentContext,
+        public override PlatypusInstance ToStringInstance(PlatypusContext currentContext,
             Symbol currentSymbol,
             params object[] args)
         {
-            if (args[0] is PlatypusStringInstance platypusStringInstance)
+            var arg = (PlatypusInstance) args[0];
+
+            if (arg.Symbol.Name is "String")
             {
-                return platypusStringInstance;
+                return arg;
             }
 
-            return new PlatypusStringInstance("", currentSymbol, currentContext);
+            return Create(currentContext, currentSymbol);
         }
     }
 }
