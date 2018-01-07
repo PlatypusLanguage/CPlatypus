@@ -1,6 +1,24 @@
-﻿using CPlatypus.Execution.Object;
-using CPlatypus.Execution.StandardLibrary;
+﻿/*
+ * Copyright (c) 2017 Platypus Language http://platypus.vfrz.fr/
+ *  This file is part of CPlatypus.
+ *
+ *     CPlatypus is free software: you can redistribute it and/or modify
+ *     it under the terms of the GNU General Public License as published by
+ *     the Free Software Foundation, either version 3 of the License, or
+ *     (at your option) any later version.
+ *
+ *     CPlatypus is distributed in the hope that it will be useful,
+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *     GNU General Public License for more details.
+ *
+ *     You should have received a copy of the GNU General Public License
+ *     along with CPlatypus.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+using CPlatypus.Execution.Object;
 using CPlatypus.Execution.StandardLibrary.Types;
+using CPlatypus.Framework.Semantic;
 using CPlatypus.Parser;
 using CPlatypus.Parser.Nodes;
 using CPlatypus.Semantic;
@@ -16,13 +34,13 @@ namespace CPlatypus.Execution.Executors
         }
 
         public override PlatypusInstance Execute(PlatypusNode node, PlatypusContext currentContext,
-            PlatypusSymbol currentSymbol)
+            Symbol currentSymbol)
         {
             if (node is IdentifierNode identifierNode)
             {
                 return currentContext.Get(identifierNode.Value);
             }
-            
+
             if (node is IntegerNode integerNode)
             {
                 return currentSymbol.Get<PlatypusClassSymbol>("Integer").Get<PlatypusFunctionSymbol>("_constructor")
@@ -44,7 +62,7 @@ namespace CPlatypus.Execution.Executors
             {
                 return BinaryOperationExecutor.Instance.Execute(binaryOperationNode, currentContext, currentSymbol);
             }
-            
+
             return PlatypusNullInstance.Instance;
         }
 
@@ -74,7 +92,7 @@ namespace CPlatypus.Execution.Executors
             return null;
         }
 
-        public PlatypusContext ResolveObjectContext(PlatypusNode node, PlatypusContext context, PlatypusSymbol symbol)
+        public PlatypusContext ResolveObjectContext(PlatypusNode node, PlatypusContext context, Symbol symbol)
         {
             if (node is IdentifierNode identifierNode)
             {

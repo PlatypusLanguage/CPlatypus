@@ -8,7 +8,4 @@
     <PackageReference Include="DotNetGraph" Version="1.0.1" />
     <PackageReference Include="FluentCommandLineParser" Version="1.4.3" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Framework\Semantic" />
-  </ItemGroup>
 </Project>

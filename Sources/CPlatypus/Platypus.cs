@@ -22,13 +22,10 @@ using System.Text;
 using System.Text.RegularExpressions;
 using CPlatypus.Core;
 using CPlatypus.Execution;
-using CPlatypus.Execution.Object;
-using CPlatypus.Execution.StandardLibrary;
 using CPlatypus.Framework;
 using CPlatypus.Graphviz;
 using CPlatypus.Lexer;
 using CPlatypus.Parser;
-using CPlatypus.Parser.Nodes;
 using CPlatypus.Semantic;
 
 namespace CPlatypus
