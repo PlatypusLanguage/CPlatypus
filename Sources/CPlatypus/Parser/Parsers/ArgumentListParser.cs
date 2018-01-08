@@ -22,7 +22,7 @@ using CPlatypus.Parser.Nodes;
 
 namespace CPlatypus.Parser.Parsers
 {
-    public class ArgumentListParser : PlatypusNodeParser
+    public class ArgumentListParser : NodeParser
     {
         public static ArgumentListParser Instance { get; } = new ArgumentListParser();
 

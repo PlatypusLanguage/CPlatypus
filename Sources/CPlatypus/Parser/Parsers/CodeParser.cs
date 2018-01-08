@@ -23,7 +23,7 @@ using CPlatypus.Parser.Nodes;
 
 namespace CPlatypus.Parser.Parsers
 {
-    public class CodeParser : PlatypusNodeParser
+    public class CodeParser : NodeParser
     {
         public static CodeParser Instance { get; } = new CodeParser();
 

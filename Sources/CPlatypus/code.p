@@ -1,14 +1,6 @@
 #lang=default#
 
-function test() 
-    function hello()
-        return "Hello, " + readname() + " !"
-        function readname()
-            return read()
-        end
-    end
-    print("Enter your name :")
-    return hello()
-end
+var a = 4
+var b = 6
 
-print(test())
+print(a.tostring() + b)

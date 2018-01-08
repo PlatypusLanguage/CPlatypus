@@ -21,7 +21,7 @@ using CPlatypus.Parser.Nodes;
 
 namespace CPlatypus.Parser.Parsers
 {
-    public class WhileParser : PlatypusNodeParser
+    public class WhileParser : NodeParser
     { 
         public static WhileParser Instance { get; } = new WhileParser();
 

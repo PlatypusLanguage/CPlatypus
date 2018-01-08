@@ -101,7 +101,6 @@ namespace CPlatypus.Execution
         public void Visit(CodeNode node, PlatypusNode parent)
         {
             BodyExecutor.Instance.Execute(node, _context, _moduleSymbol);
-            //node.AcceptChildren(this, node);
         }
 
         public void Visit(ConstructorNode node, PlatypusNode parent)

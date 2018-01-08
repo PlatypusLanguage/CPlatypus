@@ -16,6 +16,7 @@
  *     along with CPlatypus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+using System.Collections.Generic;
 using CPlatypus.Execution.Object;
 using CPlatypus.Execution.StandardLibrary.Types;
 using CPlatypus.Framework.Execution;
@@ -48,9 +49,12 @@ namespace CPlatypus.Execution.Executors
 
             if (node is IntegerNode integerNode)
             {
-                return FunctionCallExecutor.Instance.Execute(
+                return PlatypusInteger.Singleton.Create(currentContext, currentSymbol,
+                    new Dictionary<string, object> {{"value", integerNode.Value}});
+
+                /*return FunctionCallExecutor.Instance.Execute(
                     currentSymbol.Get<PlatypusClassSymbol>("Integer").Get<PlatypusFunctionSymbol>("_constructor"),
-                    currentContext, integerNode.Value);
+                    currentContext, integerNode.Value);*/
                 /*
                 return currentSymbol.Get<PlatypusClassSymbol>("Integer").Get<PlatypusFunctionSymbol>("_constructor")
                     .Execute(currentContext, currentSymbol, integerNode.Value);*/
@@ -58,9 +62,12 @@ namespace CPlatypus.Execution.Executors
 
             if (node is StringNode stringNode)
             {
-                return FunctionCallExecutor.Instance.Execute(
+                return PlatypusString.Singleton.Create(currentContext, currentSymbol,
+                    new Dictionary<string, object> {{"value", stringNode.Value}});
+                
+                /*return FunctionCallExecutor.Instance.Execute(
                     currentSymbol.Get<PlatypusClassSymbol>("String").Get<PlatypusFunctionSymbol>("_constructor"),
-                    currentContext, stringNode.Value);
+                    currentContext, stringNode.Value);*/
                 /*
                 return currentSymbol.Get<PlatypusClassSymbol>("String").Get<PlatypusFunctionSymbol>("_constructor")
                     .Execute(currentContext, currentSymbol, stringNode.Value);*/
@@ -105,27 +112,31 @@ namespace CPlatypus.Execution.Executors
             return null;
         }
 
-        public Context ResolveObjectContext(PlatypusNode node, Context context, Symbol symbol)
+        public PlatypusInstance ResolveObject(PlatypusNode node, Context context, Symbol symbol)
         {
             if (node is IdentifierNode identifierNode)
             {
                 if (context.Contains(identifierNode.Value))
                 {
-                    return (context.Get(identifierNode.Value) as PlatypusInstance)?.Context;
+                    return (PlatypusInstance) context.Get(identifierNode.Value);
                 }
-
-                return null;
             }
 
             if (node is FunctionCallNode functionCallNode)
             {
-                return FunctionCallExecutor.Instance.Execute(functionCallNode, context, symbol).Context;
+                return FunctionCallExecutor.Instance.Execute(functionCallNode, context, symbol);
             }
 
             if (node is AttributeAccessNode attributeAccessNode)
             {
+                var left = ResolveObject(attributeAccessNode.Left, context, symbol);
+                return ResolveObject(attributeAccessNode.Attribute, left.Context, left.Symbol);
+
+                //TODO CHECK THIS IN MULTIPLE CASES
+                /*
                 return ResolveContext(attributeAccessNode.Attribute,
                     ResolveObjectContext(attributeAccessNode.Left, context, symbol));
+                    */
             }
 
             return null;

@@ -17,16 +17,27 @@
  */
 
 using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace CPlatypus.Execution.Object
 {
     public class PlatypusFunctionAttribute : Attribute
     {
         public string Name { get; }
+        
+        public List<string> Parameters { get; }
 
         public PlatypusFunctionAttribute(string name)
         {
             Name = name;
+            Parameters = new List<string>();
+        }
+
+        public PlatypusFunctionAttribute(string name, params string[] parameters)
+        {
+            Name = name;
+            Parameters = parameters.ToList();
         }
        
     }

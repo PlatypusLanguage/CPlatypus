@@ -35,13 +35,30 @@ namespace CPlatypus.Execution.Executors
         {
         }
 
-        public PlatypusInstance Execute(PlatypusFunctionSymbol functionSymbol, Context currentContext, params object[] args)
+        public PlatypusInstance Execute(PlatypusFunctionSymbol functionSymbol, Context currentContext,
+            object[] args, PlatypusInstance objectInstance = null)
         {
             if (functionSymbol.ExternFunction)
             {
                 var functionContext = new PlatypusContext("Function Context", currentContext);
-                return functionSymbol.FunctionTarget.Execute(functionContext, functionSymbol, args);
+
+                var argsDictionary = new Dictionary<string, object>();
+
+                for (var i = 0; i < functionSymbol.FunctionTarget.Parameters.Count; i++)
+                {
+                    var name = functionSymbol.FunctionTarget.Parameters[i];
+                    var argumentValue = args[i];
+                    argsDictionary.Add(name, argumentValue);
+                }
+                
+                if (objectInstance != null)
+                {
+                    argsDictionary.Add("this", objectInstance);
+                }
+
+                return functionSymbol.FunctionTarget.Execute(functionContext, functionSymbol, argsDictionary);
             }
+
             return PlatypusNullInstance.Instance;
         }
 
@@ -53,12 +70,14 @@ namespace CPlatypus.Execution.Executors
                 Context executionContext;
                 Symbol executionSymbol;
 
+                PlatypusInstance targetObject = null;
+
                 if (functionCallNode.HasTarget)
                 {
-                    executionContext =
-                        ExpressionExecutor.Instance.ResolveObjectContext(functionCallNode.TargetNode, currentContext,
-                            currentSymbol);
-                    executionSymbol = currentSymbol;
+                    targetObject = ExpressionExecutor.Instance.ResolveObject(
+                        functionCallNode.TargetNode, currentContext, currentSymbol);
+                    executionContext = targetObject.Context;
+                    executionSymbol = targetObject.Symbol;
                 }
                 else
                 {
@@ -75,19 +94,29 @@ namespace CPlatypus.Execution.Executors
                     {
                         if (functionSymbol.ExternFunction)
                         {
+                            /*var args = new Dictionary<string, object>();
+
+                            for (var i = 0; i < functionSymbol.FunctionTarget.Parameters.Count; i++)
+                            {
+                                var argumentValue = ExpressionExecutor.Instance.Execute(
+                                    functionCallNode.ArgumentList.Arguments[i], currentContext, currentSymbol);
+                                var name = functionSymbol.FunctionNode.ParameterList.Parameters[i].Value;
+                                args.Add(name, argumentValue);
+                            }*/
+
                             var args = new List<object>();
-                            
+
                             foreach (var arg in functionCallNode.ArgumentList.Arguments)
                             {
                                 args.Add(ExpressionExecutor.Instance.Execute(arg, currentContext, currentSymbol));
                             }
-                            
-                            return Execute(functionSymbol, currentContext, args.ToArray());
+
+                            return Execute(functionSymbol, currentContext, args.ToArray(), targetObject);
                         }
                         else
                         {
                             var functionContext = new PlatypusContext("Function Context", executionContext);
-                            
+
                             for (var i = 0; i < functionSymbol.FunctionNode.ParameterList.Parameters.Count; i++)
                             {
                                 var argumentValue = ExpressionExecutor.Instance.Execute(

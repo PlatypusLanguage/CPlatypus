@@ -66,7 +66,7 @@ namespace CPlatypus.Execution.Object
         public override string ToString()
         {
             return FunctionCallExecutor.Instance
-                .Execute(Symbol.GetLocal<PlatypusFunctionSymbol>("_tostring"), Context, this).Context
+                .Execute(Symbol.GetLocal<PlatypusFunctionSymbol>("tostring"), Context, new object[0], this).Context
                 .GetLocal<string>("_value");
         }
     }

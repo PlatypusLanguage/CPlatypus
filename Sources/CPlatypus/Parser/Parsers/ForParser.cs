@@ -21,7 +21,7 @@ using CPlatypus.Parser.Nodes;
 
 namespace CPlatypus.Parser.Parsers
 {
-    public class ForParser : PlatypusNodeParser
+    public class ForParser : NodeParser
     {
         public static ForParser Instance { get; } = new ForParser();
 

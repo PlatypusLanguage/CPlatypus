@@ -17,6 +17,7 @@
  */
 
 using System;
+using System.Collections.Generic;
 using CPlatypus.Execution.Object;
 using CPlatypus.Execution.StandardLibrary.Types;
 using CPlatypus.Framework.Execution;
@@ -27,15 +28,16 @@ namespace CPlatypus.Execution.StandardLibrary.IO
     public class PlatypusReadFunction : PlatypusFunction
     {
         public static PlatypusReadFunction Singleton { get; } = new PlatypusReadFunction();
-        
-        private PlatypusReadFunction() : base("read", "Read")
+
+        private PlatypusReadFunction() : base("read", new List<string>(), "Read")
         {
         }
-        
+
         public PlatypusInstance Read(Context currentContext, Symbol currentSymbol,
-            params object[] args)
+            Dictionary<string, object> args)
         {
-            return PlatypusString.Singleton.Create(currentContext, currentSymbol, Console.ReadLine());
+            return PlatypusString.Singleton.Create(currentContext, currentSymbol,
+                new Dictionary<string, object> {{"value", Console.ReadLine()}});
         }
     }
 }

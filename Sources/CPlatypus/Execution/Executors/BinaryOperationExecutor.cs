@@ -87,7 +87,7 @@ namespace CPlatypus.Execution.Executors
                     }
 
                     return FunctionCallExecutor.Instance.Execute(l.Symbol.Get<PlatypusFunctionSymbol>(opString),
-                        currentContext, l, r);
+                        currentContext, new object[] {l, r});
                 }
             }
 

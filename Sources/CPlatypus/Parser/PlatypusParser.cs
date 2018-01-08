@@ -26,14 +26,14 @@ namespace CPlatypus.Parser
 {
     public class PlatypusParser : Parser<PlatypusToken, PlatypusNode>
     {
-        public readonly List<PlatypusNodeParser> Parsers;
+        public readonly List<NodeParser> Parsers;
 
         private int _counter;
 
         public PlatypusParser(PlatypusLexer lexer) : base(lexer)
         {
             _counter = 0;
-            Parsers = new List<PlatypusNodeParser>
+            Parsers = new List<NodeParser>
             {
                 IfParser.Instance,
                 WhileParser.Instance,

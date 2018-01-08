@@ -16,6 +16,7 @@
  *     along with CPlatypus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using CPlatypus.Core;
@@ -35,25 +36,25 @@ namespace CPlatypus.Execution.Object
         }
 
         public abstract PlatypusInstance Create(Context currentContext, Symbol currentSymbol,
-            params object[] args);
+            Dictionary<string, object> args);
 
         public abstract PlatypusInstance Constructor(Context currentContext, Symbol currentSymbol,
-            params object[] args);
+            Dictionary<string, object> args);
 
         public abstract PlatypusInstance PlusOperator(Context currentContext, Symbol currentSymbol,
-            params object[] args);
+            Dictionary<string, object> args);
         
         public abstract PlatypusInstance MinusOperator(Context currentContext, Symbol currentSymbol,
-            params object[] args);
+            Dictionary<string, object> args);
 
         public abstract PlatypusInstance DivideOperator(Context currentContext, Symbol currentSymbol,
-            params object[] args);
+            Dictionary<string, object> args);
         
         public abstract PlatypusInstance MultiplyOperator(Context currentContext, Symbol currentSymbol,
-            params object[] args);
+            Dictionary<string, object> args);
         
         public abstract PlatypusInstance ToStringInstance(Context currentContext, Symbol currentSymbol,
-            params object[] args);
+            Dictionary<string, object> args);
 
         public PlatypusClassSymbol ToSymbol(Symbol parent)
         {
@@ -65,7 +66,7 @@ namespace CPlatypus.Execution.Object
                 var attribute = method.GetCustomAttribute<PlatypusFunctionAttribute>();
 
                 classSymbol.Add(
-                    new PlatypusFunction(attribute.Name, method.CreateDelegate(this)).ToSymbol(classSymbol));
+                    new PlatypusFunction(attribute.Name, attribute.Parameters, method.CreateDelegate(this)).ToSymbol(classSymbol));
             }
 
             return classSymbol;

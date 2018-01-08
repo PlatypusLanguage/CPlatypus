@@ -17,6 +17,7 @@
  */
 
 using System;
+using System.Collections.Generic;
 using CPlatypus.Core;
 using CPlatypus.Execution.Object;
 using CPlatypus.Execution.StandardLibrary.Types;
@@ -28,15 +29,15 @@ namespace CPlatypus.Execution.StandardLibrary.IO
     public class PlatypusPrintFunction : PlatypusFunction
     {
         public static PlatypusPrintFunction Singleton { get; } = new PlatypusPrintFunction();
-        
-        private PlatypusPrintFunction() : base("print", "Print")
+
+        private PlatypusPrintFunction() : base("print", new List<string> {"value"}, "Print")
         {
         }
-        
+
         public PlatypusInstance Print(Context currentContext, Symbol currentSymbol,
-            params object[] args)
+            Dictionary<string, object> args)
         {
-            Console.WriteLine(args.JoinToString());
+            Console.WriteLine(args["value"]);
             return PlatypusNullInstance.Instance;
         }
     }

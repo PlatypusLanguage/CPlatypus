@@ -18,7 +18,7 @@
 
 namespace CPlatypus.Parser
 {
-    public abstract class PlatypusNodeParser
+    public abstract class NodeParser
     {
         public abstract bool Match(PlatypusParser parser);
 

@@ -17,6 +17,7 @@
  */
 
 using System;
+using System.Collections.Generic;
 using CPlatypus.Core;
 using CPlatypus.Framework.Execution;
 using CPlatypus.Framework.Semantic;
@@ -28,21 +29,25 @@ namespace CPlatypus.Execution.Object
     {
         public string Name { get; }
 
+        public List<string> Parameters { get; }
+        
         private readonly Delegate _delegateFunction;
         
-        public PlatypusFunction(string name, Delegate delegateFunction)
+        public PlatypusFunction(string name, List<string> parameters, Delegate delegateFunction)
         {
             Name = name;
+            Parameters = parameters;
             _delegateFunction = delegateFunction;
         }
-
-        public PlatypusFunction(string name, string realName)
+        
+        public PlatypusFunction(string name, List<string> parameters, string realName)
         {
             Name = name;
+            Parameters = parameters;
             _delegateFunction = GetType().GetMethod(realName).CreateDelegate(this);
         }
 
-        public PlatypusInstance Execute(Context currentContext, Symbol currentSymbol, params object[] args)
+        public PlatypusInstance Execute(Context currentContext, Symbol currentSymbol, Dictionary<string, object> args)
         {          
             return (PlatypusInstance) _delegateFunction.DynamicInvoke(currentContext, currentSymbol, args);
         }
