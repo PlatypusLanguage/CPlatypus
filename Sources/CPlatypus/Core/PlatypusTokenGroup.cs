@@ -17,27 +17,18 @@
  */
 
 using System;
-using CPlatypus.Core;
-using CPlatypus.Execution.Object;
-using CPlatypus.Execution.StandardLibrary.Types;
-using CPlatypus.Framework.Execution;
-using CPlatypus.Framework.Semantic;
+using CPlatypus.Lexer;
 
-namespace CPlatypus.Execution.StandardLibrary.IO
+namespace CPlatypus.Core
 {
-    public class PlatypusPrintFunction : PlatypusFunction
+    [AttributeUsage(AttributeTargets.Field)]
+    public class PlatypusTokenGroup : Attribute
     {
-        public static PlatypusPrintFunction Singleton { get; } = new PlatypusPrintFunction();
-        
-        private PlatypusPrintFunction() : base("print", "Print")
+        public PlatypusTokenTypeGroup[] Groups { get; }
+
+        public PlatypusTokenGroup(params PlatypusTokenTypeGroup[] groups)
         {
-        }
-        
-        public PlatypusInstance Print(Context currentContext, Symbol currentSymbol,
-            params object[] args)
-        {
-            Console.WriteLine(args.JoinToString());
-            return PlatypusNullInstance.Instance;
+            Groups = groups;
         }
     }
 }

@@ -19,6 +19,7 @@
 using System.Collections.Generic;
 using CPlatypus.Execution.Object;
 using CPlatypus.Execution.StandardLibrary.Types;
+using CPlatypus.Framework.Execution;
 using CPlatypus.Framework.Semantic;
 using CPlatypus.Parser;
 using CPlatypus.Parser.Nodes;
@@ -26,7 +27,7 @@ using CPlatypus.Semantic;
 
 namespace CPlatypus.Execution.Executors
 {
-    public class FunctionCallExecutor : NodeExecutor
+    public class FunctionCallExecutor : PlatypusNodeExecutor
     {
         public static FunctionCallExecutor Instance { get; } = new FunctionCallExecutor();
 
@@ -34,12 +35,22 @@ namespace CPlatypus.Execution.Executors
         {
         }
 
-        public override PlatypusInstance Execute(PlatypusNode node, PlatypusContext currentContext,
+        public PlatypusInstance Execute(PlatypusFunctionSymbol functionSymbol, Context currentContext, params object[] args)
+        {
+            if (functionSymbol.ExternFunction)
+            {
+                var functionContext = new PlatypusContext("Function Context", currentContext);
+                return functionSymbol.FunctionTarget.Execute(functionContext, functionSymbol, args);
+            }
+            return PlatypusNullInstance.Instance;
+        }
+
+        public override PlatypusInstance Execute(PlatypusNode node, Context currentContext,
             Symbol currentSymbol)
         {
             if (node is FunctionCallNode functionCallNode)
             {
-                PlatypusContext executionContext;
+                Context executionContext;
                 Symbol executionSymbol;
 
                 if (functionCallNode.HasTarget)
@@ -62,21 +73,21 @@ namespace CPlatypus.Execution.Executors
 
                     if (functionSymbol != null)
                     {
-                        var functionContext = new PlatypusContext("Function Context", executionContext);
-                    
-                        var args = new List<object>();
-
                         if (functionSymbol.ExternFunction)
                         {
+                            var args = new List<object>();
+                            
                             foreach (var arg in functionCallNode.ArgumentList.Arguments)
                             {
                                 args.Add(ExpressionExecutor.Instance.Execute(arg, currentContext, currentSymbol));
                             }
-
-                            return functionSymbol.Execute(functionContext, functionSymbol, args.ToArray());
+                            
+                            return Execute(functionSymbol, currentContext, args.ToArray());
                         }
                         else
                         {
+                            var functionContext = new PlatypusContext("Function Context", executionContext);
+                            
                             for (var i = 0; i < functionSymbol.FunctionNode.ParameterList.Parameters.Count; i++)
                             {
                                 var argumentValue = ExpressionExecutor.Instance.Execute(

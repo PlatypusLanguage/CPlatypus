@@ -16,15 +16,12 @@
  *     along with CPlatypus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-using CPlatypus.Execution.Object;
-using CPlatypus.Framework.Semantic;
-using CPlatypus.Parser;
-
-namespace CPlatypus.Execution
+namespace CPlatypus.Parser
 {
-    public abstract class NodeExecutor
+    public abstract class PlatypusNodeParser
     {
-        public abstract PlatypusInstance Execute(PlatypusNode node, PlatypusContext currentContext,
-            Symbol currentSymbol);
+        public abstract bool Match(PlatypusParser parser);
+
+        public abstract PlatypusNode Parse(PlatypusParser parser);
     }
 }

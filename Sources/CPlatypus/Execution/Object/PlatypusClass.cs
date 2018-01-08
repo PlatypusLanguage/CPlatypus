@@ -19,6 +19,7 @@
 using System.Linq;
 using System.Reflection;
 using CPlatypus.Core;
+using CPlatypus.Framework.Execution;
 using CPlatypus.Framework.Semantic;
 using CPlatypus.Semantic;
 
@@ -33,25 +34,25 @@ namespace CPlatypus.Execution.Object
             Name = name;
         }
 
-        public abstract PlatypusInstance Create(PlatypusContext currentContext, Symbol currentSymbol,
+        public abstract PlatypusInstance Create(Context currentContext, Symbol currentSymbol,
             params object[] args);
 
-        public abstract PlatypusInstance Constructor(PlatypusContext currentContext, Symbol currentSymbol,
+        public abstract PlatypusInstance Constructor(Context currentContext, Symbol currentSymbol,
             params object[] args);
 
-        public abstract PlatypusInstance PlusOperator(PlatypusContext currentContext, Symbol currentSymbol,
+        public abstract PlatypusInstance PlusOperator(Context currentContext, Symbol currentSymbol,
             params object[] args);
         
-        public abstract PlatypusInstance MinusOperator(PlatypusContext currentContext, Symbol currentSymbol,
+        public abstract PlatypusInstance MinusOperator(Context currentContext, Symbol currentSymbol,
             params object[] args);
 
-        public abstract PlatypusInstance DivideOperator(PlatypusContext currentContext, Symbol currentSymbol,
+        public abstract PlatypusInstance DivideOperator(Context currentContext, Symbol currentSymbol,
             params object[] args);
         
-        public abstract PlatypusInstance MultiplyOperator(PlatypusContext currentContext, Symbol currentSymbol,
+        public abstract PlatypusInstance MultiplyOperator(Context currentContext, Symbol currentSymbol,
             params object[] args);
         
-        public abstract PlatypusInstance ToStringInstance(PlatypusContext currentContext, Symbol currentSymbol,
+        public abstract PlatypusInstance ToStringInstance(Context currentContext, Symbol currentSymbol,
             params object[] args);
 
         public PlatypusClassSymbol ToSymbol(Symbol parent)

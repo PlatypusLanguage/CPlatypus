@@ -17,6 +17,9 @@
  */
 
 using System;
+using CPlatypus.Execution.Executors;
+using CPlatypus.Execution.StandardLibrary.Types;
+using CPlatypus.Framework.Execution;
 using CPlatypus.Semantic;
 
 namespace CPlatypus.Execution.Object
@@ -25,9 +28,9 @@ namespace CPlatypus.Execution.Object
     {
         public PlatypusClassSymbol Symbol { get; }
 
-        public PlatypusContext Context { get; }
+        public Context Context { get; }
 
-        public PlatypusInstance(PlatypusClassSymbol symbol, PlatypusContext parentContext)
+        public PlatypusInstance(PlatypusClassSymbol symbol, Context parentContext)
         {
             Symbol = symbol;
             Context = new PlatypusContext(symbol is null ? "c_null" : "c_" + symbol.Name, parentContext);
@@ -39,7 +42,7 @@ namespace CPlatypus.Execution.Object
         {
             Context.Set("_value", value);
         }
-        
+
         public object GetValue()
         {
             if (HasValue)
@@ -62,8 +65,9 @@ namespace CPlatypus.Execution.Object
 
         public override string ToString()
         {
-            return (Symbol.GetLocal<PlatypusFunctionSymbol>("_tostring")
-                .Execute(Context, Symbol, this)).Context.GetLocal<string>("_value");
+            return FunctionCallExecutor.Instance
+                .Execute(Symbol.GetLocal<PlatypusFunctionSymbol>("_tostring"), Context, this).Context
+                .GetLocal<string>("_value");
         }
     }
 }

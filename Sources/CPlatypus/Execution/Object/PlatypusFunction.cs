@@ -18,6 +18,7 @@
 
 using System;
 using CPlatypus.Core;
+using CPlatypus.Framework.Execution;
 using CPlatypus.Framework.Semantic;
 using CPlatypus.Semantic;
 
@@ -41,7 +42,7 @@ namespace CPlatypus.Execution.Object
             _delegateFunction = GetType().GetMethod(realName).CreateDelegate(this);
         }
 
-        public PlatypusInstance Execute(PlatypusContext currentContext, Symbol currentSymbol, params object[] args)
+        public PlatypusInstance Execute(Context currentContext, Symbol currentSymbol, params object[] args)
         {          
             return (PlatypusInstance) _delegateFunction.DynamicInvoke(currentContext, currentSymbol, args);
         }

@@ -18,6 +18,7 @@
 
 using CPlatypus.Execution.Object;
 using CPlatypus.Execution.StandardLibrary.Types;
+using CPlatypus.Framework.Execution;
 using CPlatypus.Framework.Semantic;
 using CPlatypus.Parser;
 using CPlatypus.Parser.Nodes;
@@ -25,7 +26,7 @@ using CPlatypus.Semantic;
 
 namespace CPlatypus.Execution.Executors
 {
-    public class ExpressionExecutor : NodeExecutor
+    public class ExpressionExecutor : PlatypusNodeExecutor
     {
         public static ExpressionExecutor Instance { get; } = new ExpressionExecutor();
 
@@ -33,7 +34,7 @@ namespace CPlatypus.Execution.Executors
         {
         }
 
-        public override PlatypusInstance Execute(PlatypusNode node, PlatypusContext currentContext,
+        public override PlatypusInstance Execute(PlatypusNode node, Context currentContext,
             Symbol currentSymbol)
         {
             if (node is IdentifierNode identifierNode)
@@ -47,14 +48,22 @@ namespace CPlatypus.Execution.Executors
 
             if (node is IntegerNode integerNode)
             {
+                return FunctionCallExecutor.Instance.Execute(
+                    currentSymbol.Get<PlatypusClassSymbol>("Integer").Get<PlatypusFunctionSymbol>("_constructor"),
+                    currentContext, integerNode.Value);
+                /*
                 return currentSymbol.Get<PlatypusClassSymbol>("Integer").Get<PlatypusFunctionSymbol>("_constructor")
-                    .Execute(currentContext, currentSymbol, integerNode.Value);
+                    .Execute(currentContext, currentSymbol, integerNode.Value);*/
             }
 
             if (node is StringNode stringNode)
             {
+                return FunctionCallExecutor.Instance.Execute(
+                    currentSymbol.Get<PlatypusClassSymbol>("String").Get<PlatypusFunctionSymbol>("_constructor"),
+                    currentContext, stringNode.Value);
+                /*
                 return currentSymbol.Get<PlatypusClassSymbol>("String").Get<PlatypusFunctionSymbol>("_constructor")
-                    .Execute(currentContext, currentSymbol, stringNode.Value);
+                    .Execute(currentContext, currentSymbol, stringNode.Value);*/
             }
 
             if (node is FunctionCallNode functionCallNode)
@@ -70,7 +79,7 @@ namespace CPlatypus.Execution.Executors
             return PlatypusNullInstance.Instance;
         }
 
-        public PlatypusContext ResolveContext(PlatypusNode node, PlatypusContext context)
+        public Context ResolveContext(PlatypusNode node, Context context)
         {
             if (node is IdentifierNode identifierNode)
             {
@@ -96,7 +105,7 @@ namespace CPlatypus.Execution.Executors
             return null;
         }
 
-        public PlatypusContext ResolveObjectContext(PlatypusNode node, PlatypusContext context, Symbol symbol)
+        public Context ResolveObjectContext(PlatypusNode node, Context context, Symbol symbol)
         {
             if (node is IdentifierNode identifierNode)
             {

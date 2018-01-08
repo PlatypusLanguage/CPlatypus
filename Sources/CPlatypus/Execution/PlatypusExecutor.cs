@@ -20,6 +20,7 @@ using CPlatypus.Execution.Executors;
 using CPlatypus.Execution.Object;
 using CPlatypus.Execution.StandardLibrary.IO;
 using CPlatypus.Execution.StandardLibrary.Types;
+using CPlatypus.Framework.Execution;
 using CPlatypus.Parser;
 using CPlatypus.Parser.Nodes;
 using CPlatypus.Semantic;
@@ -30,7 +31,7 @@ namespace CPlatypus.Execution
     {
         private PlatypusModuleSymbol _moduleSymbol;
 
-        private PlatypusContext _context;
+        private Context _context;
         
         public PlatypusExecutor(PlatypusModuleSymbol globalModuleSymbol = null)
         {

@@ -17,7 +17,9 @@
  */
 
 using System;
+using CPlatypus.Execution.Executors;
 using CPlatypus.Execution.Object;
+using CPlatypus.Framework.Execution;
 using CPlatypus.Framework.Semantic;
 using CPlatypus.Semantic;
 
@@ -26,12 +28,12 @@ namespace CPlatypus.Execution.StandardLibrary.Types
     public class PlatypusInteger : PlatypusClass
     {
         public static PlatypusInteger Singleton { get; } = new PlatypusInteger();
-        
+
         private PlatypusInteger() : base("Integer")
         {
         }
 
-        public override PlatypusInstance Create(PlatypusContext currentContext, Symbol currentSymbol,
+        public override PlatypusInstance Create(Context currentContext, Symbol currentSymbol,
             params object[] args)
         {
             var instance = new PlatypusInstance(currentSymbol.TopSymbol.Get<PlatypusClassSymbol>(Name),
@@ -41,7 +43,7 @@ namespace CPlatypus.Execution.StandardLibrary.Types
         }
 
         [PlatypusFunction("_constructor")]
-        public override PlatypusInstance Constructor(PlatypusContext currentContext, Symbol currentSymbol,
+        public override PlatypusInstance Constructor(Context currentContext, Symbol currentSymbol,
             params object[] args)
         {
             var value = args.Length > 0 ? args[0] : 0;
@@ -49,7 +51,7 @@ namespace CPlatypus.Execution.StandardLibrary.Types
         }
 
         [PlatypusFunction("_plusoperator")]
-        public override PlatypusInstance PlusOperator(PlatypusContext currentContext, Symbol currentSymbol,
+        public override PlatypusInstance PlusOperator(Context currentContext, Symbol currentSymbol,
             params object[] args)
         {
             var left = (PlatypusInstance) args[0];
@@ -64,33 +66,36 @@ namespace CPlatypus.Execution.StandardLibrary.Types
 
             return PlatypusString.Singleton.Create(
                 currentContext, currentSymbol,
-                (left.Symbol.Get<PlatypusFunctionSymbol>("_tostring")
-                    .Execute(currentContext, currentSymbol, left)).GetValue<string>() +
-                (right.Symbol.Get<PlatypusFunctionSymbol>("_tostring")
-                    .Execute(currentContext, currentSymbol, right)).GetValue<string>()
+                FunctionCallExecutor.Instance.Execute(left.Symbol.Get<PlatypusFunctionSymbol>("_tostring"),
+                        currentContext, left).GetValue<string>() +
+                FunctionCallExecutor.Instance.Execute(right.Symbol.Get<PlatypusFunctionSymbol>("_tostring"),
+                    currentContext, right).GetValue<string>()
             );
         }
 
         [PlatypusFunction("_minusoperator")]
-        public override PlatypusInstance MinusOperator(PlatypusContext currentContext, Symbol currentSymbol, params object[] args)
+        public override PlatypusInstance MinusOperator(Context currentContext, Symbol currentSymbol,
+            params object[] args)
         {
             throw new NotImplementedException();
         }
 
         [PlatypusFunction("_divideoperator")]
-        public override PlatypusInstance DivideOperator(PlatypusContext currentContext, Symbol currentSymbol, params object[] args)
+        public override PlatypusInstance DivideOperator(Context currentContext, Symbol currentSymbol,
+            params object[] args)
         {
             throw new NotImplementedException();
         }
 
         [PlatypusFunction("_multiplyoperator")]
-        public override PlatypusInstance MultiplyOperator(PlatypusContext currentContext, Symbol currentSymbol, params object[] args)
+        public override PlatypusInstance MultiplyOperator(Context currentContext, Symbol currentSymbol,
+            params object[] args)
         {
             throw new NotImplementedException();
         }
 
         [PlatypusFunction("_tostring")]
-        public override PlatypusInstance ToStringInstance(PlatypusContext currentContext,
+        public override PlatypusInstance ToStringInstance(Context currentContext,
             Symbol currentSymbol,
             params object[] args)
         {

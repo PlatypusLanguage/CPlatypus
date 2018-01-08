@@ -16,8 +16,10 @@
  *     along with CPlatypus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+using System.Net.Mail;
 using CPlatypus.Execution.Object;
 using CPlatypus.Execution.StandardLibrary.Types;
+using CPlatypus.Framework.Execution;
 using CPlatypus.Framework.Semantic;
 using CPlatypus.Parser;
 using CPlatypus.Parser.Nodes;
@@ -25,7 +27,7 @@ using CPlatypus.Semantic;
 
 namespace CPlatypus.Execution.Executors
 {
-    public class BinaryOperationExecutor : NodeExecutor
+    public class BinaryOperationExecutor : PlatypusNodeExecutor
     {
         public static BinaryOperationExecutor Instance { get; } = new BinaryOperationExecutor();
 
@@ -33,7 +35,7 @@ namespace CPlatypus.Execution.Executors
         {
         }
 
-        public override PlatypusInstance Execute(PlatypusNode node, PlatypusContext currentContext,
+        public override PlatypusInstance Execute(PlatypusNode node, Context currentContext,
             Symbol currentSymbol)
         {
             if (node is BinaryOperationNode binaryOperationNode)
@@ -83,9 +85,9 @@ namespace CPlatypus.Execution.Executors
                             opString = "_divideoperator";
                             break;
                     }
-                    
-                    return l.Symbol.Get<PlatypusFunctionSymbol>(opString)
-                        .Execute(currentContext, currentSymbol, l, r);
+
+                    return FunctionCallExecutor.Instance.Execute(l.Symbol.Get<PlatypusFunctionSymbol>(opString),
+                        currentContext, l, r);
                 }
             }
 

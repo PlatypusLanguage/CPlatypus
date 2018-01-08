@@ -19,6 +19,7 @@
 using System;
 using CPlatypus.Execution.Object;
 using CPlatypus.Execution.StandardLibrary.Types;
+using CPlatypus.Framework.Execution;
 using CPlatypus.Framework.Semantic;
 
 namespace CPlatypus.Execution.StandardLibrary.IO
@@ -31,7 +32,7 @@ namespace CPlatypus.Execution.StandardLibrary.IO
         {
         }
         
-        public PlatypusInstance Read(PlatypusContext currentContext, Symbol currentSymbol,
+        public PlatypusInstance Read(Context currentContext, Symbol currentSymbol,
             params object[] args)
         {
             return PlatypusString.Singleton.Create(currentContext, currentSymbol, Console.ReadLine());

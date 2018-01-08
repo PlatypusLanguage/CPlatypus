@@ -16,19 +16,16 @@
  *     along with CPlatypus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-using System;
-using CPlatypus.Lexer;
+using CPlatypus.Execution.Object;
+using CPlatypus.Framework.Execution;
+using CPlatypus.Framework.Semantic;
+using CPlatypus.Parser;
 
-namespace CPlatypus.Core
+namespace CPlatypus.Execution
 {
-    [AttributeUsage(AttributeTargets.Field)]
-    public class TokenGroup : Attribute
+    public abstract class PlatypusNodeExecutor
     {
-        public PlatypusTokenTypeGroup[] Groups { get; }
-
-        public TokenGroup(params PlatypusTokenTypeGroup[] groups)
-        {
-            Groups = groups;
-        }
+        public abstract PlatypusInstance Execute(PlatypusNode node, Context currentContext,
+            Symbol currentSymbol);
     }
 }

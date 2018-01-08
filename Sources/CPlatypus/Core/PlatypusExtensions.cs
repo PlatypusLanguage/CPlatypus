@@ -78,15 +78,15 @@ namespace CPlatypus.Core
 
         public static bool IsInTokenGroup(this PlatypusTokenType tokenType, PlatypusTokenTypeGroup group)
         {
-            var attributes = (TokenGroup[]) tokenType.GetType().GetField(tokenType.ToString())
-                .GetCustomAttributes(typeof(TokenGroup), false);
+            var attributes = (PlatypusTokenGroup[]) tokenType.GetType().GetField(tokenType.ToString())
+                .GetCustomAttributes(typeof(PlatypusTokenGroup), false);
             return attributes.Length > 0 && attributes[0].Groups.Contains(group);
         }
 
         public static bool IsInTokenGroups(this PlatypusTokenType tokenType, PlatypusTokenTypeGroup[] groups)
         {
-            var attributes = (TokenGroup[]) tokenType.GetType().GetField(tokenType.ToString())
-                .GetCustomAttributes(typeof(TokenGroup), false);
+            var attributes = (PlatypusTokenGroup[]) tokenType.GetType().GetField(tokenType.ToString())
+                .GetCustomAttributes(typeof(PlatypusTokenGroup), false);
             return attributes.Length > 0 && !attributes[0].Groups.Except(groups).Any();
         }
 

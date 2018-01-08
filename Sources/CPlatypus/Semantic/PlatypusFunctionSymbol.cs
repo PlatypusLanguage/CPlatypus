@@ -16,9 +16,6 @@
  *     along with CPlatypus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-using System;
-using CPlatypus.Execution;
-using CPlatypus.Execution.Executors;
 using CPlatypus.Execution.Object;
 using CPlatypus.Framework.Semantic;
 using CPlatypus.Parser.Nodes;
@@ -29,7 +26,7 @@ namespace CPlatypus.Semantic
     {
         public FunctionNode FunctionNode { get; }
 
-        private PlatypusFunction FunctionTarget { get; }
+        public PlatypusFunction FunctionTarget { get; }
 
         public bool ExternFunction => FunctionNode is null;
 
@@ -43,17 +40,6 @@ namespace CPlatypus.Semantic
         {
             Name = functionTarget.Name;
             FunctionTarget = functionTarget;
-        }
-
-        public PlatypusInstance Execute(PlatypusContext currentContext, Symbol currentSymbol,
-            params object[] args)
-        {
-            if (ExternFunction)
-            {
-                return FunctionTarget.Execute(currentContext, currentSymbol, args);
-            }
-
-            return FunctionCallExecutor.Instance.Execute(FunctionNode, currentContext, currentSymbol);
         }
     }
 }

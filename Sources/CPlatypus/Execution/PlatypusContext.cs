@@ -16,96 +16,15 @@
  *     along with CPlatypus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-using System.Collections.Generic;
 using CPlatypus.Execution.StandardLibrary.Types;
+using CPlatypus.Framework.Execution;
 
 namespace CPlatypus.Execution
 {
-    public class PlatypusContext
+    public class PlatypusContext : Context
     {
-        public string Name { get; }
-
-        public PlatypusContext Parent { get; }
-
-        private readonly Dictionary<string, object> _fields;
-
-        public PlatypusContext GlobalContext
+        public PlatypusContext(string name, Context parent) : base(name, parent, PlatypusNullInstance.Instance)
         {
-            get
-            {
-                var ctx = this;
-                while (ctx.Parent != null)
-                {
-                    ctx = ctx.Parent;
-                }
-
-                return ctx;
-            }
-        }
-
-        public PlatypusContext(string name, PlatypusContext parent)
-        {
-            Name = name;
-            Parent = parent;
-            _fields = new Dictionary<string, object>();
-        }
-
-        public object Add(string name)
-        {
-            _fields.Add(name, PlatypusNullInstance.Instance);
-            return PlatypusNullInstance.Instance;
-        }
-
-        public object Add(string name, object instance)
-        {
-            Add(name);
-            Set(name, instance);
-            return instance;
-        }
-
-        public object Set(string name, object obj)
-        {
-            return _fields[name] = obj;
-        }
-        
-        public T Set<T>(string name, T instance)
-        {
-            return (T)(_fields[name] = instance);
-        }
-
-        public object Get(string name)
-        {
-            return GetLocal(name) ?? Parent?.GetLocal(name);
-        }
-
-        public T Get<T>(string name)
-        {
-            return GetLocal(name) is null ? Parent.GetLocal<T>(name) : default(T);
-        }
-
-        public object GetLocal(string name)
-        {
-            return _fields.ContainsKey(name) ? _fields[name] : null;
-        }
-        
-        public T GetLocal<T>(string name)
-        {
-            return _fields.ContainsKey(name) ? (T)_fields[name] : default(T);
-        }
-        
-        public bool ContainsLocal(string name)
-        {
-            return _fields.ContainsKey(name);
-        }
-
-        public bool Contains(string name)
-        {
-            if (ContainsLocal(name))
-            {
-                return true;
-            }
-
-            return Parent != null && Parent.Contains(name);
         }
     }
 }

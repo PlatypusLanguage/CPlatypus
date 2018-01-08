@@ -18,13 +18,14 @@
 
 using CPlatypus.Execution.Object;
 using CPlatypus.Execution.StandardLibrary.Types;
+using CPlatypus.Framework.Execution;
 using CPlatypus.Framework.Semantic;
 using CPlatypus.Parser;
 using CPlatypus.Parser.Nodes;
 
 namespace CPlatypus.Execution.Executors
 {
-    public class BodyExecutor : NodeExecutor
+    public class BodyExecutor : PlatypusNodeExecutor
     {
         public static BodyExecutor Instance { get; } = new BodyExecutor();
 
@@ -32,7 +33,7 @@ namespace CPlatypus.Execution.Executors
         {
         }
 
-        public override PlatypusInstance Execute(PlatypusNode node, PlatypusContext currentContext,
+        public override PlatypusInstance Execute(PlatypusNode node, Context currentContext,
             Symbol currentSymbol)
         {
             if (node is CodeNode codeNode)
