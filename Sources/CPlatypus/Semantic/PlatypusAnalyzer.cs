@@ -92,13 +92,13 @@ namespace CPlatypus.Semantic
 
         public void Visit(ConstructorNode node, PlatypusNode parent)
         {
-            /*var function = new PlatypusFunctionSymbol(node, _currentSymbol);
-            _currentSymbol.Add(function);
-            _currentSymbol = function;
+            var constructor = new PlatypusFunctionSymbol(node, _currentSymbol);
+            _currentSymbol.Add(constructor);
+            _currentSymbol = constructor;
             
             node.AcceptChildren(this, node);
 
-            _currentSymbol = function.Parent;*/
+            _currentSymbol = constructor.Parent;
         }
 
         public void Visit(IdentifierNode node, PlatypusNode parent)

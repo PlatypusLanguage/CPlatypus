@@ -28,12 +28,22 @@ namespace CPlatypus.Semantic
 
         public PlatypusFunction FunctionTarget { get; }
 
+        public ConstructorNode ConstructorNode { get; }
+
         public bool ExternFunction => FunctionNode is null;
+
+        public bool IsConstructor => !(ConstructorNode is null);
 
         public PlatypusFunctionSymbol(FunctionNode functionNode, Symbol parent) : base(parent)
         {
             Name = functionNode.Name.Value;
             FunctionNode = functionNode;
+        }
+
+        public PlatypusFunctionSymbol(ConstructorNode constructorNode, Symbol parent) : base(parent)
+        {
+            Name = "_constructor";
+            ConstructorNode = constructorNode;
         }
 
         public PlatypusFunctionSymbol(PlatypusFunction functionTarget, Symbol parent) : base(parent)

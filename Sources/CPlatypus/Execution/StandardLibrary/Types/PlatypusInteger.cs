@@ -39,7 +39,14 @@ namespace CPlatypus.Execution.StandardLibrary.Types
         {
             var instance = new PlatypusInstance(currentSymbol.Get<PlatypusClassSymbol>(Name),
                 currentContext);
-            instance.SetValue(args.ContainsKey("value") ? Convert.ToInt32(args["value"]) : 0);
+            if (args["value"] is PlatypusInstance platypusInstance)
+            {
+                instance.SetValue(platypusInstance.GetValue());
+            }
+            else
+            {
+                instance.SetValue(args["value"]);
+            }
             return instance;
         }
 

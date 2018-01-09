@@ -78,6 +78,11 @@ namespace CPlatypus.Execution.Executors
                 return FunctionCallExecutor.Instance.Execute(functionCallNode, currentContext, currentSymbol);
             }
 
+            if (node is NewNode newNode)
+            {
+                return NewExecutor.Instance.Execute(newNode, currentContext, currentSymbol);
+            }
+
             if (node is BinaryOperationNode binaryOperationNode)
             {
                 return BinaryOperationExecutor.Instance.Execute(binaryOperationNode, currentContext, currentSymbol);

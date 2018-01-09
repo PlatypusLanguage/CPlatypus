@@ -17,6 +17,7 @@
  */
 
 using System.Collections.Generic;
+using System.Linq;
 using CPlatypus.Execution.Object;
 using CPlatypus.Execution.StandardLibrary.Types;
 using CPlatypus.Framework.Execution;
@@ -44,18 +45,22 @@ namespace CPlatypus.Execution.Executors
 
                 var argsDictionary = new Dictionary<string, object>();
 
-                for (var i = 0; i < functionSymbol.FunctionTarget.Parameters.Count; i++)
+                var parameters = functionSymbol.IsConstructor
+                    ? functionSymbol.ConstructorNode.Parameters.Parameters.Select(p => p.Value).ToList()
+                    : functionSymbol.FunctionTarget.Parameters;
+
+                for (var i = 0; i < parameters.Count; i++)
                 {
-                    var name = functionSymbol.FunctionTarget.Parameters[i];
+                    var name = parameters[i];
                     var argumentValue = args[i];
                     argsDictionary.Add(name, argumentValue);
                 }
-                
+
                 if (objectInstance != null)
                 {
                     argsDictionary.Add("this", objectInstance);
                 }
-
+                
                 return functionSymbol.FunctionTarget.Execute(functionContext, functionSymbol, argsDictionary);
             }
 

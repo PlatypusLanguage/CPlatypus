@@ -18,7 +18,6 @@
 
 using System;
 using System.Collections.Generic;
-using CPlatypus.Core;
 using CPlatypus.Execution.Executors;
 using CPlatypus.Execution.Object;
 using CPlatypus.Framework.Execution;
@@ -40,7 +39,14 @@ namespace CPlatypus.Execution.StandardLibrary.Types
         {
             var instance = new PlatypusInstance(currentSymbol.Get<PlatypusClassSymbol>(Name),
                 currentContext);
-            instance.SetValue(args.ContainsKey("value") ? args["value"] : "");
+            if (args["value"] is PlatypusInstance platypusInstance)
+            {
+                instance.SetValue(platypusInstance.GetValue());
+            }
+            else
+            {
+                instance.SetValue(args["value"]);
+            }
             return instance;
         }
 

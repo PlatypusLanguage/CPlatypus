@@ -1,6 +1,9 @@
 #lang=default#
 
-var a = 4
-var b = 6
+function test()
+    return 20 + 4
+end
 
-print(a.tostring() + b)
+var a = new Integer(new Integer(test()))
+
+print(a)
