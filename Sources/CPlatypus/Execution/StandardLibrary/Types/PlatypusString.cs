@@ -51,11 +51,10 @@ namespace CPlatypus.Execution.StandardLibrary.Types
             return Create(currentContext, currentSymbol, args);
         }
 
-        [PlatypusFunction("_plusoperator", "left", "right")]
         public override PlatypusInstance PlusOperator(Context currentContext, Symbol currentSymbol,
             Dictionary<string, object> args)
         {
-            var left = (PlatypusInstance) args["left"];
+            var left = (PlatypusInstance) args["this"];
             var right = (PlatypusInstance) args["right"];
 
             return Create(
@@ -74,28 +73,24 @@ namespace CPlatypus.Execution.StandardLibrary.Types
             );
         }
 
-        [PlatypusFunction("_minusoperator", "left", "right")]
         public override PlatypusInstance MinusOperator(Context currentContext, Symbol currentSymbol,
             Dictionary<string, object> args)
         {
             throw new NotImplementedException();
         }
 
-        [PlatypusFunction("_divideoperator", "left", "right")]
         public override PlatypusInstance DivideOperator(Context currentContext, Symbol currentSymbol,
             Dictionary<string, object> args)
         {
             throw new NotImplementedException();
         }
 
-        [PlatypusFunction("_multiplyoperator", "left", "right")]
         public override PlatypusInstance MultiplyOperator(Context currentContext, Symbol currentSymbol,
             Dictionary<string, object> args)
         {
             throw new NotImplementedException();
         }
 
-        [PlatypusFunction("tostring")]
         public override PlatypusInstance ToStringInstance(Context currentContext,
             Symbol currentSymbol, Dictionary<string, object> args)
         {

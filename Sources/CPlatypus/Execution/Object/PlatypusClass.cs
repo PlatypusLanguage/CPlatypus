@@ -43,16 +43,16 @@ namespace CPlatypus.Execution.Object
 
         public abstract PlatypusInstance PlusOperator(Context currentContext, Symbol currentSymbol,
             Dictionary<string, object> args);
-        
+
         public abstract PlatypusInstance MinusOperator(Context currentContext, Symbol currentSymbol,
             Dictionary<string, object> args);
 
         public abstract PlatypusInstance DivideOperator(Context currentContext, Symbol currentSymbol,
             Dictionary<string, object> args);
-        
+
         public abstract PlatypusInstance MultiplyOperator(Context currentContext, Symbol currentSymbol,
             Dictionary<string, object> args);
-        
+
         public abstract PlatypusInstance ToStringInstance(Context currentContext, Symbol currentSymbol,
             Dictionary<string, object> args);
 
@@ -66,7 +66,24 @@ namespace CPlatypus.Execution.Object
                 var attribute = method.GetCustomAttribute<PlatypusFunctionAttribute>();
 
                 classSymbol.Add(
-                    new PlatypusFunction(attribute.Name, attribute.Parameters, method.CreateDelegate(this)).ToSymbol(classSymbol));
+                    new PlatypusFunction(attribute.Name, attribute.Parameters, method.CreateDelegate(this)).ToSymbol(
+                        classSymbol));
+            }
+
+            var methods = new List<(string RealName, string Name, List<string> Parameters)>
+            {
+                ("PlusOperator", "_plusoperator", new List<string> {"right"}),
+                ("MinusOperator", "_minusoperator", new List<string> {"right"}),
+                ("DivideOperator", "_divideoperator", new List<string> {"right"}),
+                ("MultiplyOperator", "_multiplyoperator", new List<string> {"right"}),
+                ("ToStringInstance", "tostring", new List<string>())
+            };
+
+            foreach (var method in methods)
+            {
+                classSymbol.Add(
+                    new PlatypusFunction(method.Name, method.Parameters,
+                        GetType().GetMethod(method.RealName).CreateDelegate(this)).ToSymbol(classSymbol));
             }
 
             return classSymbol;
