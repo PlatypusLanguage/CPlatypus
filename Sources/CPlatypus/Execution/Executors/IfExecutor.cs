@@ -25,44 +25,35 @@ using CPlatypus.Parser.Nodes;
 
 namespace CPlatypus.Execution.Executors
 {
-    public class BodyExecutor : PlatypusNodeExecutor
+    public class IfExecutor : PlatypusNodeExecutor
     {
-        public static BodyExecutor Instance { get; } = new BodyExecutor();
+        public static IfExecutor Instance { get; } = new IfExecutor();
 
-        private BodyExecutor()
+        private IfExecutor()
         {
         }
 
-        public override PlatypusInstance Execute(PlatypusNode node, Context currentContext,
-            Symbol currentSymbol)
+        public override PlatypusInstance Execute(PlatypusNode node, Context currentContext, Symbol currentSymbol)
         {
-            if (node is CodeNode codeNode)
+            if (node is IfNode ifNode)
             {
-                foreach (var n in codeNode.Children)
+                var conditionResult =
+                    ExpressionExecutor.Instance.Execute(ifNode.Condition, currentContext, currentSymbol);
+                if (conditionResult.HasValue && conditionResult.GetValue() is bool)
                 {
-                    if (n is VariableDeclarationNode)
+                    if (conditionResult.GetValue<bool>())
                     {
-                        VariableDeclarationExecutor.Instance.Execute(n, currentContext, currentSymbol);
+                        var r = BodyExecutor.Instance.Execute(ifNode.Body, currentContext, currentSymbol);
+                        return r != PlatypusNullInstance.Instance ? r : null;
                     }
-                    else if (n is BinaryOperationNode)
+                    else
                     {
-                        BinaryOperationExecutor.Instance.Execute(n, currentContext, currentSymbol);
-                    }
-                    else if (n is FunctionCallNode)
-                    {
-                        FunctionCallExecutor.Instance.Execute(n, currentContext, currentSymbol);
-                    }
-                    else if (n is IfNode)
-                    {
-                        var r = IfExecutor.Instance.Execute(n, currentContext, currentSymbol);
-                        if (r != null)
+                        //TODO Execute else if
+                        if (ifNode.ElseBody != null)
                         {
-                            return r;
+                            var r = BodyExecutor.Instance.Execute(ifNode.ElseBody, currentContext, currentSymbol);
+                            return r != PlatypusNullInstance.Instance ? r : null;
                         }
-                    }
-                    else if (n is ReturnNode returnNode)
-                    {
-                        return ExpressionExecutor.Instance.Execute(returnNode.Expression, currentContext, currentSymbol);
                     }
                 }
             }

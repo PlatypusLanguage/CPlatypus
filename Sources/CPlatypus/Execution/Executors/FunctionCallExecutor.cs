@@ -99,16 +99,6 @@ namespace CPlatypus.Execution.Executors
                     {
                         if (functionSymbol.ExternFunction)
                         {
-                            /*var args = new Dictionary<string, object>();
-
-                            for (var i = 0; i < functionSymbol.FunctionTarget.Parameters.Count; i++)
-                            {
-                                var argumentValue = ExpressionExecutor.Instance.Execute(
-                                    functionCallNode.ArgumentList.Arguments[i], currentContext, currentSymbol);
-                                var name = functionSymbol.FunctionNode.ParameterList.Parameters[i].Value;
-                                args.Add(name, argumentValue);
-                            }*/
-
                             var args = new List<object>();
 
                             foreach (var arg in functionCallNode.ArgumentList.Arguments)

@@ -16,7 +16,6 @@
  *     along with CPlatypus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-using System.Net.Mail;
 using CPlatypus.Execution.Object;
 using CPlatypus.Execution.StandardLibrary.Types;
 using CPlatypus.Framework.Execution;
@@ -63,7 +62,10 @@ namespace CPlatypus.Execution.Executors
                 var op = binaryOperationNode.OperationType;
 
                 if (op == BinaryOperation.Addition || op == BinaryOperation.Subtraction ||
-                    op == BinaryOperation.Division || op == BinaryOperation.Multiplication)
+                    op == BinaryOperation.Division || op == BinaryOperation.Multiplication ||
+                    op == BinaryOperation.Equal || op == BinaryOperation.Greater ||
+                    op == BinaryOperation.Less || op == BinaryOperation.GreaterEqual ||
+                    op == BinaryOperation.LessEqual)
                 {
                     var l = ExpressionExecutor.Instance.Execute(left, currentContext, currentSymbol);
                     var r = ExpressionExecutor.Instance.Execute(right, currentContext, currentSymbol);
@@ -83,6 +85,21 @@ namespace CPlatypus.Execution.Executors
                             break;
                         case BinaryOperation.Division:
                             opString = "_divideoperator";
+                            break;
+                        case BinaryOperation.Equal:
+                            opString = "_equaloperator";
+                            break;
+                        case BinaryOperation.Greater:
+                            opString = "_greateroperator";
+                            break;
+                        case BinaryOperation.GreaterEqual:
+                            opString = "_greaterequaloperator";
+                            break;
+                        case BinaryOperation.Less:
+                            opString = "_lessoperator";
+                            break;
+                        case BinaryOperation.LessEqual:
+                            opString = "_lessequaloperator";
                             break;
                     }
 

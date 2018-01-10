@@ -97,6 +97,31 @@ namespace CPlatypus.Execution.StandardLibrary.Types
             throw new NotImplementedException();
         }
 
+        public override PlatypusInstance EqualOperator(Context currentContext, Symbol currentSymbol, Dictionary<string, object> args)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override PlatypusInstance GreaterOperator(Context currentContext, Symbol currentSymbol, Dictionary<string, object> args)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override PlatypusInstance GreaterEqualOperator(Context currentContext, Symbol currentSymbol, Dictionary<string, object> args)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override PlatypusInstance LessOperator(Context currentContext, Symbol currentSymbol, Dictionary<string, object> args)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override PlatypusInstance LessEqualOperator(Context currentContext, Symbol currentSymbol, Dictionary<string, object> args)
+        {
+            throw new NotImplementedException();
+        }
+
         public override PlatypusInstance ToStringInstance(Context currentContext,
             Symbol currentSymbol, Dictionary<string, object> args)
         {

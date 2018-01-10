@@ -87,43 +87,44 @@ namespace CPlatypus.Execution.StandardLibrary.Types
         public override PlatypusInstance MinusOperator(Context currentContext, Symbol currentSymbol,
             Dictionary<string, object> args)
         {
-            var left = (PlatypusInstance) args["this"];
-            var right = (PlatypusInstance) args["right"];
-
-            if (left.Symbol.Name == Name && right.Symbol.Name == Name)
-            {
-                
-            }
-            
-            return PlatypusNullInstance.Instance;
+            throw new NotImplementedException();
         }
 
         public override PlatypusInstance DivideOperator(Context currentContext, Symbol currentSymbol,
             Dictionary<string, object> args)
         {
-            var left = (PlatypusInstance) args["this"];
-            var right = (PlatypusInstance) args["right"];
-
-            if (left.Symbol.Name == Name && right.Symbol.Name == Name)
-            {
-                
-            }
-            
-            return PlatypusNullInstance.Instance;
+            throw new NotImplementedException();
         }
 
         public override PlatypusInstance MultiplyOperator(Context currentContext, Symbol currentSymbol,
             Dictionary<string, object> args)
         {
-            var left = (PlatypusInstance) args["this"];
-            var right = (PlatypusInstance) args["right"];
+            throw new NotImplementedException();
+        }
 
-            if (left.Symbol.Name == Name && right.Symbol.Name == Name)
-            {
-                
-            }
-            
-            return PlatypusNullInstance.Instance;
+        public override PlatypusInstance EqualOperator(Context currentContext, Symbol currentSymbol, Dictionary<string, object> args)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override PlatypusInstance GreaterOperator(Context currentContext, Symbol currentSymbol, Dictionary<string, object> args)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override PlatypusInstance GreaterEqualOperator(Context currentContext, Symbol currentSymbol, Dictionary<string, object> args)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override PlatypusInstance LessOperator(Context currentContext, Symbol currentSymbol, Dictionary<string, object> args)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override PlatypusInstance LessEqualOperator(Context currentContext, Symbol currentSymbol, Dictionary<string, object> args)
+        {
+            throw new NotImplementedException();
         }
 
         public override PlatypusInstance ToStringInstance(Context currentContext,

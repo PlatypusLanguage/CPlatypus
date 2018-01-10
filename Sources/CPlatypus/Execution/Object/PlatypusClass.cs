@@ -53,6 +53,21 @@ namespace CPlatypus.Execution.Object
         public abstract PlatypusInstance MultiplyOperator(Context currentContext, Symbol currentSymbol,
             Dictionary<string, object> args);
 
+        public abstract PlatypusInstance EqualOperator(Context currentContext, Symbol currentSymbol,
+            Dictionary<string, object> args);
+        
+        public abstract PlatypusInstance GreaterOperator(Context currentContext, Symbol currentSymbol,
+            Dictionary<string, object> args);
+        
+        public abstract PlatypusInstance GreaterEqualOperator(Context currentContext, Symbol currentSymbol,
+            Dictionary<string, object> args);
+        
+        public abstract PlatypusInstance LessOperator(Context currentContext, Symbol currentSymbol,
+            Dictionary<string, object> args);
+
+        public abstract PlatypusInstance LessEqualOperator(Context currentContext, Symbol currentSymbol,
+            Dictionary<string, object> args);
+
         public abstract PlatypusInstance ToStringInstance(Context currentContext, Symbol currentSymbol,
             Dictionary<string, object> args);
 
@@ -76,6 +91,11 @@ namespace CPlatypus.Execution.Object
                 ("MinusOperator", "_minusoperator", new List<string> {"right"}),
                 ("DivideOperator", "_divideoperator", new List<string> {"right"}),
                 ("MultiplyOperator", "_multiplyoperator", new List<string> {"right"}),
+                ("EqualOperator", "_equaloperator", new List<string> {"right"}),
+                ("GreaterOperator", "_greateroperator", new List<string> {"right"}),
+                ("GreaterEqualOperator", "_greaterequaloperator", new List<string> {"right"}),
+                ("LessOperator", "_lessoperator", new List<string> {"right"}),
+                ("LessEqualOperator", "_lessequaloperator", new List<string> {"right"}),
                 ("ToStringInstance", "tostring", new List<string>())
             };
 

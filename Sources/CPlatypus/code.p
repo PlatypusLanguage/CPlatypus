@@ -1,9 +1,11 @@
 #lang=default#
 
-function test()
-    return 20 + 4
+function fibonacci(n)
+    if (n <= 1)
+        return n
+    else
+        return fibonacci(n-1) + fibonacci(n-2)
+    end
 end
 
-var a = new Integer(new Integer(test()))
-
-print(a)
+print(fibonacci(15))

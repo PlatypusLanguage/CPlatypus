@@ -116,7 +116,7 @@ namespace CPlatypus.Execution
 
         public void Visit(IfNode node, PlatypusNode parent)
         {
-            
+            IfExecutor.Instance.Execute(node, _context, _moduleSymbol);
         }
 
         public void Visit(IntegerNode node, PlatypusNode parent)
