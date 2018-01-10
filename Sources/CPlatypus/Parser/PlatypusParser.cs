@@ -104,6 +104,11 @@ namespace CPlatypus.Parser
             return base.PeekType(offset, (int) tokenType);
         }
 
+        public new PlatypusToken Consume()
+        {
+            return base.Consume();
+        }
+        
         public PlatypusToken ConsumeType(PlatypusTokenType tokenType)
         {
             return base.ConsumeType((int) tokenType);

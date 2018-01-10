@@ -41,6 +41,7 @@ namespace CPlatypus.Execution
 
             // Inject standard library classes and functions
             
+            InjectClass(PlatypusBoolean.Singleton);
             InjectClass(PlatypusInteger.Singleton);
             InjectClass(PlatypusString.Singleton);
             

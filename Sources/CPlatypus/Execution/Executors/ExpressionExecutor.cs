@@ -51,26 +51,18 @@ namespace CPlatypus.Execution.Executors
             {
                 return PlatypusInteger.Singleton.Create(currentContext, currentSymbol,
                     new Dictionary<string, object> {{"value", integerNode.Value}});
-
-                /*return FunctionCallExecutor.Instance.Execute(
-                    currentSymbol.Get<PlatypusClassSymbol>("Integer").Get<PlatypusFunctionSymbol>("_constructor"),
-                    currentContext, integerNode.Value);*/
-                /*
-                return currentSymbol.Get<PlatypusClassSymbol>("Integer").Get<PlatypusFunctionSymbol>("_constructor")
-                    .Execute(currentContext, currentSymbol, integerNode.Value);*/
             }
 
             if (node is StringNode stringNode)
             {
                 return PlatypusString.Singleton.Create(currentContext, currentSymbol,
                     new Dictionary<string, object> {{"value", stringNode.Value}});
-                
-                /*return FunctionCallExecutor.Instance.Execute(
-                    currentSymbol.Get<PlatypusClassSymbol>("String").Get<PlatypusFunctionSymbol>("_constructor"),
-                    currentContext, stringNode.Value);*/
-                /*
-                return currentSymbol.Get<PlatypusClassSymbol>("String").Get<PlatypusFunctionSymbol>("_constructor")
-                    .Execute(currentContext, currentSymbol, stringNode.Value);*/
+            }
+
+            if (node is BooleanNode booleanNode)
+            {
+                return PlatypusBoolean.Singleton.Create(currentContext, currentSymbol,
+                    new Dictionary<string, object> {{"value", booleanNode.Value}});
             }
 
             if (node is FunctionCallNode functionCallNode)
