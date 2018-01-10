@@ -29,12 +29,6 @@ namespace CPlatypus.Execution.Executors
 {
     public class ExpressionExecutor : PlatypusNodeExecutor
     {
-        public static ExpressionExecutor Instance { get; } = new ExpressionExecutor();
-
-        private ExpressionExecutor()
-        {
-        }
-
         public override PlatypusInstance Execute(PlatypusNode node, Context currentContext,
             Symbol currentSymbol)
         {
@@ -67,17 +61,17 @@ namespace CPlatypus.Execution.Executors
 
             if (node is FunctionCallNode functionCallNode)
             {
-                return FunctionCallExecutor.Instance.Execute(functionCallNode, currentContext, currentSymbol);
+                return new FunctionCallExecutor().Execute(functionCallNode, currentContext, currentSymbol);
             }
 
             if (node is NewNode newNode)
             {
-                return NewExecutor.Instance.Execute(newNode, currentContext, currentSymbol);
+                return new NewExecutor().Execute(newNode, currentContext, currentSymbol);
             }
 
             if (node is BinaryOperationNode binaryOperationNode)
             {
-                return BinaryOperationExecutor.Instance.Execute(binaryOperationNode, currentContext, currentSymbol);
+                return new BinaryOperationExecutor().Execute(binaryOperationNode, currentContext, currentSymbol);
             }
 
             return PlatypusNullInstance.Instance;
@@ -121,7 +115,7 @@ namespace CPlatypus.Execution.Executors
 
             if (node is FunctionCallNode functionCallNode)
             {
-                return FunctionCallExecutor.Instance.Execute(functionCallNode, context, symbol);
+                return new FunctionCallExecutor().Execute(functionCallNode, context, symbol);
             }
 
             if (node is AttributeAccessNode attributeAccessNode)

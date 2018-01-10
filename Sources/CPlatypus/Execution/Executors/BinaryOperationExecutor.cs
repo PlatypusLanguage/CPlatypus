@@ -28,12 +28,6 @@ namespace CPlatypus.Execution.Executors
 {
     public class BinaryOperationExecutor : PlatypusNodeExecutor
     {
-        public static BinaryOperationExecutor Instance { get; } = new BinaryOperationExecutor();
-
-        private BinaryOperationExecutor()
-        {
-        }
-
         public override PlatypusInstance Execute(PlatypusNode node, Context currentContext,
             Symbol currentSymbol)
         {
@@ -44,7 +38,7 @@ namespace CPlatypus.Execution.Executors
 
                 if (binaryOperationNode.OperationType == BinaryOperation.Assignment)
                 {
-                    var ctx = ExpressionExecutor.Instance.ResolveContext(left, currentContext);
+                    var ctx = new ExpressionExecutor().ResolveContext(left, currentContext);
                     var name = "";
                     if (left is IdentifierNode identifierNodeName)
                     {
@@ -56,7 +50,7 @@ namespace CPlatypus.Execution.Executors
                     }
 
                     return ctx.Set(name,
-                        ExpressionExecutor.Instance.Execute(right, currentContext, currentSymbol));
+                        new ExpressionExecutor().Execute(right, currentContext, currentSymbol));
                 }
 
                 var op = binaryOperationNode.OperationType;
@@ -67,8 +61,8 @@ namespace CPlatypus.Execution.Executors
                     op == BinaryOperation.Less || op == BinaryOperation.GreaterEqual ||
                     op == BinaryOperation.LessEqual)
                 {
-                    var l = ExpressionExecutor.Instance.Execute(left, currentContext, currentSymbol);
-                    var r = ExpressionExecutor.Instance.Execute(right, currentContext, currentSymbol);
+                    var l = new ExpressionExecutor().Execute(left, currentContext, currentSymbol);
+                    var r = new ExpressionExecutor().Execute(right, currentContext, currentSymbol);
 
                     var opString = "";
 
@@ -103,7 +97,7 @@ namespace CPlatypus.Execution.Executors
                             break;
                     }
 
-                    return FunctionCallExecutor.Instance.Execute(l.Symbol.Get<PlatypusFunctionSymbol>(opString),
+                    return new FunctionCallExecutor().Execute(l.Symbol.Get<PlatypusFunctionSymbol>(opString),
                         currentContext, new object[] {r}, l);
                 }
             }

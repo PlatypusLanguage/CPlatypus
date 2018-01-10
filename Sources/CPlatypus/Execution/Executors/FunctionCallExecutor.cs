@@ -30,12 +30,6 @@ namespace CPlatypus.Execution.Executors
 {
     public class FunctionCallExecutor : PlatypusNodeExecutor
     {
-        public static FunctionCallExecutor Instance { get; } = new FunctionCallExecutor();
-
-        private FunctionCallExecutor()
-        {
-        }
-
         public PlatypusInstance Execute(PlatypusFunctionSymbol functionSymbol, Context currentContext,
             object[] args, PlatypusInstance objectInstance = null)
         {
@@ -79,7 +73,7 @@ namespace CPlatypus.Execution.Executors
 
                 if (functionCallNode.HasTarget)
                 {
-                    targetObject = ExpressionExecutor.Instance.ResolveObject(
+                    targetObject = new ExpressionExecutor().ResolveObject(
                         functionCallNode.TargetNode, currentContext, currentSymbol);
                     executionContext = targetObject.Context;
                     executionSymbol = targetObject.Symbol;
@@ -103,7 +97,7 @@ namespace CPlatypus.Execution.Executors
 
                             foreach (var arg in functionCallNode.ArgumentList.Arguments)
                             {
-                                args.Add(ExpressionExecutor.Instance.Execute(arg, currentContext, currentSymbol));
+                                args.Add(new ExpressionExecutor().Execute(arg, currentContext, currentSymbol));
                             }
 
                             return Execute(functionSymbol, currentContext, args.ToArray(), targetObject);
@@ -114,13 +108,13 @@ namespace CPlatypus.Execution.Executors
 
                             for (var i = 0; i < functionSymbol.FunctionNode.ParameterList.Parameters.Count; i++)
                             {
-                                var argumentValue = ExpressionExecutor.Instance.Execute(
+                                var argumentValue = new ExpressionExecutor().Execute(
                                     functionCallNode.ArgumentList.Arguments[i], currentContext, currentSymbol);
                                 var name = functionSymbol.FunctionNode.ParameterList.Parameters[i].Value;
                                 functionContext.Add(name, argumentValue);
                             }
 
-                            return BodyExecutor.Instance.Execute(functionSymbol.FunctionNode.Body, functionContext,
+                            return new BodyExecutor().Execute(functionSymbol.FunctionNode.Body, functionContext,
                                 functionSymbol);
                         }
                     }

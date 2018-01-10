@@ -27,32 +27,33 @@ namespace CPlatypus.Execution.Executors
 {
     public class IfExecutor : PlatypusNodeExecutor
     {
-        public static IfExecutor Instance { get; } = new IfExecutor();
-
-        private IfExecutor()
-        {
-        }
+        public bool HasReturnedValue { get; private set; }
 
         public override PlatypusInstance Execute(PlatypusNode node, Context currentContext, Symbol currentSymbol)
         {
+            HasReturnedValue = false;
             if (node is IfNode ifNode)
             {
                 var conditionResult =
-                    ExpressionExecutor.Instance.Execute(ifNode.Condition, currentContext, currentSymbol);
+                    new ExpressionExecutor().Execute(ifNode.Condition, currentContext, currentSymbol);
                 if (conditionResult.HasValue && conditionResult.GetValue() is bool)
                 {
                     if (conditionResult.GetValue<bool>())
                     {
-                        var r = BodyExecutor.Instance.Execute(ifNode.Body, currentContext, currentSymbol);
-                        return r != PlatypusNullInstance.Instance ? r : null;
+                        var executor = new BodyExecutor();
+                        var result = executor.Execute(ifNode.Body, currentContext, currentSymbol);
+                        HasReturnedValue = executor.HasReturnedValue;
+                        return result;
                     }
                     else
                     {
                         //TODO Execute else if
                         if (ifNode.ElseBody != null)
                         {
-                            var r = BodyExecutor.Instance.Execute(ifNode.ElseBody, currentContext, currentSymbol);
-                            return r != PlatypusNullInstance.Instance ? r : null;
+                            var executor = new BodyExecutor();
+                            var result = executor.Execute(ifNode.ElseBody, currentContext, currentSymbol);
+                            HasReturnedValue = executor.HasReturnedValue;
+                            return result;
                         }
                     }
                 }

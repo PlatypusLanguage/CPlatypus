@@ -27,12 +27,6 @@ namespace CPlatypus.Execution.Executors
 {
     public class VariableDeclarationExecutor : PlatypusNodeExecutor
     {
-        public static VariableDeclarationExecutor Instance { get; } = new VariableDeclarationExecutor();
-
-        private VariableDeclarationExecutor()
-        {
-        }
-
         public override PlatypusInstance Execute(PlatypusNode node, Context currentContext,
             Symbol currentSymbol)
         {

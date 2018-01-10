@@ -81,7 +81,7 @@ namespace CPlatypus.Execution
 
         public void Visit(BinaryOperationNode node, PlatypusNode parent)
         {
-            BinaryOperationExecutor.Instance.Execute(node, _context, _moduleSymbol);
+            new BinaryOperationExecutor().Execute(node, _context, _moduleSymbol);
         }
 
         public void Visit(BooleanNode node, PlatypusNode parent)
@@ -101,7 +101,7 @@ namespace CPlatypus.Execution
 
         public void Visit(CodeNode node, PlatypusNode parent)
         {
-            BodyExecutor.Instance.Execute(node, _context, _moduleSymbol);
+            new BodyExecutor().Execute(node, _context, _moduleSymbol);
         }
 
         public void Visit(ConstructorNode node, PlatypusNode parent)
@@ -116,7 +116,7 @@ namespace CPlatypus.Execution
 
         public void Visit(IfNode node, PlatypusNode parent)
         {
-            IfExecutor.Instance.Execute(node, _context, _moduleSymbol);
+            new IfExecutor().Execute(node, _context, _moduleSymbol);
         }
 
         public void Visit(IntegerNode node, PlatypusNode parent)
@@ -136,7 +136,7 @@ namespace CPlatypus.Execution
 
         public void Visit(FunctionCallNode node, PlatypusNode parent)
         {
-            FunctionCallExecutor.Instance.Execute(node, _context, _moduleSymbol);
+            new FunctionCallExecutor().Execute(node, _context, _moduleSymbol);
         }
 
         public void Visit(FunctionNode node, PlatypusNode parent)
@@ -176,7 +176,7 @@ namespace CPlatypus.Execution
 
         public void Visit(VariableDeclarationNode node, PlatypusNode parent)
         {
-            VariableDeclarationExecutor.Instance.Execute(node, _context, _moduleSymbol);
+            new VariableDeclarationExecutor().Execute(node, _context, _moduleSymbol);
         }
 
         public void Visit(StringNode node, PlatypusNode parent)

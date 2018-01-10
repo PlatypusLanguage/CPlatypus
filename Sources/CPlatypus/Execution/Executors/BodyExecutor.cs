@@ -27,42 +27,41 @@ namespace CPlatypus.Execution.Executors
 {
     public class BodyExecutor : PlatypusNodeExecutor
     {
-        public static BodyExecutor Instance { get; } = new BodyExecutor();
-
-        private BodyExecutor()
-        {
-        }
-
+        public bool HasReturnedValue { get; private set; }
+        
         public override PlatypusInstance Execute(PlatypusNode node, Context currentContext,
             Symbol currentSymbol)
         {
+            HasReturnedValue = false;
             if (node is CodeNode codeNode)
             {
                 foreach (var n in codeNode.Children)
                 {
                     if (n is VariableDeclarationNode)
                     {
-                        VariableDeclarationExecutor.Instance.Execute(n, currentContext, currentSymbol);
+                        new VariableDeclarationExecutor().Execute(n, currentContext, currentSymbol);
                     }
                     else if (n is BinaryOperationNode)
                     {
-                        BinaryOperationExecutor.Instance.Execute(n, currentContext, currentSymbol);
+                        new BinaryOperationExecutor().Execute(n, currentContext, currentSymbol);
                     }
                     else if (n is FunctionCallNode)
                     {
-                        FunctionCallExecutor.Instance.Execute(n, currentContext, currentSymbol);
+                        new FunctionCallExecutor().Execute(n, currentContext, currentSymbol);
                     }
                     else if (n is IfNode)
                     {
-                        var r = IfExecutor.Instance.Execute(n, currentContext, currentSymbol);
-                        if (r != null)
+                        var executor = new IfExecutor();
+                        var result = executor.Execute(n, currentContext, currentSymbol);
+                        if (executor.HasReturnedValue)
                         {
-                            return r;
+                            return result;
                         }
                     }
                     else if (n is ReturnNode returnNode)
                     {
-                        return ExpressionExecutor.Instance.Execute(returnNode.Expression, currentContext, currentSymbol);
+                        HasReturnedValue = true;
+                        return new ExpressionExecutor().Execute(returnNode.Expression, currentContext, currentSymbol);
                     }
                 }
             }

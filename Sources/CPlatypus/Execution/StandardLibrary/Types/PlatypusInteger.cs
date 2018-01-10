@@ -80,10 +80,10 @@ namespace CPlatypus.Execution.StandardLibrary.Types
                 new Dictionary<string, object>
                 {
                     {
-                        "value", FunctionCallExecutor.Instance.Execute(
+                        "value", new FunctionCallExecutor().Execute(
                                      left.Symbol.Get<PlatypusFunctionSymbol>("tostring"),
                                      currentContext, new object[0], left).GetValue<string>() +
-                                 FunctionCallExecutor.Instance.Execute(
+                                 new FunctionCallExecutor().Execute(
                                      right.Symbol.Get<PlatypusFunctionSymbol>("tostring"),
                                      currentContext, new object[0], right).GetValue<string>()
                     }

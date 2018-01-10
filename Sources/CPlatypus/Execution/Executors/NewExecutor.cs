@@ -29,12 +29,6 @@ namespace CPlatypus.Execution.Executors
 {
     public class NewExecutor : PlatypusNodeExecutor
     {
-        public static NewExecutor Instance { get; } = new NewExecutor();
-
-        private NewExecutor()
-        {
-        }
-
         public override PlatypusInstance Execute(PlatypusNode node, Context currentContext, Symbol currentSymbol)
         {
             var newNode = (NewNode) node;
@@ -49,10 +43,10 @@ namespace CPlatypus.Execution.Executors
 
             foreach (var argument in functionCallNode.ArgumentList.Arguments)
             {
-                args.Add(ExpressionExecutor.Instance.Execute(argument, currentContext, currentSymbol));
+                args.Add(new ExpressionExecutor().Execute(argument, currentContext, currentSymbol));
             }
             
-            return FunctionCallExecutor.Instance.Execute(constructorSymbol,
+            return new FunctionCallExecutor().Execute(constructorSymbol,
                 currentContext, args.ToArray());
         }
     }
