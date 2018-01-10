@@ -8,4 +8,9 @@ function fibonacci(n)
     end
 end
 
-print(fibonacci(15))
+var i = 1
+
+while(i < 16)
+    print(fibonacci(i))
+    i = i + 1
+end

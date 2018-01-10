@@ -186,7 +186,7 @@ namespace CPlatypus.Execution
 
         public void Visit(WhileNode node, PlatypusNode parent)
         {
-            
+            new WhileExecutor().Execute(node, _context, _moduleSymbol);
         }
     }
 }

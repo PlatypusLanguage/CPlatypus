@@ -58,6 +58,15 @@ namespace CPlatypus.Execution.Executors
                             return result;
                         }
                     }
+                    else if (n is WhileNode)
+                    {
+                        var executor = new WhileExecutor();
+                        var result = executor.Execute(n, currentContext, currentSymbol);
+                        if (executor.HasReturnedValue)
+                        {
+                            return result;
+                        }
+                    }
                     else if (n is ReturnNode returnNode)
                     {
                         HasReturnedValue = true;
