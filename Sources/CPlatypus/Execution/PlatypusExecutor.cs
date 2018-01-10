@@ -16,6 +16,7 @@
  *     along with CPlatypus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+using CPlatypus.Core;
 using CPlatypus.Execution.Executors;
 using CPlatypus.Execution.Object;
 using CPlatypus.Execution.StandardLibrary.IO;

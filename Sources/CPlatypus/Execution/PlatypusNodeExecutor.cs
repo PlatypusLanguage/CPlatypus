@@ -23,9 +23,7 @@ using CPlatypus.Parser;
 
 namespace CPlatypus.Execution
 {
-    public abstract class PlatypusNodeExecutor
+    public abstract class PlatypusNodeExecutor : NodeExecutor<PlatypusNode, PlatypusInstance>
     {
-        public abstract PlatypusInstance Execute(PlatypusNode node, Context currentContext,
-            Symbol currentSymbol);
     }
 }

@@ -16,9 +16,10 @@
  *     along with CPlatypus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+using CPlatypus.Parser;
 using CPlatypus.Parser.Nodes;
 
-namespace CPlatypus.Parser
+namespace CPlatypus.Core
 {
     public interface IPlatypusVisitor
     {

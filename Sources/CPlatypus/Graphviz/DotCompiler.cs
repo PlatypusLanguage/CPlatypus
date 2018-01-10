@@ -17,6 +17,7 @@
  */
 
 using System.IO;
+using CPlatypus.Core;
 using CPlatypus.Parser;
 using CPlatypus.Parser.Nodes;
 using DotNetGraph;

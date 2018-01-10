@@ -17,6 +17,7 @@
  */
 
 using System;
+using CPlatypus.Core;
 using CPlatypus.Framework;
 
 namespace CPlatypus.Parser.Nodes

@@ -16,31 +16,12 @@
  *     along with CPlatypus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-using CPlatypus.Core;
-using CPlatypus.Framework;
+using CPlatypus.Framework.Semantic;
 
-namespace CPlatypus.Parser.Nodes
+namespace CPlatypus.Framework.Execution
 {
-    public class FloatNode : PlatypusNode
+    public abstract class NodeExecutor<TNodeType, TReturnType>
     {
-        public readonly float Value;
-
-        public FloatNode(int id, float value, SourceLocation sourceLocation) : base(id, sourceLocation)
-        {
-            Value = value;
-        }
-
-        public override void Accept(IPlatypusVisitor visitor, PlatypusNode parent)
-        {
-            visitor.Visit(this, parent);
-        }
-
-        public override void AcceptChildren(IPlatypusVisitor visitor, PlatypusNode parent)
-        {
-            foreach (var child in Children)
-            {
-                child.Accept(visitor, parent);
-            }
-        }
+        public abstract TReturnType Execute(TNodeType node, Context currentContext, Symbol currentSymbol);
     }
 }
