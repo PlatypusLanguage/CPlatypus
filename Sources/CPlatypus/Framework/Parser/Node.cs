@@ -17,7 +17,6 @@
  */
 
 using System.Collections.Generic;
-using CPlatypus.Framework.Semantic;
 
 namespace CPlatypus.Framework.Parser
 {
@@ -26,8 +25,6 @@ namespace CPlatypus.Framework.Parser
         public List<T> Children { get; }
 
         public SourceLocation SourceLocation { get; }
-
-        public IScope Scope { get; set; }
 
         public Node(SourceLocation sourceLocation)
         {

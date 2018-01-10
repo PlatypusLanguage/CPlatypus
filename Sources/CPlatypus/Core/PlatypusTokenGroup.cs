@@ -16,18 +16,19 @@
  *     along with CPlatypus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-using CPlatypus.Framework.Semantic;
-using CPlatypus.Parser.Nodes;
+using System;
+using CPlatypus.Lexer;
 
-namespace CPlatypus.Semantic
+namespace CPlatypus.Core
 {
-    public class PlatypusConstructorSymbol : ScopedSymbol
+    [AttributeUsage(AttributeTargets.Field)]
+    public class PlatypusTokenGroup : Attribute
     {
-        public ConstructorNode Node { get; }
+        public PlatypusTokenTypeGroup[] Groups { get; }
 
-        public PlatypusConstructorSymbol(ConstructorNode node, IScope parentScope) : base("c_" + node.GetHashCode(), parentScope)
+        public PlatypusTokenGroup(params PlatypusTokenTypeGroup[] groups)
         {
-            Node = node;
+            Groups = groups;
         }
     }
 }

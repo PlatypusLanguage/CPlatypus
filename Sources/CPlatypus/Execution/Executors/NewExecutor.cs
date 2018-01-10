@@ -16,32 +16,44 @@
  *     along with CPlatypus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+
+using System.Collections.Generic;
 using CPlatypus.Execution.Object;
-using CPlatypus.Execution.StandardLibrary.Types;
 using CPlatypus.Framework.Execution;
 using CPlatypus.Framework.Semantic;
 using CPlatypus.Parser;
 using CPlatypus.Parser.Nodes;
+using CPlatypus.Semantic;
 
 namespace CPlatypus.Execution.Executors
 {
-    public class VariableDeclarationExecutor : PlatypusNodeExecutor
+    public class NewExecutor : PlatypusNodeExecutor
     {
-        public static VariableDeclarationExecutor Instance { get; } = new VariableDeclarationExecutor();
+        public static NewExecutor Instance { get; } = new NewExecutor();
 
-        private VariableDeclarationExecutor()
+        private NewExecutor()
         {
         }
 
-        public override PlatypusInstance Execute(PlatypusNode node, Context currentContext,
-            Symbol currentSymbol)
+        public override PlatypusInstance Execute(PlatypusNode node, Context currentContext, Symbol currentSymbol)
         {
-            if (node is VariableDeclarationNode variableDeclarationNode)
-            {
-                return currentContext.Add(variableDeclarationNode.VariableNameNode.Value) as PlatypusInstance;
-            }
+            var newNode = (NewNode) node;
 
-            return PlatypusNullInstance.Instance;
+            var functionCallNode = (FunctionCallNode) newNode.Target;
+
+            var classSymbol = currentSymbol.Get<PlatypusClassSymbol>(functionCallNode.FunctionName.Value);
+
+            var constructorSymbol = classSymbol.GetLocal<PlatypusFunctionSymbol>("_constructor");
+
+            var args = new List<object>();
+
+            foreach (var argument in functionCallNode.ArgumentList.Arguments)
+            {
+                args.Add(ExpressionExecutor.Instance.Execute(argument, currentContext, currentSymbol));
+            }
+            
+            return FunctionCallExecutor.Instance.Execute(constructorSymbol,
+                currentContext, args.ToArray());
         }
     }
 }

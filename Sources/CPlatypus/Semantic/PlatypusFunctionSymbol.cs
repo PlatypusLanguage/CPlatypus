@@ -16,18 +16,40 @@
  *     along with CPlatypus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+using CPlatypus.Execution.Object;
 using CPlatypus.Framework.Semantic;
 using CPlatypus.Parser.Nodes;
 
 namespace CPlatypus.Semantic
 {
-    public class PlatypusFunctionSymbol : ScopedSymbol
+    public class PlatypusFunctionSymbol : Symbol
     {
-        public FunctionNode Node { get; }
+        public FunctionNode FunctionNode { get; }
 
-        public PlatypusFunctionSymbol(FunctionNode node, IScope parentScope) : base("f_" + node.Name.Value + "_" + node.GetHashCode(), parentScope)
+        public PlatypusFunction FunctionTarget { get; }
+
+        public ConstructorNode ConstructorNode { get; }
+
+        public bool ExternFunction => FunctionNode is null;
+
+        public bool IsConstructor => !(ConstructorNode is null);
+
+        public PlatypusFunctionSymbol(FunctionNode functionNode, Symbol parent) : base(parent)
         {
-            Node = node;
+            Name = functionNode.Name.Value;
+            FunctionNode = functionNode;
+        }
+
+        public PlatypusFunctionSymbol(ConstructorNode constructorNode, Symbol parent) : base(parent)
+        {
+            Name = "_constructor";
+            ConstructorNode = constructorNode;
+        }
+
+        public PlatypusFunctionSymbol(PlatypusFunction functionTarget, Symbol parent) : base(parent)
+        {
+            Name = functionTarget.Name;
+            FunctionTarget = functionTarget;
         }
     }
 }

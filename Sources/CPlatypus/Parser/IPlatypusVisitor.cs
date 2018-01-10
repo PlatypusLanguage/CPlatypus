@@ -38,6 +38,7 @@ namespace CPlatypus.Parser
         void Visit(ForNode node, PlatypusNode parent);
         void Visit(FunctionCallNode node, PlatypusNode parent);
         void Visit(FunctionNode node, PlatypusNode parent);
+        void Visit(ModuleNode node, PlatypusNode parent);
         void Visit(NewNode node, PlatypusNode parent);
         void Visit(ParameterListNode node, PlatypusNode parent);
         void Visit(ReturnNode node, PlatypusNode parent);

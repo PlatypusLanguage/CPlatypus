@@ -92,6 +92,7 @@ namespace CPlatypus.Parser.Parsers
                 left = new BinaryOperationNode(parser.NextId(), BinaryOperation.Or, left, ParseLogicalAnd(parser),
                     parser.Peek().SourceLocation);
             }
+
             return left;
         }
 
@@ -103,6 +104,7 @@ namespace CPlatypus.Parser.Parsers
                 left = new BinaryOperationNode(parser.NextId(), BinaryOperation.And, left, ParseComparison(parser),
                     parser.Peek().SourceLocation);
             }
+
             return left;
         }
 
@@ -151,6 +153,7 @@ namespace CPlatypus.Parser.Parsers
 
                 break;
             }
+
             return left;
         }
 
@@ -190,8 +193,10 @@ namespace CPlatypus.Parser.Parsers
                             parser.Peek().SourceLocation);
                         continue;
                 }
+
                 break;
             }
+
             return left;
         }
 
@@ -221,6 +226,7 @@ namespace CPlatypus.Parser.Parsers
                 return new UnaryOperationNode(parser.NextId(), UnaryOperation.Negate, ParseUnary(parser),
                     parser.Peek().SourceLocation);
             }
+
             return ParseAccess(parser);
         }
 
@@ -238,6 +244,7 @@ namespace CPlatypus.Parser.Parsers
                         ArgumentListParser.Instance.Parse(parser) as ArgumentListNode,
                         parser.Peek().SourceLocation));
             }
+
             if (parser.AcceptType(PlatypusTokenType.OpenSquare))
             {
                 var expression = Parse(parser);
@@ -245,16 +252,19 @@ namespace CPlatypus.Parser.Parsers
                 return ParseAccess(parser,
                     new ArrayAccessNode(parser.NextId(), left, expression, parser.Peek().SourceLocation));
             }
+
             if (parser.AcceptType(PlatypusTokenType.PlusPlusOperator))
             {
                 return new UnaryOperationNode(parser.NextId(), UnaryOperation.PostIncrement, left,
                     parser.Peek().SourceLocation);
             }
+
             if (parser.AcceptType(PlatypusTokenType.MinusMinusOperator))
             {
                 return new UnaryOperationNode(parser.NextId(), UnaryOperation.PostDecrement, left,
                     parser.Peek().SourceLocation);
             }
+
             if (parser.AcceptType(PlatypusTokenType.Dot))
             {
                 var identifierNode = IdentifierParser.Instance.Parse(parser) as IdentifierNode;
@@ -272,46 +282,60 @@ namespace CPlatypus.Parser.Parsers
                 // TODO Rework this part
                 return new NewNode(parser.NextId(), ParseAccess(parser), parser.Peek().SourceLocation);
             }
+
             if (parser.AcceptType(PlatypusTokenType.ThisKeyword))
             {
                 return new ThisNode(parser.NextId(), parser.Peek().SourceLocation);
             }
+
             if (parser.MatchGroup(PlatypusTokenTypeGroup.TrueFalse))
             {
-                return new BooleanNode(parser.NextId(), true, parser.Peek().SourceLocation);
+                var n = parser.Consume();
+                return new BooleanNode(parser.NextId(), n.TokenType is PlatypusTokenType.TrueLiteral, n.SourceLocation);
             }
+
             if (parser.MatchType(PlatypusTokenType.Identifier))
             {
                 return new IdentifierNode(parser.NextId(), parser.ConsumeType(PlatypusTokenType.Identifier).Value,
                     parser.Peek().SourceLocation);
             }
+
             if (parser.MatchType(PlatypusTokenType.RealLiteral))
             {
                 return new FloatNode(parser.NextId(),
                     float.Parse(parser.ConsumeType(PlatypusTokenType.RealLiteral).Value,
                         CultureInfo.InvariantCulture.NumberFormat), parser.Peek().SourceLocation);
             }
+
             if (parser.MatchType(PlatypusTokenType.IntegerLiteral))
             {
                 return new IntegerNode(parser.NextId(),
                     int.Parse(parser.ConsumeType(PlatypusTokenType.IntegerLiteral).Value,
                         CultureInfo.InvariantCulture.NumberFormat), parser.Peek().SourceLocation);
             }
+
             if (parser.MatchType(PlatypusTokenType.TextLiteral))
             {
                 return new StringNode(parser.NextId(), parser.ConsumeType(PlatypusTokenType.TextLiteral).Value,
                     parser.Peek().SourceLocation);
             }
+
             if (parser.MatchType(PlatypusTokenType.CharLiteral))
             {
                 return new CharNode(parser.NextId(), parser.ConsumeType(PlatypusTokenType.CharLiteral).Value[0],
                     parser.Peek().SourceLocation);
             }
+
             if (parser.AcceptType(PlatypusTokenType.OpenParen))
             {
                 var expression = Parse(parser);
                 parser.ConsumeType(PlatypusTokenType.CloseParen);
                 return expression;
+            }
+
+            if (parser.MatchType(PlatypusTokenType.Unknown))
+            {
+                throw new Exception("Unknown token found : " + parser.ConsumeType(PlatypusTokenType.Unknown));
             }
 
             throw new Exception("Not reachable normally ?");

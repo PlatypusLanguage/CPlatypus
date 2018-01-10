@@ -16,30 +16,15 @@
  *     along with CPlatypus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-using CPlatypus.Execution.Object;
-using CPlatypus.Framework.Semantic;
-using CPlatypus.Parser.Nodes;
+using CPlatypus.Execution.StandardLibrary.Types;
+using CPlatypus.Framework.Execution;
 
-namespace CPlatypus.Semantic
+namespace CPlatypus.Execution
 {
-    public class PlatypusClassSymbol : Symbol
+    public class PlatypusContext : Context
     {
-        public ClassNode ClassNode { get; }
-        
-        public PlatypusClass ClassTarget { get; }
-
-        public bool ExternClass => ClassNode is null;
-        
-        public PlatypusClassSymbol(ClassNode classNode,  Symbol parent) : base(parent)
+        public PlatypusContext(string name, Context parent) : base(name, parent, PlatypusNullInstance.Instance)
         {
-            Name = classNode.Name.Value;
-            ClassNode = classNode;
-        }
-
-        public PlatypusClassSymbol(PlatypusClass classTarget, Symbol parent) : base(parent)
-        {
-            Name = classTarget.Name;
-            ClassTarget = classTarget;
         }
     }
 }

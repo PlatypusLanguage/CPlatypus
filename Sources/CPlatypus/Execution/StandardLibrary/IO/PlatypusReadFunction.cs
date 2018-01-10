@@ -16,13 +16,28 @@
  *     along with CPlatypus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+using System;
+using System.Collections.Generic;
 using CPlatypus.Execution.Object;
-using CPlatypus.Parser;
+using CPlatypus.Execution.StandardLibrary.Types;
+using CPlatypus.Framework.Execution;
+using CPlatypus.Framework.Semantic;
 
-namespace CPlatypus.Execution
+namespace CPlatypus.Execution.StandardLibrary.IO
 {
-    public abstract class NodeExecutor
+    public class PlatypusReadFunction : PlatypusFunction
     {
-        public abstract PlatypusObject Execute(PlatypusNode node, Context currentContext);
+        public static PlatypusReadFunction Singleton { get; } = new PlatypusReadFunction();
+
+        private PlatypusReadFunction() : base("read", new List<string>(), "Read")
+        {
+        }
+
+        public PlatypusInstance Read(Context currentContext, Symbol currentSymbol,
+            Dictionary<string, object> args)
+        {
+            return PlatypusString.Singleton.Create(currentContext, currentSymbol,
+                new Dictionary<string, object> {{"value", Console.ReadLine()}});
+        }
     }
 }

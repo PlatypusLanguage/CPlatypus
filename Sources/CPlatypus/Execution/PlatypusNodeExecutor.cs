@@ -16,20 +16,16 @@
  *     along with CPlatypus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace CPlatypus.Execution.Object
+using CPlatypus.Execution.Object;
+using CPlatypus.Framework.Execution;
+using CPlatypus.Framework.Semantic;
+using CPlatypus.Parser;
+
+namespace CPlatypus.Execution
 {
-    public class PlatypusString : PlatypusObject
+    public abstract class PlatypusNodeExecutor
     {
-        public string Value { get; }
-
-        public PlatypusString(string value, Context enclosingContext) : base(enclosingContext)
-        {
-            Value = value;
-        }
-
-        public override string ToString()
-        {
-            return Value;
-        }
+        public abstract PlatypusInstance Execute(PlatypusNode node, Context currentContext,
+            Symbol currentSymbol);
     }
 }

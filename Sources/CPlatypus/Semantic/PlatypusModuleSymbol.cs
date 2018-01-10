@@ -16,35 +16,29 @@
  *     along with CPlatypus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-using CPlatypus.Lexer;
+using CPlatypus.Framework.Semantic;
 using CPlatypus.Parser.Nodes;
 
-namespace CPlatypus.Parser.Parsers
+namespace CPlatypus.Semantic
 {
-    public class WhileParser : NodeParser
-    { 
-        public static WhileParser Instance { get; } = new WhileParser();
-
-        private WhileParser()
+    public class PlatypusModuleSymbol : Symbol
+    {        
+        public ModuleNode ModuleNode { get; }
+        
+        public PlatypusModuleSymbol(ModuleNode moduleNode, Symbol parent) : base(parent)
         {
+            Name = moduleNode.Name.Value;
+            ModuleNode = moduleNode;
         }
 
-        public override bool Match(PlatypusParser parser)
+        public static PlatypusModuleSymbol CreateGlobalModule(string name = "Global Module")
         {
-            return parser.MatchType(PlatypusTokenType.WhileKeyword);
+            return new PlatypusModuleSymbol(name);
         }
-
-        public override PlatypusNode Parse(PlatypusParser parser)
+        
+        private PlatypusModuleSymbol(string name) : base(null)
         {
-            var whileKeywordToken = parser.ConsumeType(PlatypusTokenType.WhileKeyword);
-
-            parser.ConsumeType(PlatypusTokenType.OpenParen);
-            var condition = ExpressionParser.Instance.Parse(parser);
-            parser.ConsumeType(PlatypusTokenType.CloseParen);
-
-            var body = CodeParser.Instance.ParseTill(parser);
-
-            return new WhileNode(parser.NextId(), condition, body, whileKeywordToken.SourceLocation);
+            Name = name;
         }
     }
 }

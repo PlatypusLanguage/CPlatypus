@@ -3,6 +3,7 @@ static:statique
 end:fin
 function:fonction
 class:classe
+module:module
 constructor:constructeur
 this:ceci
 new:nouveau

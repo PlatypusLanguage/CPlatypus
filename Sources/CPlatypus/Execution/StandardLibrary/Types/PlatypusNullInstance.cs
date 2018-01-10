@@ -16,13 +16,21 @@
  *     along with CPlatypus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace CPlatypus.Framework.Semantic
+using CPlatypus.Execution.Object;
+
+namespace CPlatypus.Execution.StandardLibrary.Types
 {
-    public class GlobalScope : BaseScope
+    public class PlatypusNullInstance : PlatypusInstance
     {
-        public GlobalScope() : base(null, "global_scope")
+        public static PlatypusNullInstance Instance { get; } = new PlatypusNullInstance();
+        
+        private PlatypusNullInstance() : base(null, null)
         {
-            
+        }
+
+        public override string ToString()
+        {
+            return "PLATYPUS_NULL";
         }
     }
 }

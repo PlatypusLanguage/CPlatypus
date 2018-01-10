@@ -46,7 +46,7 @@ namespace CPlatypus.Graphviz
         {
             _graph.Add(new DotNode("node" + node.Id)
             {
-                Label = "Argument List" + " [" + node.Scope.GetName() + "]"
+                Label = "Argument List"
             });
             CreateLink(parent, node);
             node.AcceptChildren(this, node);
@@ -56,7 +56,7 @@ namespace CPlatypus.Graphviz
         {
             _graph.Add(new DotNode("node" + node.Id)
             {
-                Label = "Array Access" + " [" + node.Scope.GetName() + "]"
+                Label = "Array Access"
             });
             CreateLink(parent, node);
             node.AcceptChildren(this, node);
@@ -66,7 +66,7 @@ namespace CPlatypus.Graphviz
         {
             _graph.Add(new DotNode("node" + node.Id)
             {
-                Label = "Attribute Access" + " [" + node.Scope.GetName() + "]"
+                Label = "Attribute Access"
             });
             CreateLink(parent, node);
             node.AcceptChildren(this, node);
@@ -76,7 +76,7 @@ namespace CPlatypus.Graphviz
         {
             _graph.Add(new DotNode("node" + node.Id)
             {
-                Label = "Binary Operation : " + node.OperationType + " [" + node.Scope.GetName() + "]",
+                Label = "Binary Operation : " + node.OperationType,
                 FontColor = DotColor.White,
                 FillColor = DotColor.Red3,
                 Style = DotNodeStyle.Filled
@@ -89,7 +89,7 @@ namespace CPlatypus.Graphviz
         {
             _graph.Add(new DotNode("node" + node.Id)
             {
-                Label = "Boolean : " + node.Value + " [" + node.Scope.GetName() + "]",
+                Label = "Boolean : " + node.Value,
                 FontColor = DotColor.White,
                 FillColor = DotColor.Orange,
                 Style = DotNodeStyle.Filled
@@ -102,7 +102,7 @@ namespace CPlatypus.Graphviz
         {
             _graph.Add(new DotNode("node" + node.Id)
             {
-                Label = "Char : " + node.Value + " [" + node.Scope.GetName() + "]",
+                Label = "Char : " + node.Value,
                 FontColor = DotColor.White,
                 FillColor = DotColor.Orange,
                 Style = DotNodeStyle.Filled
@@ -115,7 +115,7 @@ namespace CPlatypus.Graphviz
         {
             _graph.Add(new DotNode("node" + node.Id)
             {
-                Label = "Class : " + node.Name.Value + " [" + node.Scope.GetName() + "]",
+                Label = "Class : " + node.Name.Value,
                 FontColor = DotColor.White,
                 FillColor = DotColor.Cyan3,
                 Style = DotNodeStyle.Filled
@@ -128,7 +128,7 @@ namespace CPlatypus.Graphviz
         {
             _graph.Add(new DotNode("node" + node.Id)
             {
-                Label = "Code (Body)" + " [" + node.Scope.GetName() + "]",
+                Label = "Code (Body)",
                 FontColor = DotColor.White,
                 FillColor = DotColor.Cornflowerblue,
                 Style = DotNodeStyle.Filled
@@ -141,7 +141,7 @@ namespace CPlatypus.Graphviz
         {
             _graph.Add(new DotNode("node" + node.Id)
             {
-                Label = "Constructor" + " [" + node.Scope.GetName() + "]",
+                Label = "Constructor",
                 FontColor = DotColor.White,
                 FillColor = DotColor.Cyan3,
                 Style = DotNodeStyle.Filled
@@ -154,7 +154,7 @@ namespace CPlatypus.Graphviz
         {
             _graph.Add(new DotNode("node" + node.Id)
             {
-                Label = "Identifier : " + node.Value + " [" + node.Scope.GetName() + "]",
+                Label = "Identifier : " + node.Value,
                 FontColor = DotColor.White,
                 FillColor = DotColor.Steelblue,
                 Style = DotNodeStyle.Filled
@@ -167,7 +167,7 @@ namespace CPlatypus.Graphviz
         {
             _graph.Add(new DotNode("node" + node.Id)
             {
-                Label = "If" + " [" + node.Scope.GetName() + "]",
+                Label = "If",
             });
             CreateLink(parent, node);
             node.AcceptChildren(this, node);
@@ -177,7 +177,7 @@ namespace CPlatypus.Graphviz
         {
             _graph.Add(new DotNode("node" + node.Id)
             {
-                Label = "Integer : " + node.Value + " [" + node.Scope.GetName() + "]",
+                Label = "Integer : " + node.Value,
                 FontColor = DotColor.White,
                 FillColor = DotColor.Orange,
                 Style = DotNodeStyle.Filled
@@ -190,7 +190,7 @@ namespace CPlatypus.Graphviz
         {
             _graph.Add(new DotNode("node" + node.Id)
             {
-                Label = "Float : " + node.Value + " [" + node.Scope.GetName() + "]",
+                Label = "Float : " + node.Value,
                 FontColor = DotColor.White,
                 FillColor = DotColor.Orange,
                 Style = DotNodeStyle.Filled
@@ -203,7 +203,7 @@ namespace CPlatypus.Graphviz
         {
             _graph.Add(new DotNode("node" + node.Id)
             {
-                Label = "For" + " [" + node.Scope.GetName() + "]"
+                Label = "For"
             });
             CreateLink(parent, node);
             node.AcceptChildren(this, node);
@@ -213,7 +213,7 @@ namespace CPlatypus.Graphviz
         {
             _graph.Add(new DotNode("node" + node.Id)
             {
-                Label = "Function Call" + " [" + node.Scope.GetName() + "]",
+                Label = "Function Call",
                 FontColor = DotColor.White,
                 FillColor = DotColor.Orange,
                 Style = DotNodeStyle.Filled
@@ -226,9 +226,22 @@ namespace CPlatypus.Graphviz
         {
             _graph.Add(new DotNode("node" + node.Id)
             {
-                Label = "Function" + " [" + node.Scope.GetName() + "]",
+                Label = "Function",
                 FontColor = DotColor.White,
                 FillColor = DotColor.Mediumseagreen,
+                Style = DotNodeStyle.Filled
+            });
+            CreateLink(parent, node);
+            node.AcceptChildren(this, node);
+        }
+
+        public void Visit(ModuleNode node, PlatypusNode parent)
+        {
+            _graph.Add(new DotNode("node" + node.Id)
+            {
+                Label = "Module : " + node.Name.Value,
+                FontColor = DotColor.Black,
+                FillColor = DotColor.Gold,
                 Style = DotNodeStyle.Filled
             });
             CreateLink(parent, node);
@@ -239,7 +252,7 @@ namespace CPlatypus.Graphviz
         {
             _graph.Add(new DotNode("node" + node.Id)
             {
-                Label = "New" + " [" + node.Scope.GetName() + "]"
+                Label = "New"
             });
             CreateLink(parent, node);
             node.AcceptChildren(this, node);
@@ -249,7 +262,7 @@ namespace CPlatypus.Graphviz
         {
             _graph.Add(new DotNode("node" + node.Id)
             {
-                Label = "Parameters" + " [" + node.Scope.GetName() + "]"
+                Label = "Parameters"
             });
             CreateLink(parent, node);
             node.AcceptChildren(this, node);
@@ -259,7 +272,7 @@ namespace CPlatypus.Graphviz
         {
             _graph.Add(new DotNode("node" + node.Id)
             {
-                Label = "Return" + " [" + node.Scope.GetName() + "]"
+                Label = "Return"
             });
             CreateLink(parent, node);
             node.AcceptChildren(this, node);
@@ -269,7 +282,7 @@ namespace CPlatypus.Graphviz
         {
             _graph.Add(new DotNode("node" + node.Id)
             {
-                Label = "This" + " [" + node.Scope.GetName() + "]"
+                Label = "This"
             });
             CreateLink(parent, node);
             node.AcceptChildren(this, node);
@@ -279,7 +292,7 @@ namespace CPlatypus.Graphviz
         {
             _graph.Add(new DotNode("node" + node.Id)
             {
-                Label = "Unary Operation : " + node.OperationType + " [" + node.Scope.GetName() + "]",
+                Label = "Unary Operation : " + node.OperationType,
                 FontColor = DotColor.White,
                 FillColor = DotColor.Red3,
                 Style = DotNodeStyle.Filled
@@ -292,7 +305,7 @@ namespace CPlatypus.Graphviz
         {
             _graph.Add(new DotNode("node" + node.Id)
             {
-                Label = "Variable Declaration" + " [" + node.Scope.GetName() + "]",
+                Label = "Variable Declaration",
                 FontColor = DotColor.White,
                 FillColor = DotColor.Limegreen,
                 Style = DotNodeStyle.Filled
@@ -305,7 +318,7 @@ namespace CPlatypus.Graphviz
         {
             _graph.Add(new DotNode("node" + node.Id)
             {
-                Label = "String : " + node.Value + " [" + node.Scope.GetName() + "]",
+                Label = "String : " + node.Value,
                 FontColor = DotColor.White,
                 FillColor = DotColor.Orange,
                 Style = DotNodeStyle.Filled
@@ -318,7 +331,7 @@ namespace CPlatypus.Graphviz
         {
             _graph.Add(new DotNode("node" + node.Id)
             {
-                Label = "While" + " [" + node.Scope.GetName() + "]"
+                Label = "While"
             });
             CreateLink(parent, node);
             node.AcceptChildren(this, node);

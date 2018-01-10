@@ -16,34 +16,29 @@
  *     along with CPlatypus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-using CPlatypus.Framework;
+using System;
+using System.Collections.Generic;
+using CPlatypus.Core;
+using CPlatypus.Execution.Object;
+using CPlatypus.Execution.StandardLibrary.Types;
+using CPlatypus.Framework.Execution;
+using CPlatypus.Framework.Semantic;
 
-namespace CPlatypus.Parser.Nodes
+namespace CPlatypus.Execution.StandardLibrary.IO
 {
-    public class ConstructorNode : PlatypusNode
+    public class PlatypusPrintFunction : PlatypusFunction
     {
-        public ParameterListNode Parameters => Children[0] as ParameterListNode;
+        public static PlatypusPrintFunction Singleton { get; } = new PlatypusPrintFunction();
 
-        public CodeNode Body => Children[1] as CodeNode;
-
-        public ConstructorNode(int id, ParameterListNode parameters, CodeNode body, SourceLocation sourceLocation) :
-            base(id, sourceLocation)
+        private PlatypusPrintFunction() : base("print", new List<string> {"value"}, "Print")
         {
-            Children.Add(parameters);
-            Children.Add(body);
         }
 
-        public override void Accept(IPlatypusVisitor visitor, PlatypusNode parent)
+        public PlatypusInstance Print(Context currentContext, Symbol currentSymbol,
+            Dictionary<string, object> args)
         {
-            visitor.Visit(this, parent);
-        }
-
-        public override void AcceptChildren(IPlatypusVisitor visitor, PlatypusNode parent)
-        {
-            foreach (var child in Children)
-            {
-                child.Accept(visitor, parent);
-            }
+            Console.WriteLine(args["value"]);
+            return PlatypusNullInstance.Instance;
         }
     }
 }

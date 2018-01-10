@@ -16,15 +16,18 @@
  *     along with CPlatypus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+using System.Collections.Generic;
 using CPlatypus.Execution.Object;
-using CPlatypus.Framework.Parser;
+using CPlatypus.Execution.StandardLibrary.Types;
+using CPlatypus.Framework.Execution;
 using CPlatypus.Framework.Semantic;
 using CPlatypus.Parser;
 using CPlatypus.Parser.Nodes;
+using CPlatypus.Semantic;
 
 namespace CPlatypus.Execution.Executors
 {
-    public class ExpressionExecutor : NodeExecutor
+    public class ExpressionExecutor : PlatypusNodeExecutor
     {
         public static ExpressionExecutor Instance { get; } = new ExpressionExecutor();
 
@@ -32,76 +35,53 @@ namespace CPlatypus.Execution.Executors
         {
         }
 
-        public override PlatypusObject Execute(PlatypusNode node, Context currentContext)
+        public override PlatypusInstance Execute(PlatypusNode node, Context currentContext,
+            Symbol currentSymbol)
         {
             if (node is IdentifierNode identifierNode)
             {
-                return currentContext.Get(identifierNode.Value);
-            }
-
-            if (node is StringNode stringNode)
-            {
-                return new PlatypusString(stringNode.Value, currentContext.GlobalContext);
-            }
-
-            if (node is BooleanNode booleanNode)
-            {
-                return new PlatypusBoolean(booleanNode.Value, currentContext.GlobalContext);
+                var value = currentContext.Get(identifierNode.Value);
+                if (value is PlatypusInstance platypusInstance)
+                {
+                    return platypusInstance;
+                }
             }
 
             if (node is IntegerNode integerNode)
             {
-                return new PlatypusInteger(integerNode.Value, currentContext.GlobalContext);
+                return PlatypusInteger.Singleton.Create(currentContext, currentSymbol,
+                    new Dictionary<string, object> {{"value", integerNode.Value}});
             }
 
-            if (node is FloatNode floatNode)
+            if (node is StringNode stringNode)
             {
-                return new PlatypusFloat(floatNode.Value, currentContext.GlobalContext);
+                return PlatypusString.Singleton.Create(currentContext, currentSymbol,
+                    new Dictionary<string, object> {{"value", stringNode.Value}});
             }
 
-            if (node is CharNode charNode)
+            if (node is BooleanNode booleanNode)
             {
-                return new PlatypusChar(charNode.Value, currentContext.GlobalContext);
-            }
-
-            if (node is FunctionCallNode)
-            {
-                return FunctionExecutor.Instance.Execute(node, currentContext);
-            }
-
-            if (node is BinaryOperationNode)
-            {
-                return BinaryOperationExecutor.Instance.Execute(node, currentContext);
-            }
-
-            return PlatypusNull.Instance;
-        }
-
-        public Context ResolveObjectContext(PlatypusNode node, Context context)
-        {
-            if (node is IdentifierNode identifierNode)
-            {
-                if (context.Contains(identifierNode.Value))
-                {
-                    return context.Get(identifierNode.Value).ObjectContext;
-                }
-
-                return null;
+                return PlatypusBoolean.Singleton.Create(currentContext, currentSymbol,
+                    new Dictionary<string, object> {{"value", booleanNode.Value}});
             }
 
             if (node is FunctionCallNode functionCallNode)
             {
-                return FunctionExecutor.Instance.Execute(functionCallNode, context).ObjectContext;
+                return FunctionCallExecutor.Instance.Execute(functionCallNode, currentContext, currentSymbol);
             }
 
-            if (node is AttributeAccessNode attributeAccessNode)
+            if (node is NewNode newNode)
             {
-                return ResolveContext(attributeAccessNode.Attribute, ResolveObjectContext(attributeAccessNode.Left, context));
-            } 
+                return NewExecutor.Instance.Execute(newNode, currentContext, currentSymbol);
+            }
 
-            return null;
+            if (node is BinaryOperationNode binaryOperationNode)
+            {
+                return BinaryOperationExecutor.Instance.Execute(binaryOperationNode, currentContext, currentSymbol);
+            }
+
+            return PlatypusNullInstance.Instance;
         }
-        
 
         public Context ResolveContext(PlatypusNode node, Context context)
         {
@@ -129,36 +109,34 @@ namespace CPlatypus.Execution.Executors
             return null;
         }
 
-        public Symbol ResolveSymbol(PlatypusNode node)
+        public PlatypusInstance ResolveObject(PlatypusNode node, Context context, Symbol symbol)
         {
             if (node is IdentifierNode identifierNode)
             {
-                return identifierNode.Scope.Lookup(identifierNode.Value);
+                if (context.Contains(identifierNode.Value))
+                {
+                    return (PlatypusInstance) context.Get(identifierNode.Value);
+                }
+            }
+
+            if (node is FunctionCallNode functionCallNode)
+            {
+                return FunctionCallExecutor.Instance.Execute(functionCallNode, context, symbol);
             }
 
             if (node is AttributeAccessNode attributeAccessNode)
             {
-                return ResolveScope(attributeAccessNode.Left).Lookup(attributeAccessNode.Attribute.Value);
+                var left = ResolveObject(attributeAccessNode.Left, context, symbol);
+                return ResolveObject(attributeAccessNode.Attribute, left.Context, left.Symbol);
+
+                //TODO CHECK THIS IN MULTIPLE CASES
+                /*
+                return ResolveContext(attributeAccessNode.Attribute,
+                    ResolveObjectContext(attributeAccessNode.Left, context, symbol));
+                    */
             }
 
             return null;
         }
-
-        private IScope ResolveScope(PlatypusNode node)
-        {
-            if (node is IdentifierNode identifierNode)
-            {
-                return identifierNode.Scope;
-            }
-
-            if (node is AttributeAccessNode attributeAccessNode)
-            {
-                return ResolveScope(attributeAccessNode.Left).Lookup(attributeAccessNode.Attribute.Value).Scope;
-            }
-
-            return null;
-        }
-        
-        
     }
 }

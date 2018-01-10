@@ -16,18 +16,51 @@
  *     along with CPlatypus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+using System.Collections.Generic;
+
 namespace CPlatypus.Framework.Semantic
 {
-    public class Symbol
+    public abstract class Symbol
     {
-        public string Name { get; }
+        public string Name { get; protected set; }
 
-        public IScope Scope { get; }
+        private Dictionary<string, Symbol> Symbols { get; }
 
-        public Symbol(string name, IScope scope)
+        public Symbol Parent { get; }
+
+        public Symbol TopSymbol => Parent is null ? this : Parent.TopSymbol;
+
+        public Symbol(Symbol parent)
         {
-            Name = name;
-            Scope = scope;
-        } 
+            Symbols = new Dictionary<string, Symbol>();
+            Parent = parent;
+        }
+
+        public void Add(Symbol symbol)
+        {
+            Symbols.Add(symbol.Name, symbol);
+        }
+
+        public T GetLocal<T>(string name) where T : Symbol
+        {
+            if (!Symbols.ContainsKey(name)) return null;
+
+            if (Symbols[name] is T platypusSymbol)
+            {
+                return platypusSymbol;
+            }
+            else
+            {
+                //TODO : THROW ERROR
+            }
+
+            //TODO : THROW ERROR
+            return null;
+        }
+
+        public T Get<T>(string name) where T : Symbol
+        {
+            return GetLocal<T>(name) ?? Parent?.Get<T>(name);
+        }
     }
 }

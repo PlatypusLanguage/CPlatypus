@@ -27,6 +27,7 @@ namespace CPlatypus.Core
         [KeywordIndex("end", PlatypusTokenType.EndKeyword)] End,
         [KeywordIndex("function", PlatypusTokenType.FunctionKeyword)] Function,
         [KeywordIndex("class", PlatypusTokenType.ClassKeyword)] Class,
+        [KeywordIndex("module", PlatypusTokenType.ModuleKeyword)] Module,
         [KeywordIndex("constructor", PlatypusTokenType.ConstructorKeyword)] Constructor,
         [KeywordIndex("this", PlatypusTokenType.ThisKeyword)] This,
         [KeywordIndex("new", PlatypusTokenType.NewKeyword)] New,

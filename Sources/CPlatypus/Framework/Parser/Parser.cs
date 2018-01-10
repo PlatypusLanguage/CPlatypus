@@ -94,6 +94,11 @@ namespace CPlatypus.Framework.Parser
             return null;
         }
 
+        public TToken Consume()
+        {
+            return Lexer.ConsumeToken();
+        }
+
         public TToken ConsumeType(int tokenType)
         {
             if (MatchType(tokenType))

@@ -18,6 +18,9 @@
 
 using System;
 using System.Linq;
+using System.Linq.Expressions;
+using System.Reflection;
+using System.Text;
 using CPlatypus.Framework.Lexer;
 using CPlatypus.Lexer;
 
@@ -25,6 +28,40 @@ namespace CPlatypus.Core
 {
     public static class PlatypusExtensions
     {
+        public static string JoinToString(this object[] objects)
+        {
+            if (objects.Length == 0)
+            {
+                return "";
+            }
+            var sb = new StringBuilder();
+            sb.AppendJoin(" ", objects);
+            return sb.ToString();
+        }
+        
+        public static Delegate CreateDelegate(this MethodInfo methodInfo, object target = null)
+        {
+            Func<Type[], Type> getType;
+            var types = methodInfo.GetParameters().Select(p => p.ParameterType);
+
+            if (methodInfo.ReturnType == typeof(void))
+            {
+                getType = Expression.GetActionType;
+            }
+            else
+            {
+                getType = Expression.GetFuncType;
+                types = types.Concat(new[] {methodInfo.ReturnType});
+            }
+
+            if (methodInfo.IsStatic)
+            {
+                return Delegate.CreateDelegate(getType(types.ToArray()), methodInfo);
+            }
+
+            return Delegate.CreateDelegate(getType(types.ToArray()), target, methodInfo.Name);
+        }
+        
         public static string ToKeywordIndex(this PlatypusKeywords keyword)
         {
             var attributes = (KeywordIndex[]) keyword.GetType().GetField(keyword.ToString())
@@ -41,15 +78,15 @@ namespace CPlatypus.Core
 
         public static bool IsInTokenGroup(this PlatypusTokenType tokenType, PlatypusTokenTypeGroup group)
         {
-            var attributes = (TokenGroup[]) tokenType.GetType().GetField(tokenType.ToString())
-                .GetCustomAttributes(typeof(TokenGroup), false);
+            var attributes = (PlatypusTokenGroup[]) tokenType.GetType().GetField(tokenType.ToString())
+                .GetCustomAttributes(typeof(PlatypusTokenGroup), false);
             return attributes.Length > 0 && attributes[0].Groups.Contains(group);
         }
 
-        public static bool IsInTokenGroups(this PlatypusTokenType tokenType, params PlatypusTokenTypeGroup[] groups)
+        public static bool IsInTokenGroups(this PlatypusTokenType tokenType, PlatypusTokenTypeGroup[] groups)
         {
-            var attributes = (TokenGroup[]) tokenType.GetType().GetField(tokenType.ToString())
-                .GetCustomAttributes(typeof(TokenGroup), false);
+            var attributes = (PlatypusTokenGroup[]) tokenType.GetType().GetField(tokenType.ToString())
+                .GetCustomAttributes(typeof(PlatypusTokenGroup), false);
             return attributes.Length > 0 && !attributes[0].Groups.Except(groups).Any();
         }
 
@@ -58,7 +95,7 @@ namespace CPlatypus.Core
             return IsInTokenGroup(token.TokenType, group);
         }
 
-        public static bool IsInTokenGroups(this PlatypusToken token, params PlatypusTokenTypeGroup[] groups)
+        public static bool IsInTokenGroups(this PlatypusToken token, PlatypusTokenTypeGroup[] groups)
         {
             return IsInTokenGroups(token.TokenType, groups);
         }

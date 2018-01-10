@@ -20,16 +20,15 @@ using CPlatypus.Framework;
 
 namespace CPlatypus.Parser.Nodes
 {
-    public class ConstructorNode : PlatypusNode
+    public class ModuleNode : PlatypusNode
     {
-        public ParameterListNode Parameters => Children[0] as ParameterListNode;
+        public IdentifierNode Name => Children[0] as IdentifierNode;
 
         public CodeNode Body => Children[1] as CodeNode;
 
-        public ConstructorNode(int id, ParameterListNode parameters, CodeNode body, SourceLocation sourceLocation) :
-            base(id, sourceLocation)
+        public ModuleNode(int id, IdentifierNode name, CodeNode body, SourceLocation sourceLocation) : base(id, sourceLocation)
         {
-            Children.Add(parameters);
+            Children.Add(name);
             Children.Add(body);
         }
 

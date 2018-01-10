@@ -16,33 +16,31 @@
  *     along with CPlatypus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace CPlatypus.Execution
+using CPlatypus.Lexer;
+using CPlatypus.Parser.Nodes;
+
+namespace CPlatypus.Parser.Parsers
 {
-    public class ExecutionContext
+    public class ModuleParser : NodeParser
     {
-        public Context CurrentContext { get; private set; }
+        public static ModuleParser Instance { get; } = new ModuleParser();
 
-        public ExecutionContext()
+        private ModuleParser()
         {
-            var globalContext = new Context("Global Context", null);
-            CurrentContext = globalContext;
         }
 
-        public void EnterScope(string name = "Context")
+        public override bool Match(PlatypusParser parser)
         {
-            CurrentContext = new Context(name, CurrentContext);
+            return parser.MatchType(PlatypusTokenType.ModuleKeyword) &&
+                   parser.MatchType(1, PlatypusTokenType.Identifier);
         }
 
-        public void ExitScope()
+        public override PlatypusNode Parse(PlatypusParser parser)
         {
-            if (CurrentContext.Parent != null)
-            {
-                CurrentContext = CurrentContext.Parent;
-            }
-            else
-            {
-                // TODO THROW ERROR (should never happen btw)
-            }
+            var moduleKeywordToken = parser.ConsumeType(PlatypusTokenType.ModuleKeyword);
+            var nameNode = IdentifierParser.Instance.Parse(parser) as IdentifierNode;
+            var bodyNode = CodeParser.Instance.ParseTill(parser);
+            return new ModuleNode(parser.NextId(), nameNode, bodyNode, moduleKeywordToken.SourceLocation);
         }
     }
 }

@@ -16,14 +16,18 @@
  *     along with CPlatypus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-using System;
+using System.Net.Mail;
 using CPlatypus.Execution.Object;
+using CPlatypus.Execution.StandardLibrary.Types;
+using CPlatypus.Framework.Execution;
+using CPlatypus.Framework.Semantic;
 using CPlatypus.Parser;
 using CPlatypus.Parser.Nodes;
+using CPlatypus.Semantic;
 
 namespace CPlatypus.Execution.Executors
 {
-    public class BinaryOperationExecutor : NodeExecutor
+    public class BinaryOperationExecutor : PlatypusNodeExecutor
     {
         public static BinaryOperationExecutor Instance { get; } = new BinaryOperationExecutor();
 
@@ -31,69 +35,63 @@ namespace CPlatypus.Execution.Executors
         {
         }
 
-        public override PlatypusObject Execute(PlatypusNode node, Context currentContext)
+        public override PlatypusInstance Execute(PlatypusNode node, Context currentContext,
+            Symbol currentSymbol)
         {
             if (node is BinaryOperationNode binaryOperationNode)
             {
-                switch (binaryOperationNode.OperationType)
+                var left = binaryOperationNode.Left;
+                var right = binaryOperationNode.Right;
+
+                if (binaryOperationNode.OperationType == BinaryOperation.Assignment)
                 {
-                    case BinaryOperation.Assignment:
-                        return ExecuteAssignment(binaryOperationNode, currentContext);
-                    case BinaryOperation.Addition:
-                        return ExecuteAddition(binaryOperationNode, currentContext);
-                    case BinaryOperation.Subtraction:
-                        break;
-                    case BinaryOperation.Multiplication:
-                        break;
-                    case BinaryOperation.Division:
-                        break;
-                    case BinaryOperation.Or:
-                        break;
-                    case BinaryOperation.And:
-                        break;
-                    case BinaryOperation.Equal:
-                        break;
-                    case BinaryOperation.NotEqual:
-                        break;
-                    case BinaryOperation.Greater:
-                        break;
-                    case BinaryOperation.GreaterEqual:
-                        break;
-                    case BinaryOperation.Is:
-                        break;
-                    case BinaryOperation.Less:
-                        break;
-                    case BinaryOperation.LessEqual:
-                        break;
-                    default:
-                        throw new ArgumentOutOfRangeException();
+                    var ctx = ExpressionExecutor.Instance.ResolveContext(left, currentContext);
+                    var name = "";
+                    if (left is IdentifierNode identifierNodeName)
+                    {
+                        name = identifierNodeName.Value;
+                    }
+                    else if (left is BinaryOperationNode binaryOperationNodeName)
+                    {
+                        name = ((IdentifierNode) binaryOperationNodeName.Right).Value;
+                    }
+
+                    return ctx.Set(name,
+                        ExpressionExecutor.Instance.Execute(right, currentContext, currentSymbol));
+                }
+
+                var op = binaryOperationNode.OperationType;
+
+                if (op == BinaryOperation.Addition || op == BinaryOperation.Subtraction ||
+                    op == BinaryOperation.Division || op == BinaryOperation.Multiplication)
+                {
+                    var l = ExpressionExecutor.Instance.Execute(left, currentContext, currentSymbol);
+                    var r = ExpressionExecutor.Instance.Execute(right, currentContext, currentSymbol);
+
+                    var opString = "";
+
+                    switch (op)
+                    {
+                        case BinaryOperation.Addition:
+                            opString = "_plusoperator";
+                            break;
+                        case BinaryOperation.Subtraction:
+                            opString = "_minusoperator";
+                            break;
+                        case BinaryOperation.Multiplication:
+                            opString = "_multiplyoperator";
+                            break;
+                        case BinaryOperation.Division:
+                            opString = "_divideoperator";
+                            break;
+                    }
+
+                    return FunctionCallExecutor.Instance.Execute(l.Symbol.Get<PlatypusFunctionSymbol>(opString),
+                        currentContext, new object[] {r}, l);
                 }
             }
-            return PlatypusNull.Instance; // Should never happen
-        }
 
-        private PlatypusObject ExecuteAssignment(BinaryOperationNode node, Context context)
-        {
-            var name = ExpressionExecutor.Instance.ResolveSymbol(node.Left).Name;
-            var ctx = ExpressionExecutor.Instance.ResolveContext(node.Left, context);
-            if (!(name is null))
-            {
-                ctx?.Set(name, ExpressionExecutor.Instance.Execute(node.Right, context));
-            }
-            return PlatypusNull.Instance;
-        }
-
-        private PlatypusObject ExecuteAddition(BinaryOperationNode node, Context context)
-        {
-            var left = ExpressionExecutor.Instance.Execute(node.Left, context);
-            var right = ExpressionExecutor.Instance.Execute(node.Right, context);
-
-            if (left is PlatypusInteger leftInteger && right is PlatypusInteger rightInteger)
-            {
-                return new PlatypusInteger(leftInteger.Value + rightInteger.Value, context);
-            }
-            
-            return PlatypusNull.Instance;
+            return PlatypusNullInstance.Instance;
         }
     }
 }

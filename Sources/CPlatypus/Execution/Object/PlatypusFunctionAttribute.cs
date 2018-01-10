@@ -16,15 +16,29 @@
  *     along with CPlatypus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+using System;
+using System.Collections.Generic;
+using System.Linq;
+
 namespace CPlatypus.Execution.Object
 {
-    public abstract class PlatypusObject
+    public class PlatypusFunctionAttribute : Attribute
     {
-        public Context ObjectContext { get; }
+        public string Name { get; }
+        
+        public List<string> Parameters { get; }
 
-        public PlatypusObject(Context globalContext)
+        public PlatypusFunctionAttribute(string name)
         {
-            ObjectContext = new Context("Object Context", globalContext);
+            Name = name;
+            Parameters = new List<string>();
         }
+
+        public PlatypusFunctionAttribute(string name, params string[] parameters)
+        {
+            Name = name;
+            Parameters = parameters.ToList();
+        }
+       
     }
 }
