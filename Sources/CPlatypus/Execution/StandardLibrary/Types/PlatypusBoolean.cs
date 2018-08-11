@@ -30,7 +30,7 @@ namespace CPlatypus.Execution.StandardLibrary.Types
     {
         public static PlatypusBoolean Singleton { get; } = new PlatypusBoolean();
 
-        private PlatypusBoolean() : base("Boolean")
+        private PlatypusBoolean() : base("boolean")
         {
         }
 
@@ -63,7 +63,7 @@ namespace CPlatypus.Execution.StandardLibrary.Types
             var left = (PlatypusInstance) args["this"];
             var right = (PlatypusInstance) args["right"];
 
-            if (right.Symbol.Name != "String")
+            if (right.Symbol.Name != "string")
             {
                 return PlatypusNullInstance.Instance;
             }

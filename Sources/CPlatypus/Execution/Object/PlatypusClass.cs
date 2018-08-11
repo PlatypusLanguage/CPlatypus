@@ -87,16 +87,16 @@ namespace CPlatypus.Execution.Object
 
             var methods = new List<(string RealName, string Name, List<string> Parameters)>
             {
-                ("PlusOperator", "_plusoperator", new List<string> {"right"}),
-                ("MinusOperator", "_minusoperator", new List<string> {"right"}),
-                ("DivideOperator", "_divideoperator", new List<string> {"right"}),
-                ("MultiplyOperator", "_multiplyoperator", new List<string> {"right"}),
-                ("EqualOperator", "_equaloperator", new List<string> {"right"}),
-                ("GreaterOperator", "_greateroperator", new List<string> {"right"}),
-                ("GreaterEqualOperator", "_greaterequaloperator", new List<string> {"right"}),
-                ("LessOperator", "_lessoperator", new List<string> {"right"}),
-                ("LessEqualOperator", "_lessequaloperator", new List<string> {"right"}),
-                ("ToStringInstance", "tostring", new List<string>())
+                (nameof(PlusOperator), "_plusoperator", new List<string> {"right"}),
+                (nameof(MinusOperator), "_minusoperator", new List<string> {"right"}),
+                (nameof(DivideOperator), "_divideoperator", new List<string> {"right"}),
+                (nameof(MultiplyOperator), "_multiplyoperator", new List<string> {"right"}),
+                (nameof(EqualOperator), "_equaloperator", new List<string> {"right"}),
+                (nameof(GreaterOperator), "_greateroperator", new List<string> {"right"}),
+                (nameof(GreaterEqualOperator), "_greaterequaloperator", new List<string> {"right"}),
+                (nameof(LessOperator), "_lessoperator", new List<string> {"right"}),
+                (nameof(LessEqualOperator), "_lessequaloperator", new List<string> {"right"}),
+                (nameof(ToStringInstance), "tostring", new List<string>())
             };
 
             foreach (var method in methods)

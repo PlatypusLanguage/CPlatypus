@@ -30,7 +30,7 @@ namespace CPlatypus.Execution.StandardLibrary.Types
     {
         public static PlatypusString Singleton { get; } = new PlatypusString();
 
-        private PlatypusString() : base("String")
+        private PlatypusString() : base("string")
         {
         }
 

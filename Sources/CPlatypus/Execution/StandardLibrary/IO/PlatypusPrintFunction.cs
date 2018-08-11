@@ -18,7 +18,6 @@
 
 using System;
 using System.Collections.Generic;
-using CPlatypus.Core;
 using CPlatypus.Execution.Object;
 using CPlatypus.Execution.StandardLibrary.Types;
 using CPlatypus.Framework.Execution;

@@ -28,15 +28,19 @@ namespace CPlatypus.Execution.Executors
     public class WhileExecutor : PlatypusNodeExecutor
     {
         public bool HasReturnedValue { get; private set; }
-        
+
         public override PlatypusInstance Execute(PlatypusNode node, Context currentContext, Symbol currentSymbol)
         {
             HasReturnedValue = false;
+            
             if (node is WhileNode whileNode)
             {
                 PlatypusInstance conditionResult;
+
+                var expressionExecutor = new ExpressionExecutor();
+
                 while ((conditionResult =
-                    new ExpressionExecutor().Execute(whileNode.Condition, currentContext, currentSymbol)).HasValue &&
+                           expressionExecutor.Execute(whileNode.Condition, currentContext, currentSymbol)).HasValue &&
                        conditionResult.GetValue() is bool && conditionResult.GetValue<bool>())
                 {
                     var executor = new BodyExecutor();
