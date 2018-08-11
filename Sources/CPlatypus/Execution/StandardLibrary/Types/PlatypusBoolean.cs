@@ -20,7 +20,6 @@ using System;
 using System.Collections.Generic;
 using CPlatypus.Execution.Executors;
 using CPlatypus.Execution.Object;
-using CPlatypus.Framework.Execution;
 using CPlatypus.Framework.Semantic;
 using CPlatypus.Semantic;
 
@@ -34,32 +33,32 @@ namespace CPlatypus.Execution.StandardLibrary.Types
         {
         }
 
-        public override PlatypusInstance Create(PlatypusContext currentContext, Symbol currentSymbol, Dictionary<string, object> args)
+        public override PlatypusInstance Create(PlatypusContext currentContext, Symbol currentSymbol, object value)
         {
             var instance = new PlatypusInstance(currentSymbol.Get<PlatypusClassSymbol>(Name),
                 currentContext);
-            if (args["value"] is PlatypusInstance platypusInstance)
+            if (value is bool booleanValue)
             {
-                instance.SetValue(platypusInstance.GetValue());
+                instance.SetValue(booleanValue);
+                return instance;
             }
-            else
-            {
-                instance.SetValue(args["value"]);
-            }
-            return instance;
+
+            throw new InvalidOperationException($"Can't assign {value.GetType()} for {nameof(PlatypusBoolean)}");
         }
 
         [PlatypusFunction("_constructor", "value")]
-        public override PlatypusInstance Constructor(PlatypusContext currentContext, Symbol currentSymbol, Dictionary<string, object> args)
+        public override PlatypusInstance Constructor(PlatypusContext currentContext, Symbol currentSymbol, Dictionary<string, PlatypusInstance> args)
         {
-            return Create(currentContext, currentSymbol, args);
+            return PlatypusNullInstance.Instance;
+            //return Create(currentContext, currentSymbol, args);
         }
 
-        public override PlatypusInstance PlusOperator(PlatypusContext currentContext, Symbol currentSymbol, Dictionary<string, object> args)
+        public override PlatypusInstance PlusOperator(PlatypusContext currentContext, Symbol currentSymbol, Dictionary<string, PlatypusInstance> args)
         {
-            var left = (PlatypusInstance) args["this"];
-            var right = (PlatypusInstance) args["right"];
+            var left = args["this"];
+            var right = args["right"];
 
+            //TODO CHECK WHY THIS CODE IS HERE???
             if (right.Symbol.Name != "string")
             {
                 return PlatypusNullInstance.Instance;
@@ -67,71 +66,65 @@ namespace CPlatypus.Execution.StandardLibrary.Types
 
             return PlatypusString.Singleton.Create(
                 currentContext, currentSymbol,
-                new Dictionary<string, object>
-                {
-                    {
-                        "value", new FunctionCallExecutor().Execute(
-                                     left.Symbol.Get<PlatypusFunctionSymbol>("tostring"),
-                                     currentContext, new object[0], left).GetValue<string>() +
-                                 new FunctionCallExecutor().Execute(
-                                     right.Symbol.Get<PlatypusFunctionSymbol>("tostring"),
-                                     currentContext, new object[0], right).GetValue<string>()
-                    }
-                }
+                new FunctionCallExecutor().Execute(
+                    left.Symbol.Get<PlatypusFunctionSymbol>("tostring"),
+                    currentContext, new PlatypusInstance[0], left).GetValue<string>() +
+                new FunctionCallExecutor().Execute(
+                    right.Symbol.Get<PlatypusFunctionSymbol>("tostring"),
+                    currentContext, new PlatypusInstance[0], right).GetValue<string>()
             );
         }
 
-        public override PlatypusInstance MinusOperator(PlatypusContext currentContext, Symbol currentSymbol, Dictionary<string, object> args)
+        public override PlatypusInstance MinusOperator(PlatypusContext currentContext, Symbol currentSymbol, Dictionary<string, PlatypusInstance> args)
         {
             throw new NotImplementedException();
         }
 
-        public override PlatypusInstance DivideOperator(PlatypusContext currentContext, Symbol currentSymbol, Dictionary<string, object> args)
+        public override PlatypusInstance DivideOperator(PlatypusContext currentContext, Symbol currentSymbol, Dictionary<string, PlatypusInstance> args)
         {
             throw new NotImplementedException();
         }
 
-        public override PlatypusInstance MultiplyOperator(PlatypusContext currentContext, Symbol currentSymbol, Dictionary<string, object> args)
+        public override PlatypusInstance MultiplyOperator(PlatypusContext currentContext, Symbol currentSymbol, Dictionary<string, PlatypusInstance> args)
         {
             throw new NotImplementedException();
         }
 
-        public override PlatypusInstance EqualOperator(PlatypusContext currentContext, Symbol currentSymbol, Dictionary<string, object> args)
+        public override PlatypusInstance EqualOperator(PlatypusContext currentContext, Symbol currentSymbol, Dictionary<string, PlatypusInstance> args)
         {
             throw new NotImplementedException();
         }
 
-        public override PlatypusInstance GreaterOperator(PlatypusContext currentContext, Symbol currentSymbol, Dictionary<string, object> args)
+        public override PlatypusInstance GreaterOperator(PlatypusContext currentContext, Symbol currentSymbol, Dictionary<string, PlatypusInstance> args)
         {
             throw new NotImplementedException();
         }
 
-        public override PlatypusInstance GreaterEqualOperator(PlatypusContext currentContext, Symbol currentSymbol, Dictionary<string, object> args)
+        public override PlatypusInstance GreaterEqualOperator(PlatypusContext currentContext, Symbol currentSymbol, Dictionary<string, PlatypusInstance> args)
         {
             throw new NotImplementedException();
         }
 
-        public override PlatypusInstance LessOperator(PlatypusContext currentContext, Symbol currentSymbol, Dictionary<string, object> args)
+        public override PlatypusInstance LessOperator(PlatypusContext currentContext, Symbol currentSymbol, Dictionary<string, PlatypusInstance> args)
         {
             throw new NotImplementedException();
         }
 
-        public override PlatypusInstance LessEqualOperator(PlatypusContext currentContext, Symbol currentSymbol, Dictionary<string, object> args)
+        public override PlatypusInstance LessEqualOperator(PlatypusContext currentContext, Symbol currentSymbol, Dictionary<string, PlatypusInstance> args)
         {
             throw new NotImplementedException();
         }
 
-        public override PlatypusInstance ToStringInstance(PlatypusContext currentContext, Symbol currentSymbol, Dictionary<string, object> args)
+        public override PlatypusInstance ToStringInstance(PlatypusContext currentContext, Symbol currentSymbol, Dictionary<string, PlatypusInstance> args)
         {
-            var arg = (PlatypusInstance) args["this"];
+            var arg = args["this"];
 
             if (arg.Symbol.Name == Name)
             {
-                return PlatypusString.Singleton.Create(currentContext, currentSymbol,
-                    new Dictionary<string, object> {{"value", arg.GetValue().ToString()}});
+                return PlatypusString.Singleton.Create(currentContext, currentSymbol, arg.GetValue().ToString());
             }
 
-            return PlatypusString.Singleton.Create(currentContext, currentSymbol, new Dictionary<string, object>());
+            return PlatypusString.Singleton.Create(currentContext, currentSymbol, string.Empty);
         }
     }
 }

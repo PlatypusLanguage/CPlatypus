@@ -20,13 +20,12 @@ using System;
 using System.Collections.Generic;
 using CPlatypus.Execution.Executors;
 using CPlatypus.Execution.Object;
-using CPlatypus.Framework.Execution;
 using CPlatypus.Framework.Semantic;
 using CPlatypus.Semantic;
 
 namespace CPlatypus.Execution.StandardLibrary.Types
 {
-    public class PlatypusString : PlatypusClass
+    public class PlatypusString : PlatypusClass, IPlatypusBuiltInType<string>
     {
         public static PlatypusString Singleton { get; } = new PlatypusString();
 
@@ -34,107 +33,97 @@ namespace CPlatypus.Execution.StandardLibrary.Types
         {
         }
 
-        public override PlatypusInstance Create(PlatypusContext currentContext, Symbol currentSymbol, Dictionary<string, object> args)
+        public PlatypusInstance Create(PlatypusContext currentContext, Symbol currentSymbol, string value)
+        {
+            throw new NotImplementedException();
+        }
+        
+        public override PlatypusInstance Create(PlatypusContext currentContext, Symbol currentSymbol, object value)
         {
             var instance = new PlatypusInstance(currentSymbol.Get<PlatypusClassSymbol>(Name), currentContext);
-            if (args["value"] is PlatypusInstance platypusInstance)
+            if (value is string stringValue)
             {
-                instance.SetValue(platypusInstance.GetValue());
+                instance.SetValue(stringValue);
+                return instance;
             }
-            else
-            {
-                instance.SetValue(args["value"]);
-            }
-            return instance;
+
+            throw new InvalidOperationException($"Can't assign {value.GetType()} for {nameof(PlatypusString)}");
         }
 
         [PlatypusFunction("_constructor", "value")]
-        public override PlatypusInstance Constructor(PlatypusContext currentContext, Symbol currentSymbol, Dictionary<string, object> args)
+        public override PlatypusInstance Constructor(PlatypusContext currentContext, Symbol currentSymbol, Dictionary<string, PlatypusInstance> args)
         {
-            if (args["value"] is PlatypusInstance platypusInstance)
-            {
-                currentContext.GetFirstParentContextOfType(PlatypusContextType.ObjectInstance).Set("_value", platypusInstance.GetValue());
-            }
-            else
-            {
-                currentContext.GetFirstParentContextOfType(PlatypusContextType.ObjectInstance).Set("_value", args["value"]);
-            }
-            
+            currentContext.GetFirstParentContextOfType(PlatypusContextType.ObjectInstance).Set("_value", args["value"].GetValue());
             return PlatypusNullInstance.Instance;
-            return Create(currentContext, currentSymbol, args);
+            //return Create(currentContext, currentSymbol, args);
         }
 
-        public override PlatypusInstance PlusOperator(PlatypusContext currentContext, Symbol currentSymbol, Dictionary<string, object> args)
+        public override PlatypusInstance PlusOperator(PlatypusContext currentContext, Symbol currentSymbol, Dictionary<string, PlatypusInstance> args)
         {
-            var left = (PlatypusInstance) args["this"];
-            var right = (PlatypusInstance) args["right"];
+            var left = args["this"];
+            var right = args["right"];
 
             return Create(
                 currentContext, currentSymbol,
-                new Dictionary<string, object>
-                {
-                    {
-                        "value", new FunctionCallExecutor().Execute(
-                                     left.Symbol.Get<PlatypusFunctionSymbol>("tostring"),
-                                     currentContext, new object[0], left).GetValue<string>() +
-                                 new FunctionCallExecutor().Execute(
-                                     right.Symbol.Get<PlatypusFunctionSymbol>("tostring"),
-                                     currentContext, new object[0], right).GetValue<string>()
-                    }
-                }
+                new FunctionCallExecutor().Execute(
+                    left.Symbol.Get<PlatypusFunctionSymbol>("tostring"),
+                    currentContext, new PlatypusInstance[0], left).GetValue<string>() +
+                new FunctionCallExecutor().Execute(
+                    right.Symbol.Get<PlatypusFunctionSymbol>("tostring"),
+                    currentContext, new PlatypusInstance[0], right).GetValue<string>()
             );
         }
 
-        public override PlatypusInstance MinusOperator(PlatypusContext currentContext, Symbol currentSymbol, Dictionary<string, object> args)
+        public override PlatypusInstance MinusOperator(PlatypusContext currentContext, Symbol currentSymbol, Dictionary<string, PlatypusInstance> args)
         {
             throw new NotImplementedException();
         }
 
-        public override PlatypusInstance DivideOperator(PlatypusContext currentContext, Symbol currentSymbol, Dictionary<string, object> args)
+        public override PlatypusInstance DivideOperator(PlatypusContext currentContext, Symbol currentSymbol, Dictionary<string, PlatypusInstance> args)
         {
             throw new NotImplementedException();
         }
 
-        public override PlatypusInstance MultiplyOperator(PlatypusContext currentContext, Symbol currentSymbol, Dictionary<string, object> args)
+        public override PlatypusInstance MultiplyOperator(PlatypusContext currentContext, Symbol currentSymbol, Dictionary<string, PlatypusInstance> args)
         {
             throw new NotImplementedException();
         }
 
-        public override PlatypusInstance EqualOperator(PlatypusContext currentContext, Symbol currentSymbol, Dictionary<string, object> args)
+        public override PlatypusInstance EqualOperator(PlatypusContext currentContext, Symbol currentSymbol, Dictionary<string, PlatypusInstance> args)
         {
             throw new NotImplementedException();
         }
 
-        public override PlatypusInstance GreaterOperator(PlatypusContext currentContext, Symbol currentSymbol, Dictionary<string, object> args)
+        public override PlatypusInstance GreaterOperator(PlatypusContext currentContext, Symbol currentSymbol, Dictionary<string, PlatypusInstance> args)
         {
             throw new NotImplementedException();
         }
 
-        public override PlatypusInstance GreaterEqualOperator(PlatypusContext currentContext, Symbol currentSymbol, Dictionary<string, object> args)
+        public override PlatypusInstance GreaterEqualOperator(PlatypusContext currentContext, Symbol currentSymbol, Dictionary<string, PlatypusInstance> args)
         {
             throw new NotImplementedException();
         }
 
-        public override PlatypusInstance LessOperator(PlatypusContext currentContext, Symbol currentSymbol, Dictionary<string, object> args)
+        public override PlatypusInstance LessOperator(PlatypusContext currentContext, Symbol currentSymbol, Dictionary<string, PlatypusInstance> args)
         {
             throw new NotImplementedException();
         }
 
-        public override PlatypusInstance LessEqualOperator(PlatypusContext currentContext, Symbol currentSymbol, Dictionary<string, object> args)
+        public override PlatypusInstance LessEqualOperator(PlatypusContext currentContext, Symbol currentSymbol, Dictionary<string, PlatypusInstance> args)
         {
             throw new NotImplementedException();
         }
 
-        public override PlatypusInstance ToStringInstance(PlatypusContext currentContext, Symbol currentSymbol, Dictionary<string, object> args)
+        public override PlatypusInstance ToStringInstance(PlatypusContext currentContext, Symbol currentSymbol, Dictionary<string, PlatypusInstance> args)
         {
-            var arg = (PlatypusInstance) args["this"];
+            var arg = args["this"];
 
             if (arg.Symbol.Name == Name)
             {
                 return arg;
             }
 
-            return Create(currentContext, currentSymbol, new Dictionary<string, object>());
+            return Create(currentContext, currentSymbol, string.Empty);
         }
     }
 }

@@ -33,10 +33,9 @@ namespace CPlatypus.Execution.StandardLibrary.IO
         {
         }
 
-        public PlatypusInstance Read(Context currentContext, Symbol currentSymbol, Dictionary<string, object> args)
+        public PlatypusInstance Read(Context currentContext, Symbol currentSymbol, Dictionary<string, PlatypusInstance> args)
         {
-            return PlatypusString.Singleton.Create(currentContext as PlatypusContext, currentSymbol,
-                new Dictionary<string, object> {{"value", Console.ReadLine()}});
+            return PlatypusString.Singleton.Create(currentContext as PlatypusContext, currentSymbol, Console.ReadLine());
         }
     }
 }

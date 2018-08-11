@@ -1,5 +1,10 @@
 #lang=default#
 
+var me = new string("valentin")
+
+print(me)
+
+##
 function fibonacci(n)
     if (n <= 1)
         return n
@@ -14,3 +19,4 @@ while(i < 16)
     print(fibonacci(i))
     i = i + 1
 end
+##

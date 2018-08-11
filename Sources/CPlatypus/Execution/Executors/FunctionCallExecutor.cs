@@ -31,13 +31,13 @@ namespace CPlatypus.Execution.Executors
 {
     public class FunctionCallExecutor : PlatypusNodeExecutor
     {
-        public PlatypusInstance Execute(PlatypusFunctionSymbol functionSymbol, Context currentContext, object[] args, PlatypusInstance objectInstance = null)
+        public PlatypusInstance Execute(PlatypusFunctionSymbol functionSymbol, Context currentContext, PlatypusInstance[] args, PlatypusInstance objectInstance = null)
         {
             if (functionSymbol.ExternFunction)
             {
                 var functionContext = new PlatypusContext(PlatypusContextType.Function, currentContext);
 
-                var argsDictionary = new Dictionary<string, object>();
+                var argsDictionary = new Dictionary<string, PlatypusInstance>();
 
                 var parameters = functionSymbol.FunctionTarget.Parameters;
 
@@ -81,9 +81,6 @@ namespace CPlatypus.Execution.Executors
         {
             var functionContext = new PlatypusContext(PlatypusContextType.Function, currentContext);
 
-            
-            
-
             throw new NotImplementedException();
             return PlatypusNullInstance.Instance;
         }
@@ -112,7 +109,7 @@ namespace CPlatypus.Execution.Executors
                 {
                     if (functionSymbol.ExternFunction)
                     {
-                        var args = new List<object>();
+                        var args = new List<PlatypusInstance>();
 
                         foreach (var arg in functionCallNode.ArgumentList.Arguments)
                         {

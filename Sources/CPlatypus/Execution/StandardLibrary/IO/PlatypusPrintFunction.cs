@@ -33,10 +33,9 @@ namespace CPlatypus.Execution.StandardLibrary.IO
         {
         }
 
-        public PlatypusInstance Print(Context currentContext, Symbol currentSymbol, Dictionary<string, object> args)
+        public PlatypusInstance Print(Context currentContext, Symbol currentSymbol, Dictionary<string, PlatypusInstance> args)
         {
             Console.WriteLine(args["value"]);
-            return PlatypusNullInstance.Instance;
-        }
+            return PlatypusNullInstance.Instance;        }
     }
 }

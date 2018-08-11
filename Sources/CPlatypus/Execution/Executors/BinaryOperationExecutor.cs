@@ -99,7 +99,7 @@ namespace CPlatypus.Execution.Executors
                             break;
                     }
 
-                    return new FunctionCallExecutor().Execute(leftValue.Symbol.Get<PlatypusFunctionSymbol>(opString), currentContext, new object[] {rightValue}, leftValue);
+                    return new FunctionCallExecutor().Execute(leftValue.Symbol.Get<PlatypusFunctionSymbol>(opString), currentContext, new[] {rightValue}, leftValue);
                 }
             }
 

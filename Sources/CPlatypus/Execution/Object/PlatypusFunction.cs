@@ -47,7 +47,7 @@ namespace CPlatypus.Execution.Object
             _delegateFunction = GetType().GetMethod(realName).CreateDelegate(this);
         }
 
-        public PlatypusInstance Execute(Context currentContext, Symbol currentSymbol, Dictionary<string, object> args)
+        public PlatypusInstance Execute(Context currentContext, Symbol currentSymbol, Dictionary<string, PlatypusInstance> args)
         {          
             return (PlatypusInstance) _delegateFunction.DynamicInvoke(currentContext, currentSymbol, args);
         }

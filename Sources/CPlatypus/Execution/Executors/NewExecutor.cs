@@ -40,7 +40,7 @@ namespace CPlatypus.Execution.Executors
             
             var constructorSymbol = classSymbol.GetLocal<PlatypusFunctionSymbol>("_constructor");
 
-            var args = new List<object>();
+            var args = new List<PlatypusInstance>();
 
             foreach (var argument in functionCallNode.ArgumentList.Arguments)
             {

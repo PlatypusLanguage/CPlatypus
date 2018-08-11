@@ -16,7 +16,6 @@
  *     along with CPlatypus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-using System.Collections.Generic;
 using CPlatypus.Execution.Object;
 using CPlatypus.Execution.StandardLibrary.Types;
 using CPlatypus.Framework.Execution;
@@ -41,20 +40,17 @@ namespace CPlatypus.Execution.Executors
 
             if (node is IntegerNode integerNode)
             {
-                return PlatypusInteger.Singleton.Create(currentContext as PlatypusContext, currentSymbol,
-                    new Dictionary<string, object> {{"value", integerNode.Value}});
+                return PlatypusInteger.Singleton.Create(currentContext as PlatypusContext, currentSymbol, integerNode.Value);
             }
 
             if (node is StringNode stringNode)
             {
-                return PlatypusString.Singleton.Create(currentContext as PlatypusContext, currentSymbol,
-                    new Dictionary<string, object> {{"value", stringNode.Value}});
+                return PlatypusString.Singleton.Create(currentContext as PlatypusContext, currentSymbol, stringNode.Value);
             }
 
             if (node is BooleanNode booleanNode)
             {
-                return PlatypusBoolean.Singleton.Create(currentContext as PlatypusContext, currentSymbol,
-                    new Dictionary<string, object> {{"value", booleanNode.Value}});
+                return PlatypusBoolean.Singleton.Create(currentContext as PlatypusContext, currentSymbol, booleanNode);
             }
 
             if (node is FunctionCallNode functionCallNode)
