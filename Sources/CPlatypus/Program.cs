@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright (c) 2017 Platypus Language http://platypus.vfrz.fr/
+ * Copyright (c) 2018 Platypus Language http://platypus.vfrz.fr/
  *  This file is part of CPlatypus.
  *
  *     CPlatypus is free software: you can redistribute it and/or modify
@@ -24,13 +24,6 @@ using CPlatypus.Parser;
 
 namespace CPlatypus
 {
-    public class ApplicationArguments
-    {
-        public string File { get; set; } = "";
-        public string DotTree { get; set; } = "";
-        public bool IgnoreUnknownTokens { get; set; }
-    }
-
     internal class Program
     {
         private static void Main(string[] args)

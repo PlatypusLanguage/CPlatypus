@@ -16,12 +16,14 @@
  *     along with CPlatypus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-using CPlatypus.Framework;
-
-namespace CPlatypus.Lexer.Matcher
+namespace CPlatypus
 {
-    public interface IMatcher
+    public class ApplicationArguments
     {
-        PlatypusToken Match(SourceLocation location, Source source);
+        public string File { get; set; } = "";
+        
+        public string DotTree { get; set; } = "";
+        
+        public bool IgnoreUnknownTokens { get; set; }
     }
 }
