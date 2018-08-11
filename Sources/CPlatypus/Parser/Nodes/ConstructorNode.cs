@@ -21,9 +21,9 @@ using CPlatypus.Framework;
 
 namespace CPlatypus.Parser.Nodes
 {
-    public class ConstructorNode : PlatypusNode
+    public class ConstructorNode : PlatypusNode, IParameterizedNode, IBodiedNode
     {
-        public ParameterListNode Parameters => Children[0] as ParameterListNode;
+        public ParameterListNode ParameterList => Children[0] as ParameterListNode;
 
         public CodeNode Body => Children[1] as CodeNode;
 

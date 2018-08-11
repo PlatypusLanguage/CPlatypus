@@ -18,21 +18,18 @@
 
 using CPlatypus.Execution.Object;
 using CPlatypus.Framework.Semantic;
+using CPlatypus.Parser;
 using CPlatypus.Parser.Nodes;
 
 namespace CPlatypus.Semantic
 {
     public class PlatypusFunctionSymbol : Symbol
     {
-        public FunctionNode FunctionNode { get; }
+        public PlatypusNode FunctionNode { get; }
 
         public PlatypusFunction FunctionTarget { get; }
 
-        public ConstructorNode ConstructorNode { get; }
-
         public bool ExternFunction => FunctionNode is null;
-
-        public bool IsConstructor => !(ConstructorNode is null);
 
         public PlatypusFunctionSymbol(FunctionNode functionNode, Symbol parent) : base(parent)
         {
@@ -43,7 +40,7 @@ namespace CPlatypus.Semantic
         public PlatypusFunctionSymbol(ConstructorNode constructorNode, Symbol parent) : base(parent)
         {
             Name = "_constructor";
-            ConstructorNode = constructorNode;
+            FunctionNode = constructorNode;
         }
 
         public PlatypusFunctionSymbol(PlatypusFunction functionTarget, Symbol parent) : base(parent)

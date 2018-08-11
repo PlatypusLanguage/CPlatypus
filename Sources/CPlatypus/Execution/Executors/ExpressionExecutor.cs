@@ -23,14 +23,12 @@ using CPlatypus.Framework.Execution;
 using CPlatypus.Framework.Semantic;
 using CPlatypus.Parser;
 using CPlatypus.Parser.Nodes;
-using CPlatypus.Semantic;
 
 namespace CPlatypus.Execution.Executors
 {
     public class ExpressionExecutor : PlatypusNodeExecutor
     {
-        public override PlatypusInstance Execute(PlatypusNode node, Context currentContext,
-            Symbol currentSymbol)
+        public override PlatypusInstance Execute(PlatypusNode node, Context currentContext, Symbol currentSymbol)
         {
             if (node is IdentifierNode identifierNode)
             {
@@ -43,19 +41,19 @@ namespace CPlatypus.Execution.Executors
 
             if (node is IntegerNode integerNode)
             {
-                return PlatypusInteger.Singleton.Create(currentContext, currentSymbol,
+                return PlatypusInteger.Singleton.Create(currentContext as PlatypusContext, currentSymbol,
                     new Dictionary<string, object> {{"value", integerNode.Value}});
             }
 
             if (node is StringNode stringNode)
             {
-                return PlatypusString.Singleton.Create(currentContext, currentSymbol,
+                return PlatypusString.Singleton.Create(currentContext as PlatypusContext, currentSymbol,
                     new Dictionary<string, object> {{"value", stringNode.Value}});
             }
 
             if (node is BooleanNode booleanNode)
             {
-                return PlatypusBoolean.Singleton.Create(currentContext, currentSymbol,
+                return PlatypusBoolean.Singleton.Create(currentContext as PlatypusContext, currentSymbol,
                     new Dictionary<string, object> {{"value", booleanNode.Value}});
             }
 
@@ -103,7 +101,7 @@ namespace CPlatypus.Execution.Executors
             return null;
         }
 
-        public PlatypusInstance ResolveObject(PlatypusNode node, Context context, Symbol symbol)
+        public PlatypusInstance ResolveInstance(PlatypusNode node, Context context, Symbol symbol)
         {
             if (node is IdentifierNode identifierNode)
             {
@@ -120,8 +118,8 @@ namespace CPlatypus.Execution.Executors
 
             if (node is AttributeAccessNode attributeAccessNode)
             {
-                var left = ResolveObject(attributeAccessNode.Left, context, symbol);
-                return ResolveObject(attributeAccessNode.Attribute, left.Context, left.Symbol);
+                var left = ResolveInstance(attributeAccessNode.Left, context, symbol);
+                return ResolveInstance(attributeAccessNode.Attribute, left.Context, left.Symbol);
 
                 //TODO CHECK THIS IN MULTIPLE CASES
                 /*

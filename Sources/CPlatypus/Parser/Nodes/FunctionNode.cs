@@ -21,14 +21,13 @@ using CPlatypus.Framework;
 
 namespace CPlatypus.Parser.Nodes
 {
-    public class FunctionNode : PlatypusNode
+    public class FunctionNode : PlatypusNode, IParameterizedNode, IBodiedNode
     {
         public IdentifierNode Name => Children[0] as IdentifierNode;
 
         public ParameterListNode ParameterList => Children[1] as ParameterListNode;
 
         public CodeNode Body => Children[2] as CodeNode;
-
 
         public FunctionNode(int id, IdentifierNode name, ParameterListNode parameters, CodeNode body,
             SourceLocation sourceLocation) : base(id, sourceLocation)

@@ -32,8 +32,7 @@ namespace CPlatypus.Parser.Nodes
 
         public ArgumentListNode ArgumentList => Children[2] as ArgumentListNode;
 
-        public FunctionCallNode(int id, PlatypusNode target, ArgumentListNode arguments, SourceLocation sourceLocation)
-            : base(id, sourceLocation)
+        public FunctionCallNode(int id, PlatypusNode target, ArgumentListNode arguments, SourceLocation sourceLocation) : base(id, sourceLocation)
         {
             if (target is IdentifierNode)
             {

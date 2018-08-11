@@ -1,4 +1,4 @@
-﻿/*
+/*
  * Copyright (c) 2018 Platypus Language http://platypus.vfrz.fr/
  *  This file is part of CPlatypus.
  *
@@ -16,21 +16,12 @@
  *     along with CPlatypus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-using System;
-using CPlatypus.Lexer;
+using CPlatypus.Parser.Nodes;
 
-namespace CPlatypus.Core
+namespace CPlatypus.Parser
 {
-    [AttributeUsage(AttributeTargets.Field)]
-    public class KeywordIndex : Attribute
+    public interface IParameterizedNode
     {
-        public string Index { get; set; }
-        public PlatypusTokenType TokenType { get; set; }
-
-        public KeywordIndex(string index, PlatypusTokenType tokenType)
-        {
-            Index = index;
-            TokenType = tokenType;
-        }
+        ParameterListNode ParameterList { get; }
     }
 }

@@ -16,7 +16,6 @@
  *     along with CPlatypus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 using System.Collections.Generic;
 using CPlatypus.Execution.Object;
 using CPlatypus.Framework.Execution;
@@ -37,17 +36,20 @@ namespace CPlatypus.Execution.Executors
 
             var classSymbol = currentSymbol.Get<PlatypusClassSymbol>(functionCallNode.FunctionName.Value);
 
+            var newInstance = new PlatypusInstance(classSymbol, currentContext);
+            
             var constructorSymbol = classSymbol.GetLocal<PlatypusFunctionSymbol>("_constructor");
 
             var args = new List<object>();
 
             foreach (var argument in functionCallNode.ArgumentList.Arguments)
             {
-                args.Add(new ExpressionExecutor().Execute(argument, currentContext, currentSymbol));
+                args.Add(new ExpressionExecutor().Execute(argument, newInstance.Context, currentSymbol));
             }
             
-            return new FunctionCallExecutor().Execute(constructorSymbol,
-                currentContext, args.ToArray());
+            new FunctionCallExecutor().Execute(constructorSymbol, newInstance.Context, args.ToArray(), newInstance);
+
+            return newInstance;
         }
     }
 }

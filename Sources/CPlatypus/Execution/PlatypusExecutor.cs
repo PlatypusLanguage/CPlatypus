@@ -38,7 +38,7 @@ namespace CPlatypus.Execution
         {
             _moduleSymbol = globalModuleSymbol ?? PlatypusModuleSymbol.CreateGlobalModule();
             
-            _context = new PlatypusContext("Global Context", null);
+            _context = new PlatypusContext(PlatypusContextType.Global, null);
 
             // Inject standard library classes and functions
             

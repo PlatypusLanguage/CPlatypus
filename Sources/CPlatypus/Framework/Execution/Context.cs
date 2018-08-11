@@ -16,12 +16,15 @@
  *     along with CPlatypus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+using System;
 using System.Collections.Generic;
 
 namespace CPlatypus.Framework.Execution
 {
     public class Context
     {
+        public Guid Identifier { get; }
+        
         public string Name { get; }
 
         public Context Parent { get; }
@@ -46,6 +49,7 @@ namespace CPlatypus.Framework.Execution
 
         public Context(string name, Context parent, object defaultNullValue)
         {
+            Identifier = Guid.NewGuid();
             Name = name;
             Parent = parent;
             _defaultNullValue = defaultNullValue;

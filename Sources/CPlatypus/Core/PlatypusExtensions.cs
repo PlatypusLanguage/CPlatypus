@@ -21,6 +21,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Text;
+using CPlatypus.Execution;
 using CPlatypus.Framework.Lexer;
 using CPlatypus.Lexer;
 
@@ -61,18 +62,31 @@ namespace CPlatypus.Core
 
             return Delegate.CreateDelegate(getType(types.ToArray()), target, methodInfo.Name);
         }
+
+        public static string ToContextName(this PlatypusContextType contextType)
+        {
+            var field = contextType.GetType().GetField(contextType.ToString());
+            var attributes = field.GetCustomAttributes<PlatypusContextName>(false).ToList();
+
+            if (attributes.Any())
+            {
+                return attributes.First().ContextName;
+            }
+            
+            throw new CustomAttributeFormatException($"{contextType.ToString()} has no {nameof(PlatypusContextName)} attribute");
+        }
         
         public static string ToKeywordIndex(this PlatypusKeywords keyword)
         {
-            var attributes = (KeywordIndex[]) keyword.GetType().GetField(keyword.ToString())
-                .GetCustomAttributes(typeof(KeywordIndex), false);
+            var attributes = (PlatypusKeywordIndex[]) keyword.GetType().GetField(keyword.ToString())
+                .GetCustomAttributes(typeof(PlatypusKeywordIndex), false);
             return attributes.Length > 0 ? attributes[0].Index : string.Empty;
         }
 
         public static PlatypusTokenType GetTokenType(this PlatypusKeywords keyword)
         {
-            var attributes = (KeywordIndex[]) keyword.GetType().GetField(keyword.ToString())
-                .GetCustomAttributes(typeof(KeywordIndex), false);
+            var attributes = (PlatypusKeywordIndex[]) keyword.GetType().GetField(keyword.ToString())
+                .GetCustomAttributes(typeof(PlatypusKeywordIndex), false);
             return attributes.Length > 0 ? attributes[0].TokenType : PlatypusTokenType.Unknown;
         }
 

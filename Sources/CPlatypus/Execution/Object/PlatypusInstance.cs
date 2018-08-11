@@ -33,7 +33,7 @@ namespace CPlatypus.Execution.Object
         public PlatypusInstance(PlatypusClassSymbol symbol, Context parentContext)
         {
             Symbol = symbol;
-            Context = new PlatypusContext(symbol is null ? "c_null" : "c_" + symbol.Name, parentContext);
+            Context = new PlatypusContext(symbol is null ? PlatypusContextType.Null : PlatypusContextType.ObjectInstance, parentContext);
         }
 
         public bool HasValue => Context.ContainsLocal("_value");

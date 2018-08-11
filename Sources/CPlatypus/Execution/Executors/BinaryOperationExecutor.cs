@@ -28,29 +28,29 @@ namespace CPlatypus.Execution.Executors
 {
     public class BinaryOperationExecutor : PlatypusNodeExecutor
     {
-        public override PlatypusInstance Execute(PlatypusNode node, Context currentContext,
-            Symbol currentSymbol)
+        public override PlatypusInstance Execute(PlatypusNode node, Context currentContext, Symbol currentSymbol)
         {
             if (node is BinaryOperationNode binaryOperationNode)
             {
-                var left = binaryOperationNode.Left;
-                var right = binaryOperationNode.Right;
+                var leftNode = binaryOperationNode.Left;
+                var rightNode = binaryOperationNode.Right;
 
                 if (binaryOperationNode.OperationType == BinaryOperation.Assignment)
                 {
-                    var ctx = new ExpressionExecutor().ResolveContext(left, currentContext);
+                    var expressionExecutor = new ExpressionExecutor();
+                    
+                    var ctx = expressionExecutor.ResolveContext(leftNode, currentContext);
                     var name = "";
-                    if (left is IdentifierNode identifierNodeName)
+                    if (leftNode is IdentifierNode identifierNodeName)
                     {
                         name = identifierNodeName.Value;
                     }
-                    else if (left is BinaryOperationNode binaryOperationNodeName)
+                    else if (leftNode is BinaryOperationNode binaryOperationNodeName)
                     {
                         name = ((IdentifierNode) binaryOperationNodeName.Right).Value;
                     }
 
-                    return ctx.Set(name,
-                        new ExpressionExecutor().Execute(right, currentContext, currentSymbol));
+                    return ctx.Set(name, expressionExecutor.Execute(rightNode, currentContext, currentSymbol));
                 }
 
                 var op = binaryOperationNode.OperationType;
@@ -61,8 +61,10 @@ namespace CPlatypus.Execution.Executors
                     op == BinaryOperation.Less || op == BinaryOperation.GreaterEqual ||
                     op == BinaryOperation.LessEqual)
                 {
-                    var l = new ExpressionExecutor().Execute(left, currentContext, currentSymbol);
-                    var r = new ExpressionExecutor().Execute(right, currentContext, currentSymbol);
+                    var expressionExecutor = new ExpressionExecutor();
+                    
+                    var leftValue = expressionExecutor.Execute(leftNode, currentContext, currentSymbol);
+                    var rightValue = expressionExecutor.Execute(rightNode, currentContext, currentSymbol);
 
                     var opString = "";
 
@@ -97,8 +99,7 @@ namespace CPlatypus.Execution.Executors
                             break;
                     }
 
-                    return new FunctionCallExecutor().Execute(l.Symbol.Get<PlatypusFunctionSymbol>(opString),
-                        currentContext, new object[] {r}, l);
+                    return new FunctionCallExecutor().Execute(leftValue.Symbol.Get<PlatypusFunctionSymbol>(opString), currentContext, new object[] {rightValue}, leftValue);
                 }
             }
 

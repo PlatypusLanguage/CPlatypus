@@ -35,41 +35,29 @@ namespace CPlatypus.Execution.Object
             Name = name;
         }
 
-        public abstract PlatypusInstance Create(Context currentContext, Symbol currentSymbol,
-            Dictionary<string, object> args);
+        public abstract PlatypusInstance Create(PlatypusContext currentContext, Symbol currentSymbol, Dictionary<string, object> args);
 
-        public abstract PlatypusInstance Constructor(Context currentContext, Symbol currentSymbol,
-            Dictionary<string, object> args);
+        public abstract PlatypusInstance Constructor(PlatypusContext currentContext, Symbol currentSymbol, Dictionary<string, object> args);
 
-        public abstract PlatypusInstance PlusOperator(Context currentContext, Symbol currentSymbol,
-            Dictionary<string, object> args);
+        public abstract PlatypusInstance PlusOperator(PlatypusContext currentContext, Symbol currentSymbol, Dictionary<string, object> args);
 
-        public abstract PlatypusInstance MinusOperator(Context currentContext, Symbol currentSymbol,
-            Dictionary<string, object> args);
+        public abstract PlatypusInstance MinusOperator(PlatypusContext currentContext, Symbol currentSymbol, Dictionary<string, object> args);
 
-        public abstract PlatypusInstance DivideOperator(Context currentContext, Symbol currentSymbol,
-            Dictionary<string, object> args);
+        public abstract PlatypusInstance DivideOperator(PlatypusContext currentContext, Symbol currentSymbol, Dictionary<string, object> args);
 
-        public abstract PlatypusInstance MultiplyOperator(Context currentContext, Symbol currentSymbol,
-            Dictionary<string, object> args);
+        public abstract PlatypusInstance MultiplyOperator(PlatypusContext currentContext, Symbol currentSymbol, Dictionary<string, object> args);
 
-        public abstract PlatypusInstance EqualOperator(Context currentContext, Symbol currentSymbol,
-            Dictionary<string, object> args);
+        public abstract PlatypusInstance EqualOperator(PlatypusContext currentContext, Symbol currentSymbol, Dictionary<string, object> args);
         
-        public abstract PlatypusInstance GreaterOperator(Context currentContext, Symbol currentSymbol,
-            Dictionary<string, object> args);
+        public abstract PlatypusInstance GreaterOperator(PlatypusContext currentContext, Symbol currentSymbol, Dictionary<string, object> args);
         
-        public abstract PlatypusInstance GreaterEqualOperator(Context currentContext, Symbol currentSymbol,
-            Dictionary<string, object> args);
+        public abstract PlatypusInstance GreaterEqualOperator(PlatypusContext currentContext, Symbol currentSymbol, Dictionary<string, object> args);
         
-        public abstract PlatypusInstance LessOperator(Context currentContext, Symbol currentSymbol,
-            Dictionary<string, object> args);
+        public abstract PlatypusInstance LessOperator(PlatypusContext currentContext, Symbol currentSymbol, Dictionary<string, object> args);
 
-        public abstract PlatypusInstance LessEqualOperator(Context currentContext, Symbol currentSymbol,
-            Dictionary<string, object> args);
+        public abstract PlatypusInstance LessEqualOperator(PlatypusContext currentContext, Symbol currentSymbol, Dictionary<string, object> args);
 
-        public abstract PlatypusInstance ToStringInstance(Context currentContext, Symbol currentSymbol,
-            Dictionary<string, object> args);
+        public abstract PlatypusInstance ToStringInstance(PlatypusContext currentContext, Symbol currentSymbol, Dictionary<string, object> args);
 
         public PlatypusClassSymbol ToSymbol(Symbol parent)
         {
