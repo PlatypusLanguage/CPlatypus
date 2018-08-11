@@ -25,7 +25,7 @@ using CPlatypus.Semantic;
 
 namespace CPlatypus.Execution.StandardLibrary.Types
 {
-    public class PlatypusBoolean : PlatypusClass
+    public class PlatypusBoolean : PlatypusClass, IPlatypusBuiltInType<bool>
     {
         public static PlatypusBoolean Singleton { get; } = new PlatypusBoolean();
 
@@ -33,24 +33,21 @@ namespace CPlatypus.Execution.StandardLibrary.Types
         {
         }
 
-        public override PlatypusInstance Create(PlatypusContext currentContext, Symbol currentSymbol, object value)
+        public PlatypusInstance Create(PlatypusContext currentContext, Symbol currentSymbol, bool value)
         {
-            var instance = new PlatypusInstance(currentSymbol.Get<PlatypusClassSymbol>(Name),
-                currentContext);
-            if (value is bool booleanValue)
-            {
-                instance.SetValue(booleanValue);
-                return instance;
-            }
-
-            throw new InvalidOperationException($"Can't assign {value.GetType()} for {nameof(PlatypusBoolean)}");
+            var classSymbol = currentSymbol.Get<PlatypusClassSymbol>(Name);     
+            var instance = new PlatypusInstance(classSymbol, currentContext);
+            instance.SetValue(value);
+            return instance;
         }
 
         [PlatypusFunction("_constructor", "value")]
         public override PlatypusInstance Constructor(PlatypusContext currentContext, Symbol currentSymbol, Dictionary<string, PlatypusInstance> args)
         {
+            if (args["value"].Symbol.Name != Name)
+                throw new InvalidOperationException();
+            currentContext.GetFirstParentContextOfType(PlatypusContextType.ObjectInstance).Set("_value", args["value"].GetValue());
             return PlatypusNullInstance.Instance;
-            //return Create(currentContext, currentSymbol, args);
         }
 
         public override PlatypusInstance PlusOperator(PlatypusContext currentContext, Symbol currentSymbol, Dictionary<string, PlatypusInstance> args)

@@ -34,8 +34,6 @@ namespace CPlatypus.Execution.Object
             Name = name;
         }
 
-        public abstract PlatypusInstance Create(PlatypusContext currentContext, Symbol currentSymbol, object value);
-
         public abstract PlatypusInstance Constructor(PlatypusContext currentContext, Symbol currentSymbol, Dictionary<string, PlatypusInstance> args);
 
         public abstract PlatypusInstance PlusOperator(PlatypusContext currentContext, Symbol currentSymbol, Dictionary<string, PlatypusInstance> args);

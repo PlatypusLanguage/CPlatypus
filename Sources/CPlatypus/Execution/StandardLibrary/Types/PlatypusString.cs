@@ -35,27 +35,19 @@ namespace CPlatypus.Execution.StandardLibrary.Types
 
         public PlatypusInstance Create(PlatypusContext currentContext, Symbol currentSymbol, string value)
         {
-            throw new NotImplementedException();
-        }
-        
-        public override PlatypusInstance Create(PlatypusContext currentContext, Symbol currentSymbol, object value)
-        {
-            var instance = new PlatypusInstance(currentSymbol.Get<PlatypusClassSymbol>(Name), currentContext);
-            if (value is string stringValue)
-            {
-                instance.SetValue(stringValue);
-                return instance;
-            }
-
-            throw new InvalidOperationException($"Can't assign {value.GetType()} for {nameof(PlatypusString)}");
+            var classSymbol = currentSymbol.Get<PlatypusClassSymbol>(Name);     
+            var instance = new PlatypusInstance(classSymbol, currentContext);
+            instance.SetValue(value);
+            return instance;
         }
 
         [PlatypusFunction("_constructor", "value")]
         public override PlatypusInstance Constructor(PlatypusContext currentContext, Symbol currentSymbol, Dictionary<string, PlatypusInstance> args)
         {
+            if (args["value"].Symbol.Name != Name)
+                throw new InvalidOperationException();
             currentContext.GetFirstParentContextOfType(PlatypusContextType.ObjectInstance).Set("_value", args["value"].GetValue());
             return PlatypusNullInstance.Instance;
-            //return Create(currentContext, currentSymbol, args);
         }
 
         public override PlatypusInstance PlusOperator(PlatypusContext currentContext, Symbol currentSymbol, Dictionary<string, PlatypusInstance> args)

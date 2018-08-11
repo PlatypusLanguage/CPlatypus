@@ -50,7 +50,7 @@ namespace CPlatypus.Execution.Executors
 
             if (node is BooleanNode booleanNode)
             {
-                return PlatypusBoolean.Singleton.Create(currentContext as PlatypusContext, currentSymbol, booleanNode);
+                return PlatypusBoolean.Singleton.Create(currentContext as PlatypusContext, currentSymbol, booleanNode.Value);
             }
 
             if (node is FunctionCallNode functionCallNode)

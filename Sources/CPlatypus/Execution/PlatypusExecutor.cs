@@ -152,7 +152,7 @@ namespace CPlatypus.Execution
 
         public void Visit(NewNode node, PlatypusNode parent)
         {
-            
+            new NewExecutor().Execute(node, _context, _moduleSymbol);
         }
 
         public void Visit(ParameterListNode node, PlatypusNode parent)

@@ -1,10 +1,13 @@
 #lang=default#
 
-var me = new string("valentin")
+class human
+    constructor(name)
+        print(name)
+    end
+end
 
-print(me)
+var me = new human("vfrz")
 
-##
 function fibonacci(n)
     if (n <= 1)
         return n
@@ -13,10 +16,9 @@ function fibonacci(n)
     end
 end
 
-var i = 1
+var i = 0
 
 while(i < 16)
     print(fibonacci(i))
     i = i + 1
 end
-##

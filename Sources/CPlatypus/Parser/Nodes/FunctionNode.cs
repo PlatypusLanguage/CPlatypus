@@ -29,8 +29,7 @@ namespace CPlatypus.Parser.Nodes
 
         public CodeNode Body => Children[2] as CodeNode;
 
-        public FunctionNode(int id, IdentifierNode name, ParameterListNode parameters, CodeNode body,
-            SourceLocation sourceLocation) : base(id, sourceLocation)
+        public FunctionNode(int id, IdentifierNode name, ParameterListNode parameters, CodeNode body, SourceLocation sourceLocation) : base(id, sourceLocation)
         {
             Children.Add(name);
             Children.Add(parameters);

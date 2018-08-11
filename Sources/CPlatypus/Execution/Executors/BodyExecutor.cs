@@ -35,39 +35,43 @@ namespace CPlatypus.Execution.Executors
             HasReturnedValue = false;
             if (node is CodeNode codeNode)
             {
-                foreach (var n in codeNode.Children)
+                foreach (var childNode in codeNode.Children)
                 {
-                    if (n is VariableDeclarationNode)
+                    if (childNode is VariableDeclarationNode)
                     {
-                        new VariableDeclarationExecutor().Execute(n, currentContext, currentSymbol);
+                        new VariableDeclarationExecutor().Execute(childNode, currentContext, currentSymbol);
                     }
-                    else if (n is BinaryOperationNode)
+                    else if (childNode is BinaryOperationNode)
                     {
-                        new BinaryOperationExecutor().Execute(n, currentContext, currentSymbol);
+                        new BinaryOperationExecutor().Execute(childNode, currentContext, currentSymbol);
                     }
-                    else if (n is FunctionCallNode)
+                    else if (childNode is FunctionCallNode)
                     {
-                        new FunctionCallExecutor().Execute(n, currentContext, currentSymbol);
+                        new FunctionCallExecutor().Execute(childNode, currentContext, currentSymbol);
                     }
-                    else if (n is IfNode)
+                    else if (childNode is NewNode)
+                    {
+                        new NewExecutor().Execute(childNode, currentContext, currentSymbol);
+                    } 
+                    else if (childNode is IfNode)
                     {
                         var executor = new IfExecutor();
-                        var result = executor.Execute(n, currentContext, currentSymbol);
+                        var result = executor.Execute(childNode, currentContext, currentSymbol);
                         if (executor.HasReturnedValue)
                         {
                             return result;
                         }
                     }
-                    else if (n is WhileNode)
+                    else if (childNode is WhileNode)
                     {
                         var executor = new WhileExecutor();
-                        var result = executor.Execute(n, currentContext, currentSymbol);
+                        var result = executor.Execute(childNode, currentContext, currentSymbol);
                         if (executor.HasReturnedValue)
                         {
                             return result;
                         }
                     }
-                    else if (n is ReturnNode returnNode)
+                    else if (childNode is ReturnNode returnNode)
                     {
                         HasReturnedValue = true;
                         return new ExpressionExecutor().Execute(returnNode.Expression, currentContext, currentSymbol);

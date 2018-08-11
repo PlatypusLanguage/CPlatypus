@@ -16,7 +16,6 @@
  *     along with CPlatypus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using CPlatypus.Execution.Object;
@@ -55,11 +54,12 @@ namespace CPlatypus.Execution.Executors
 
                 return functionSymbol.FunctionTarget.Execute(functionContext, functionSymbol, argsDictionary);
             }
-            else
+            
+            if (functionSymbol.FunctionNode is IParameterizedNode parameterizedNode && functionSymbol.FunctionNode is IBodiedNode bodiedNode)
             {
-                var argsDictionary = new Dictionary<string, object>();
+                var argsDictionary = new Dictionary<string, PlatypusInstance>();
 
-                var parameters = functionSymbol.FunctionNode is IParameterizedNode parameterizedNode ? parameterizedNode.ParameterList.Parameters.Select(p => p.Value).ToList() : new List<string>();
+                var parameters = parameterizedNode.ParameterList.Parameters.Select(p => p.Value).ToList();
 
                 for (var i = 0; i < parameters.Count; i++)
                 {
@@ -72,17 +72,23 @@ namespace CPlatypus.Execution.Executors
                 {
                     argsDictionary.Add("this", objectInstance);
                 }
-
-                return Execute(functionSymbol.FunctionNode, currentContext, functionSymbol);
+                
+                return ExecuteInternal(bodiedNode, currentContext, functionSymbol, argsDictionary);
             }
+            
+            return PlatypusNullInstance.Instance;
         }
 
-        private PlatypusInstance ExecuteInternal(IBodiedNode node, Context currentContext, Symbol functionSymbol)
+        private PlatypusInstance ExecuteInternal(IBodiedNode node, Context currentContext, Symbol functionSymbol, Dictionary<string, PlatypusInstance> argsDictionary)
         {
             var functionContext = new PlatypusContext(PlatypusContextType.Function, currentContext);
 
-            throw new NotImplementedException();
-            return PlatypusNullInstance.Instance;
+            foreach (var key in argsDictionary.Keys)
+            {
+                functionContext.Set(key, argsDictionary[key]);
+            }
+            
+            return new BodyExecutor().Execute(node.Body, functionContext, functionSymbol);
         }
 
         public override PlatypusInstance Execute(PlatypusNode node, Context currentContext, Symbol currentSymbol)
@@ -120,7 +126,7 @@ namespace CPlatypus.Execution.Executors
                     }
                     else
                     {
-                        var functionContext = new PlatypusContext(PlatypusContextType.Function, executionContext);
+                        var argsDictionary = new Dictionary<string, PlatypusInstance>();
 
                         if (functionSymbol.FunctionNode is IParameterizedNode parameterizedNode)
                         {
@@ -128,13 +134,13 @@ namespace CPlatypus.Execution.Executors
                             {
                                 var argumentValue = expressionExecutor.Execute(functionCallNode.ArgumentList.Arguments[i], currentContext, currentSymbol);
                                 var name = parameterizedNode.ParameterList.Parameters[i].Value;
-                                functionContext.Add(name, argumentValue);
+                                argsDictionary.Add(name, argumentValue);
                             }
                         }
 
                         if (functionSymbol.FunctionNode is IBodiedNode bodiedNode)
                         {
-                            return new BodyExecutor().Execute(bodiedNode.Body, functionContext, functionSymbol);
+                            return ExecuteInternal(bodiedNode, executionContext, functionSymbol, argsDictionary);
                         }
                     }
                 }
