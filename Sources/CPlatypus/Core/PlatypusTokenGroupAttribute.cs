@@ -22,15 +22,13 @@ using CPlatypus.Lexer;
 namespace CPlatypus.Core
 {
     [AttributeUsage(AttributeTargets.Field)]
-    public class PlatypusKeywordIndex : Attribute
+    public class PlatypusTokenGroupAttribute : Attribute
     {
-        public string Index { get; }
-        public PlatypusTokenType TokenType { get; }
+        public PlatypusTokenTypeGroup[] Groups { get; }
 
-        public PlatypusKeywordIndex(string index, PlatypusTokenType tokenType)
+        public PlatypusTokenGroupAttribute(params PlatypusTokenTypeGroup[] groups)
         {
-            Index = index;
-            TokenType = tokenType;
+            Groups = groups;
         }
     }
 }

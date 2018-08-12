@@ -21,11 +21,11 @@ using System;
 namespace CPlatypus.Core
 {
     [AttributeUsage(AttributeTargets.Field)]
-    public class PlatypusContextName : Attribute
+    public class PlatypusContextNameAttribute : Attribute
     {
         public string ContextName { get; }
 
-        public PlatypusContextName(string contextName)
+        public PlatypusContextNameAttribute(string contextName)
         {
             ContextName = contextName;
         }

@@ -27,17 +27,10 @@ namespace CPlatypus.Core
 {
     public class PlatypusLanguage : Dictionary<string, string>
     {
-        public static string Pattern { get; } = @"(\w+):(\w+)";
+        private const string Pattern = @"(\w+):(\w+)";
 
-        public bool IsCorrect
-        {
-            get
-            {
-                return Enum.GetValues(typeof(PlatypusKeywords)).Cast<PlatypusKeywords>()
-                    .All(key => Keys.Any(
-                        kw => key.ToKeywordIndex().Equals(kw, StringComparison.CurrentCulture)));
-            }
-        }
+        public bool IsCorrect => Enum.GetValues(typeof(PlatypusKeywords)).Cast<PlatypusKeywords>()
+            .All(key => Keys.Any(kw => key.ToKeywordIndex().Equals(kw, StringComparison.CurrentCulture)));
 
         public static PlatypusLanguage DefaultLanguage
         {
@@ -72,14 +65,20 @@ namespace CPlatypus.Core
         {
         }
 
-        public static PlatypusLanguage FromFile(string file)
+        public static PlatypusLanguage FromFile(string path)
         {
-            return FromFile(file, Encoding.UTF8);
+            return FromFile(path, Encoding.Default);
         }
 
-        public static PlatypusLanguage FromFile(string file, Encoding encoding)
+        public static PlatypusLanguage FromFile(string path, Encoding encoding)
         {
-            return new PlatypusLanguage(File.ReadAllLines(file, encoding));
+            if (!File.Exists(path))
+            {
+                throw new FileNotFoundException("Platypus language file not found", path);
+            }
+
+            var lines = File.ReadAllLines(path, encoding);
+            return new PlatypusLanguage(lines);
         }
     }
 }

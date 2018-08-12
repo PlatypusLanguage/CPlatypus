@@ -33,7 +33,7 @@ namespace CPlatypus.Core
         {
             if (objects.Length == 0)
             {
-                return "";
+                return string.Empty;
             }
             var sb = new StringBuilder();
             sb.AppendJoin(" ", objects);
@@ -66,42 +66,66 @@ namespace CPlatypus.Core
         public static string ToContextName(this PlatypusContextType contextType)
         {
             var field = contextType.GetType().GetField(contextType.ToString());
-            var attributes = field.GetCustomAttributes<PlatypusContextName>(false).ToList();
+            var attributes = field.GetCustomAttributes<PlatypusContextNameAttribute>(false).ToList();
 
             if (attributes.Any())
             {
                 return attributes.First().ContextName;
             }
             
-            throw new CustomAttributeFormatException($"{contextType.ToString()} has no {nameof(PlatypusContextName)} attribute");
+            throw new CustomAttributeFormatException($"{contextType.ToString()} has no {nameof(PlatypusContextNameAttribute)} attribute");
         }
         
         public static string ToKeywordIndex(this PlatypusKeywords keyword)
         {
-            var attributes = (PlatypusKeywordIndex[]) keyword.GetType().GetField(keyword.ToString())
-                .GetCustomAttributes(typeof(PlatypusKeywordIndex), false);
-            return attributes.Length > 0 ? attributes[0].Index : string.Empty;
+            var field = keyword.GetType().GetField(keyword.ToString());
+            var attributes = field.GetCustomAttributes<PlatypusKeywordIndexAttribute>(false).ToList();
+            
+            if (attributes.Any())
+            {
+                return attributes.First().Index;
+            }
+            
+            throw new CustomAttributeFormatException($"{keyword.ToString()} has no {nameof(PlatypusKeywordIndexAttribute)} attribute");
         }
 
         public static PlatypusTokenType GetTokenType(this PlatypusKeywords keyword)
         {
-            var attributes = (PlatypusKeywordIndex[]) keyword.GetType().GetField(keyword.ToString())
-                .GetCustomAttributes(typeof(PlatypusKeywordIndex), false);
-            return attributes.Length > 0 ? attributes[0].TokenType : PlatypusTokenType.Unknown;
+            var field = keyword.GetType().GetField(keyword.ToString());
+            var attributes = field.GetCustomAttributes<PlatypusKeywordIndexAttribute>(false).ToList();
+            
+            if (attributes.Any())
+            {
+                return attributes.First().TokenType;
+            }
+            
+            throw new CustomAttributeFormatException($"{keyword.ToString()} has no {nameof(PlatypusKeywordIndexAttribute)} attribute");
         }
 
         public static bool IsInTokenGroup(this PlatypusTokenType tokenType, PlatypusTokenTypeGroup group)
         {
-            var attributes = (PlatypusTokenGroup[]) tokenType.GetType().GetField(tokenType.ToString())
-                .GetCustomAttributes(typeof(PlatypusTokenGroup), false);
-            return attributes.Length > 0 && attributes[0].Groups.Contains(group);
+            var field = tokenType.GetType().GetField(tokenType.ToString());
+            var attributes = field.GetCustomAttributes<PlatypusTokenGroupAttribute>(false).ToList();
+
+            if (attributes.Any())
+            {
+                return attributes.First().Groups.Contains(group);
+            }
+            
+            throw new CustomAttributeFormatException($"{tokenType.ToString()} has no {nameof(PlatypusTokenGroupAttribute)} attribute");
         }
 
         public static bool IsInTokenGroups(this PlatypusTokenType tokenType, PlatypusTokenTypeGroup[] groups)
         {
-            var attributes = (PlatypusTokenGroup[]) tokenType.GetType().GetField(tokenType.ToString())
-                .GetCustomAttributes(typeof(PlatypusTokenGroup), false);
-            return attributes.Length > 0 && !attributes[0].Groups.Except(groups).Any();
+            var field = tokenType.GetType().GetField(tokenType.ToString());
+            var attributes = field.GetCustomAttributes<PlatypusTokenGroupAttribute>(false).ToList();
+
+            if (attributes.Any())
+            {
+                return attributes.First().Groups.Except(groups).Any();
+            }
+            
+            throw new CustomAttributeFormatException($"{tokenType.ToString()} has no {nameof(PlatypusTokenGroupAttribute)} attribute");
         }
 
         public static bool IsInTokenGroup(this PlatypusToken token, PlatypusTokenTypeGroup group)
@@ -124,7 +148,9 @@ namespace CPlatypus.Core
             foreach (var key in Enum.GetValues(typeof(PlatypusKeywords)).Cast<PlatypusKeywords>())
             {
                 if (key.ToKeywordIndex() == str)
+                {
                     return key;
+                }
             }
             throw new Exception("Keyword not found with string : " + str);
         }

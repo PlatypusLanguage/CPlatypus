@@ -16,18 +16,22 @@
  *     along with CPlatypus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace CPlatypus.Lexer
+using System;
+using CPlatypus.Lexer;
+
+namespace CPlatypus.Core
 {
-    public enum PlatypusTokenTypeGroup
+    [AttributeUsage(AttributeTargets.Field)]
+    public class PlatypusKeywordIndexAttribute : Attribute
     {
-        Common,
-        UserDefined,
-        Operator,
-        BinaryOperator,
-        UnaryOperator,
-        AssignOperator,
-        ComparisonOperator,
-        Literal,
-        TrueFalse
+        public string Index { get; }
+        
+        public PlatypusTokenType TokenType { get; }
+
+        public PlatypusKeywordIndexAttribute(string index, PlatypusTokenType tokenType)
+        {
+            Index = index;
+            TokenType = tokenType;
+        }
     }
 }
