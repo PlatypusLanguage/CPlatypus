@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright (c) 2017 Platypus Language http://platypus.vfrz.fr/
+ * Copyright (c) 2018 Platypus Language http://platypus.vfrz.fr/
  *  This file is part of CPlatypus.
  *
  *     CPlatypus is free software: you can redistribute it and/or modify
@@ -30,24 +30,36 @@ namespace CPlatypus.Execution.Executors
 {
     public class FunctionCallExecutor : PlatypusNodeExecutor
     {
-        public static FunctionCallExecutor Instance { get; } = new FunctionCallExecutor();
-
-        private FunctionCallExecutor()
-        {
-        }
-
-        public PlatypusInstance Execute(PlatypusFunctionSymbol functionSymbol, Context currentContext,
-            object[] args, PlatypusInstance objectInstance = null)
+        public PlatypusInstance Execute(PlatypusFunctionSymbol functionSymbol, Context currentContext, PlatypusInstance[] args, PlatypusInstance objectInstance = null)
         {
             if (functionSymbol.ExternFunction)
             {
-                var functionContext = new PlatypusContext("Function Context", currentContext);
+                var functionContext = new PlatypusContext(PlatypusContextType.Function, currentContext);
 
-                var argsDictionary = new Dictionary<string, object>();
+                var argsDictionary = new Dictionary<string, PlatypusInstance>();
 
-                var parameters = functionSymbol.IsConstructor
-                    ? functionSymbol.ConstructorNode.Parameters.Parameters.Select(p => p.Value).ToList()
-                    : functionSymbol.FunctionTarget.Parameters;
+                var parameters = functionSymbol.FunctionTarget.Parameters;
+
+                for (var i = 0; i < parameters.Count; i++)
+                {
+                    var name = parameters[i];
+                    var argumentValue = args[i];
+                    argsDictionary.Add(name, argumentValue);
+                }
+
+                if (objectInstance != null)
+                {
+                    argsDictionary.Add("this", objectInstance);
+                }
+
+                return functionSymbol.FunctionTarget.Execute(functionContext, functionSymbol, argsDictionary);
+            }
+            
+            if (functionSymbol.FunctionNode is IParameterizedNode parameterizedNode && functionSymbol.FunctionNode is IBodiedNode bodiedNode)
+            {
+                var argsDictionary = new Dictionary<string, PlatypusInstance>();
+
+                var parameters = parameterizedNode.ParameterList.Parameters.Select(p => p.Value).ToList();
 
                 for (var i = 0; i < parameters.Count; i++)
                 {
@@ -61,67 +73,74 @@ namespace CPlatypus.Execution.Executors
                     argsDictionary.Add("this", objectInstance);
                 }
                 
-                return functionSymbol.FunctionTarget.Execute(functionContext, functionSymbol, argsDictionary);
+                return ExecuteInternal(bodiedNode, currentContext, functionSymbol, argsDictionary);
             }
-
+            
             return PlatypusNullInstance.Instance;
         }
 
-        public override PlatypusInstance Execute(PlatypusNode node, Context currentContext,
-            Symbol currentSymbol)
+        private PlatypusInstance ExecuteInternal(IBodiedNode node, Context currentContext, Symbol functionSymbol, Dictionary<string, PlatypusInstance> argsDictionary)
         {
+            var functionContext = new PlatypusContext(PlatypusContextType.Function, currentContext);
+
+            foreach (var key in argsDictionary.Keys)
+            {
+                functionContext.Set(key, argsDictionary[key]);
+            }
+            
+            return new BodyExecutor().Execute(node.Body, functionContext, functionSymbol);
+        }
+
+        public override PlatypusInstance Execute(PlatypusNode node, Context currentContext, Symbol currentSymbol)
+        {
+            var executionContext = currentContext;
+            var executionSymbol = currentSymbol;
+
             if (node is FunctionCallNode functionCallNode)
             {
-                Context executionContext;
-                Symbol executionSymbol;
+                var expressionExecutor = new ExpressionExecutor();
 
                 PlatypusInstance targetObject = null;
 
                 if (functionCallNode.HasTarget)
                 {
-                    targetObject = ExpressionExecutor.Instance.ResolveObject(
-                        functionCallNode.TargetNode, currentContext, currentSymbol);
+                    targetObject = expressionExecutor.ResolveInstance(functionCallNode.TargetNode, currentContext, currentSymbol);
                     executionContext = targetObject.Context;
                     executionSymbol = targetObject.Symbol;
                 }
-                else
-                {
-                    executionContext = currentContext;
-                    executionSymbol = currentSymbol;
-                }
 
-                if (executionContext != null)
-                {
-                    var functionSymbol =
-                        executionSymbol.Get<PlatypusFunctionSymbol>(functionCallNode.FunctionName.Value);
+                var functionSymbol = executionSymbol.Get<PlatypusFunctionSymbol>(functionCallNode.FunctionName.Value);
 
-                    if (functionSymbol != null)
+                if (functionSymbol != null)
+                {
+                    if (functionSymbol.ExternFunction)
                     {
-                        if (functionSymbol.ExternFunction)
+                        var args = new List<PlatypusInstance>();
+
+                        foreach (var arg in functionCallNode.ArgumentList.Arguments)
                         {
-                            var args = new List<object>();
-
-                            foreach (var arg in functionCallNode.ArgumentList.Arguments)
-                            {
-                                args.Add(ExpressionExecutor.Instance.Execute(arg, currentContext, currentSymbol));
-                            }
-
-                            return Execute(functionSymbol, currentContext, args.ToArray(), targetObject);
+                            args.Add(expressionExecutor.Execute(arg, currentContext, currentSymbol));
                         }
-                        else
+
+                        return Execute(functionSymbol, currentContext, args.ToArray(), targetObject);
+                    }
+                    else
+                    {
+                        var argsDictionary = new Dictionary<string, PlatypusInstance>();
+
+                        if (functionSymbol.FunctionNode is IParameterizedNode parameterizedNode)
                         {
-                            var functionContext = new PlatypusContext("Function Context", executionContext);
-
-                            for (var i = 0; i < functionSymbol.FunctionNode.ParameterList.Parameters.Count; i++)
+                            for (var i = 0; i < parameterizedNode.ParameterList.Parameters.Count; i++)
                             {
-                                var argumentValue = ExpressionExecutor.Instance.Execute(
-                                    functionCallNode.ArgumentList.Arguments[i], currentContext, currentSymbol);
-                                var name = functionSymbol.FunctionNode.ParameterList.Parameters[i].Value;
-                                functionContext.Add(name, argumentValue);
+                                var argumentValue = expressionExecutor.Execute(functionCallNode.ArgumentList.Arguments[i], currentContext, currentSymbol);
+                                var name = parameterizedNode.ParameterList.Parameters[i].Value;
+                                argsDictionary.Add(name, argumentValue);
                             }
+                        }
 
-                            return BodyExecutor.Instance.Execute(functionSymbol.FunctionNode.Body, functionContext,
-                                functionSymbol);
+                        if (functionSymbol.FunctionNode is IBodiedNode bodiedNode)
+                        {
+                            return ExecuteInternal(bodiedNode, executionContext, functionSymbol, argsDictionary);
                         }
                     }
                 }

@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright (c) 2017 Platypus Language http://platypus.vfrz.fr/
+ * Copyright (c) 2018 Platypus Language http://platypus.vfrz.fr/
  *  This file is part of CPlatypus.
  *
  *     CPlatypus is free software: you can redistribute it and/or modify
@@ -18,7 +18,6 @@
 
 using System;
 using System.Collections.Generic;
-using CPlatypus.Core;
 using CPlatypus.Execution.Object;
 using CPlatypus.Execution.StandardLibrary.Types;
 using CPlatypus.Framework.Execution;
@@ -34,8 +33,7 @@ namespace CPlatypus.Execution.StandardLibrary.IO
         {
         }
 
-        public PlatypusInstance Print(Context currentContext, Symbol currentSymbol,
-            Dictionary<string, object> args)
+        public PlatypusInstance Print(Context currentContext, Symbol currentSymbol, Dictionary<string, PlatypusInstance> args)
         {
             Console.WriteLine(args["value"]);
             return PlatypusNullInstance.Instance;

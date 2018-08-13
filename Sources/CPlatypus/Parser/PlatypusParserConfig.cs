@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright (c) 2017 Platypus Language http://platypus.vfrz.fr/
+ * Copyright (c) 2018 Platypus Language http://platypus.vfrz.fr/
  *  This file is part of CPlatypus.
  *
  *     CPlatypus is free software: you can redistribute it and/or modify
@@ -20,6 +20,6 @@ namespace CPlatypus.Parser
 {
     public class PlatypusParserConfig
     {
-        public string TreeDotFile { get; set; } = "";
+        public string DotGraphFile { get; set; } = "";
     }
 }

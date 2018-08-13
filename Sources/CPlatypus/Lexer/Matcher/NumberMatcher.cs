@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright (c) 2017 Platypus Language http://platypus.vfrz.fr/
+ * Copyright (c) 2018 Platypus Language http://platypus.vfrz.fr/
  *  This file is part of CPlatypus.
  *
  *     CPlatypus is free software: you can redistribute it and/or modify
@@ -36,7 +36,9 @@ namespace CPlatypus.Lexer.Matcher
             while (char.IsDigit(currentChar) || currentChar == '.')
             {
                 if (currentChar == '.' && number.ToString().Contains("."))
+                {
                     break;
+                }
 
                 number.Append(currentChar);
                 currentChar = source.NextChar();

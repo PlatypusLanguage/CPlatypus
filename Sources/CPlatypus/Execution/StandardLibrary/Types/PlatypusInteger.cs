@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright (c) 2017 Platypus Language http://platypus.vfrz.fr/
+ * Copyright (c) 2018 Platypus Language http://platypus.vfrz.fr/
  *  This file is part of CPlatypus.
  *
  *     CPlatypus is free software: you can redistribute it and/or modify
@@ -20,242 +20,176 @@ using System;
 using System.Collections.Generic;
 using CPlatypus.Execution.Executors;
 using CPlatypus.Execution.Object;
-using CPlatypus.Framework.Execution;
 using CPlatypus.Framework.Semantic;
 using CPlatypus.Semantic;
 
 namespace CPlatypus.Execution.StandardLibrary.Types
 {
-    public class PlatypusInteger : PlatypusClass
+    public class PlatypusInteger : PlatypusClass, IPlatypusBuiltInType<int>
     {
         public static PlatypusInteger Singleton { get; } = new PlatypusInteger();
 
-        private PlatypusInteger() : base("Integer")
+        private PlatypusInteger() : base("integer")
         {
         }
 
-        public override PlatypusInstance Create(Context currentContext, Symbol currentSymbol,
-            Dictionary<string, object> args)
+        public PlatypusInstance Create(PlatypusContext currentContext, Symbol currentSymbol, int value)
         {
-            var instance = new PlatypusInstance(currentSymbol.Get<PlatypusClassSymbol>(Name),
-                currentContext);
-            if (args["value"] is PlatypusInstance platypusInstance)
-            {
-                instance.SetValue(platypusInstance.GetValue());
-            }
-            else
-            {
-                instance.SetValue(args["value"]);
-            }
-
+            var classSymbol = currentSymbol.Get<PlatypusClassSymbol>(Name);     
+            var instance = new PlatypusInstance(classSymbol, currentContext);
+            instance.SetValue(value);
             return instance;
         }
-
+        
         [PlatypusFunction("_constructor", "value")]
-        public override PlatypusInstance Constructor(Context currentContext, Symbol currentSymbol,
-            Dictionary<string, object> args)
+        public override PlatypusInstance Constructor(PlatypusContext currentContext, Symbol currentSymbol, Dictionary<string, PlatypusInstance> args)
         {
-            return Create(currentContext, currentSymbol, args);
+            if (args["value"].Symbol.Name != Name)
+                throw new InvalidOperationException();
+            currentContext.GetFirstParentContextOfType(PlatypusContextType.ObjectInstance).Set("_value", args["value"].GetValue());
+            return PlatypusNullInstance.Instance;
         }
 
-        public override PlatypusInstance PlusOperator(Context currentContext, Symbol currentSymbol,
-            Dictionary<string, object> args)
+        public override PlatypusInstance PlusOperator(PlatypusContext currentContext, Symbol currentSymbol, Dictionary<string, PlatypusInstance> args)
         {
-            var left = (PlatypusInstance) args["this"];
-            var right = (PlatypusInstance) args["right"];
+            var left = args["this"];
+            var right = args["right"];
 
             if (left.Symbol.Name == Name && right.Symbol.Name == Name)
             {
-                return Create(currentContext, currentSymbol, new Dictionary<string, object>
-                {
-                    {
-                        "value", Convert.ToInt32(left.GetValue()) +
-                                 Convert.ToInt32(right.GetValue())
-                    }
-                });
+                return Create(currentContext, currentSymbol, Convert.ToInt32(left.GetValue()) + Convert.ToInt32(right.GetValue()));
             }
 
             return PlatypusString.Singleton.Create(
                 currentContext, currentSymbol,
-                new Dictionary<string, object>
-                {
-                    {
-                        "value", FunctionCallExecutor.Instance.Execute(
-                                     left.Symbol.Get<PlatypusFunctionSymbol>("tostring"),
-                                     currentContext, new object[0], left).GetValue<string>() +
-                                 FunctionCallExecutor.Instance.Execute(
-                                     right.Symbol.Get<PlatypusFunctionSymbol>("tostring"),
-                                     currentContext, new object[0], right).GetValue<string>()
-                    }
-                }
+                new FunctionCallExecutor().Execute(
+                    left.Symbol.Get<PlatypusFunctionSymbol>("tostring"),
+                    currentContext, new PlatypusInstance[0], left).GetValue<string>() +
+                new FunctionCallExecutor().Execute(
+                    right.Symbol.Get<PlatypusFunctionSymbol>("tostring"),
+                    currentContext, new PlatypusInstance[0], right).GetValue<string>()
             );
         }
 
-        public override PlatypusInstance MinusOperator(Context currentContext, Symbol currentSymbol,
-            Dictionary<string, object> args)
+        public override PlatypusInstance MinusOperator(PlatypusContext currentContext, Symbol currentSymbol, Dictionary<string, PlatypusInstance> args)
         {
-            var left = (PlatypusInstance) args["this"];
-            var right = (PlatypusInstance) args["right"];
+            var left = args["this"];
+            var right = args["right"];
 
             if (left.Symbol.Name == Name && right.Symbol.Name == Name)
             {
-                return Create(currentContext, currentSymbol, new Dictionary<string, object>
-                {
-                    {
-                        "value", Convert.ToInt32(left.GetValue()) -
-                                 Convert.ToInt32(right.GetValue())
-                    }
-                });
+                return Create(currentContext, currentSymbol, Convert.ToInt32(left.GetValue()) - Convert.ToInt32(right.GetValue()));
             }
 
             return PlatypusNullInstance.Instance;
         }
 
-        public override PlatypusInstance DivideOperator(Context currentContext, Symbol currentSymbol,
-            Dictionary<string, object> args)
+        public override PlatypusInstance DivideOperator(PlatypusContext currentContext, Symbol currentSymbol, Dictionary<string, PlatypusInstance> args)
         {
-            var left = (PlatypusInstance) args["this"];
-            var right = (PlatypusInstance) args["right"];
+            var left = args["this"];
+            var right = args["right"];
 
             if (left.Symbol.Name == Name && right.Symbol.Name == Name)
             {
-                return Create(currentContext, currentSymbol, new Dictionary<string, object>
-                {
-                    {
-                        "value", Convert.ToInt32(left.GetValue()) /
-                                 Convert.ToInt32(right.GetValue())
-                    }
-                });
+                return Create(currentContext, currentSymbol, Convert.ToInt32(left.GetValue()) / Convert.ToInt32(right.GetValue()));
             }
 
             return PlatypusNullInstance.Instance;
         }
 
-        public override PlatypusInstance MultiplyOperator(Context currentContext, Symbol currentSymbol,
-            Dictionary<string, object> args)
+        public override PlatypusInstance MultiplyOperator(PlatypusContext currentContext, Symbol currentSymbol, Dictionary<string, PlatypusInstance> args)
         {
-            var left = (PlatypusInstance) args["this"];
-            var right = (PlatypusInstance) args["right"];
+            var left = args["this"];
+            var right = args["right"];
 
             if (left.Symbol.Name == Name && right.Symbol.Name == Name)
             {
-                return Create(currentContext, currentSymbol, new Dictionary<string, object>
-                {
-                    {
-                        "value", Convert.ToInt32(left.GetValue()) *
-                                 Convert.ToInt32(right.GetValue())
-                    }
-                });
+                return Create(currentContext, currentSymbol, Convert.ToInt32(left.GetValue()) * Convert.ToInt32(right.GetValue()));
             }
 
             return PlatypusNullInstance.Instance;
         }
 
-        public override PlatypusInstance EqualOperator(Context currentContext, Symbol currentSymbol,
-            Dictionary<string, object> args)
+        public override PlatypusInstance EqualOperator(PlatypusContext currentContext, Symbol currentSymbol, Dictionary<string, PlatypusInstance> args)
         {
-            var left = (PlatypusInstance) args["this"];
-            var right = (PlatypusInstance) args["right"];
+            var left = args["this"];
+            var right = args["right"];
 
             if (left.Symbol.Name == Name && right.Symbol.Name == Name)
             {
-                return PlatypusBoolean.Singleton.Create(currentContext, currentSymbol, new Dictionary<string, object>
-                {
-                    {
-                        "value", Convert.ToInt32(left.GetValue()).Equals(Convert.ToInt32(right.GetValue()))
-                    }
-                });
+                return PlatypusBoolean.Singleton.Create(currentContext, currentSymbol,
+                    Convert.ToInt32(left.GetValue()).Equals(Convert.ToInt32(right.GetValue())));
             }
 
             return PlatypusNullInstance.Instance;
         }
 
-        public override PlatypusInstance GreaterOperator(Context currentContext, Symbol currentSymbol,
-            Dictionary<string, object> args)
+        public override PlatypusInstance GreaterOperator(PlatypusContext currentContext, Symbol currentSymbol, Dictionary<string, PlatypusInstance> args)
         {
-            var left = (PlatypusInstance) args["this"];
-            var right = (PlatypusInstance) args["right"];
+            var left = args["this"];
+            var right = args["right"];
 
             if (left.Symbol.Name == Name && right.Symbol.Name == Name)
             {
-                return PlatypusBoolean.Singleton.Create(currentContext, currentSymbol, new Dictionary<string, object>
-                {
-                    {
-                        "value", Convert.ToInt32(left.GetValue()) > Convert.ToInt32(right.GetValue())
-                    }
-                });
+                return PlatypusBoolean.Singleton.Create(currentContext, currentSymbol,
+                    Convert.ToInt32(left.GetValue()) > Convert.ToInt32(right.GetValue()));
             }
 
             return PlatypusNullInstance.Instance;
         }
 
-        public override PlatypusInstance GreaterEqualOperator(Context currentContext, Symbol currentSymbol, Dictionary<string, object> args)
+        public override PlatypusInstance GreaterEqualOperator(PlatypusContext currentContext, Symbol currentSymbol, Dictionary<string, PlatypusInstance> args)
         {
-            var left = (PlatypusInstance) args["this"];
-            var right = (PlatypusInstance) args["right"];
+            var left = args["this"];
+            var right = args["right"];
 
             if (left.Symbol.Name == Name && right.Symbol.Name == Name)
             {
-                return PlatypusBoolean.Singleton.Create(currentContext, currentSymbol, new Dictionary<string, object>
-                {
-                    {
-                        "value", Convert.ToInt32(left.GetValue()) >= Convert.ToInt32(right.GetValue())
-                    }
-                });
+                return PlatypusBoolean.Singleton.Create(currentContext, currentSymbol,
+                    Convert.ToInt32(left.GetValue()) >= Convert.ToInt32(right.GetValue()));
             }
 
             return PlatypusNullInstance.Instance;
         }
 
-        public override PlatypusInstance LessOperator(Context currentContext, Symbol currentSymbol,
-            Dictionary<string, object> args)
+        public override PlatypusInstance LessOperator(PlatypusContext currentContext, Symbol currentSymbol, Dictionary<string, PlatypusInstance> args)
         {
-            var left = (PlatypusInstance) args["this"];
-            var right = (PlatypusInstance) args["right"];
+            var left = args["this"];
+            var right = args["right"];
 
             if (left.Symbol.Name == Name && right.Symbol.Name == Name)
             {
-                return PlatypusBoolean.Singleton.Create(currentContext, currentSymbol, new Dictionary<string, object>
-                {
-                    {
-                        "value", Convert.ToInt32(left.GetValue()) < Convert.ToInt32(right.GetValue())
-                    }
-                });
+                return PlatypusBoolean.Singleton.Create(currentContext, currentSymbol,
+                    Convert.ToInt32(left.GetValue()) < Convert.ToInt32(right.GetValue()));
             }
 
             return PlatypusNullInstance.Instance;
         }
 
-        public override PlatypusInstance LessEqualOperator(Context currentContext, Symbol currentSymbol, Dictionary<string, object> args)
+        public override PlatypusInstance LessEqualOperator(PlatypusContext currentContext, Symbol currentSymbol, Dictionary<string, PlatypusInstance> args)
         {
-            var left = (PlatypusInstance) args["this"];
-            var right = (PlatypusInstance) args["right"];
+            var left = args["this"];
+            var right = args["right"];
 
             if (left.Symbol.Name == Name && right.Symbol.Name == Name)
             {
-                return PlatypusBoolean.Singleton.Create(currentContext, currentSymbol, new Dictionary<string, object>
-                {
-                    {
-                        "value", Convert.ToInt32(left.GetValue()) <= Convert.ToInt32(right.GetValue())
-                    }
-                });
+                return PlatypusBoolean.Singleton.Create(currentContext, currentSymbol,
+                    Convert.ToInt32(left.GetValue()) <= Convert.ToInt32(right.GetValue()));
             }
 
             return PlatypusNullInstance.Instance;
         }
 
-        public override PlatypusInstance ToStringInstance(Context currentContext,
-            Symbol currentSymbol, Dictionary<string, object> args)
+        public override PlatypusInstance ToStringInstance(PlatypusContext currentContext, Symbol currentSymbol, Dictionary<string, PlatypusInstance> args)
         {
-            var arg = (PlatypusInstance) args["this"];
+            var arg = args["this"];
 
             if (arg.Symbol.Name == Name)
             {
-                return PlatypusString.Singleton.Create(currentContext, currentSymbol,
-                    new Dictionary<string, object> {{"value", arg.GetValue().ToString()}});
+                return PlatypusString.Singleton.Create(currentContext, currentSymbol, arg.GetValue().ToString());
             }
 
-            return PlatypusString.Singleton.Create(currentContext, currentSymbol, new Dictionary<string, object>());
+            return PlatypusString.Singleton.Create(currentContext, currentSymbol, string.Empty);
         }
     }
 }

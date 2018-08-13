@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright (c) 2017 Platypus Language http://platypus.vfrz.fr/
+ * Copyright (c) 2018 Platypus Language http://platypus.vfrz.fr/
  *  This file is part of CPlatypus.
  *
  *     CPlatypus is free software: you can redistribute it and/or modify
@@ -24,9 +24,7 @@ namespace CPlatypus.Lexer.Matcher
     {
         public PlatypusToken Match(SourceLocation location, Source source)
         {
-            return source.PeekChar() != '\0'
-                ? null
-                : new PlatypusToken(PlatypusTokenType.Eos, source.PopChar().ToString(), location);
+            return source.PeekChar() != '\0' ? null : new PlatypusToken(PlatypusTokenType.Eos, source.PopChar().ToString(), location);
         }
     }
 }

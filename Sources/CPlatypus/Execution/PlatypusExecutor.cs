@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright (c) 2017 Platypus Language http://platypus.vfrz.fr/
+ * Copyright (c) 2018 Platypus Language http://platypus.vfrz.fr/
  *  This file is part of CPlatypus.
  *
  *     CPlatypus is free software: you can redistribute it and/or modify
@@ -16,6 +16,7 @@
  *     along with CPlatypus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+using System;
 using CPlatypus.Execution.Executors;
 using CPlatypus.Execution.Object;
 using CPlatypus.Execution.StandardLibrary.IO;
@@ -27,19 +28,19 @@ using CPlatypus.Semantic;
 
 namespace CPlatypus.Execution
 {
-    public class PlatypusExecutor : IPlatypusVisitor
+    public class PlatypusExecutor
     {
-        private PlatypusModuleSymbol _moduleSymbol;
+        private readonly PlatypusModuleSymbol _moduleSymbol;
 
-        private Context _context;
+        private readonly Context _context;
         
         public PlatypusExecutor(PlatypusModuleSymbol globalModuleSymbol = null)
         {
             _moduleSymbol = globalModuleSymbol ?? PlatypusModuleSymbol.CreateGlobalModule();
             
-            _context = new PlatypusContext("Global Context", null);
+            _context = new PlatypusContext(PlatypusContextType.Global, null);
 
-            // Inject standard library classes and functions
+            // Inject built in types, standard library classes and functions
             
             InjectClass(PlatypusBoolean.Singleton);
             InjectClass(PlatypusInteger.Singleton);
@@ -61,132 +62,12 @@ namespace CPlatypus.Execution
 
         public void Execute(PlatypusNode ast)
         {
-            ast.Accept(this, null);
-        }
+            if (!(ast is CodeNode))
+            {
+                throw new ArgumentException();
+            }
 
-        public void Visit(ArgumentListNode node, PlatypusNode parent)
-        {
-            
-        }
-
-        public void Visit(ArrayAccessNode node, PlatypusNode parent)
-        {
-            
-        }
-
-        public void Visit(AttributeAccessNode node, PlatypusNode parent)
-        {
-            
-        }
-
-        public void Visit(BinaryOperationNode node, PlatypusNode parent)
-        {
-            BinaryOperationExecutor.Instance.Execute(node, _context, _moduleSymbol);
-        }
-
-        public void Visit(BooleanNode node, PlatypusNode parent)
-        {
-            
-        }
-
-        public void Visit(CharNode node, PlatypusNode parent)
-        {
-            
-        }
-
-        public void Visit(ClassNode node, PlatypusNode parent)
-        {
-            
-        }
-
-        public void Visit(CodeNode node, PlatypusNode parent)
-        {
-            BodyExecutor.Instance.Execute(node, _context, _moduleSymbol);
-        }
-
-        public void Visit(ConstructorNode node, PlatypusNode parent)
-        {
-            
-        }
-
-        public void Visit(IdentifierNode node, PlatypusNode parent)
-        {
-            
-        }
-
-        public void Visit(IfNode node, PlatypusNode parent)
-        {
-            IfExecutor.Instance.Execute(node, _context, _moduleSymbol);
-        }
-
-        public void Visit(IntegerNode node, PlatypusNode parent)
-        {
-            
-        }
-
-        public void Visit(FloatNode node, PlatypusNode parent)
-        {
-            
-        }
-
-        public void Visit(ForNode node, PlatypusNode parent)
-        {
-            
-        }
-
-        public void Visit(FunctionCallNode node, PlatypusNode parent)
-        {
-            FunctionCallExecutor.Instance.Execute(node, _context, _moduleSymbol);
-        }
-
-        public void Visit(FunctionNode node, PlatypusNode parent)
-        {
-            
-        }
-
-        public void Visit(ModuleNode node, PlatypusNode parent)
-        {
-            node.AcceptChildren(this, node);
-        }
-
-        public void Visit(NewNode node, PlatypusNode parent)
-        {
-            
-        }
-
-        public void Visit(ParameterListNode node, PlatypusNode parent)
-        {
-            
-        }
-
-        public void Visit(ReturnNode node, PlatypusNode parent)
-        {
-            
-        }
-
-        public void Visit(ThisNode node, PlatypusNode parent)
-        {
-            
-        }
-
-        public void Visit(UnaryOperationNode node, PlatypusNode parent)
-        {
-            
-        }
-
-        public void Visit(VariableDeclarationNode node, PlatypusNode parent)
-        {
-            VariableDeclarationExecutor.Instance.Execute(node, _context, _moduleSymbol);
-        }
-
-        public void Visit(StringNode node, PlatypusNode parent)
-        {
-            
-        }
-
-        public void Visit(WhileNode node, PlatypusNode parent)
-        {
-            
+            new BodyExecutor().Execute(ast, _context, _moduleSymbol);
         }
     }
 }

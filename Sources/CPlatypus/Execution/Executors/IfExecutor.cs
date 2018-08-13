@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright (c) 2017 Platypus Language http://platypus.vfrz.fr/
+ * Copyright (c) 2018 Platypus Language http://platypus.vfrz.fr/
  *  This file is part of CPlatypus.
  *
  *     CPlatypus is free software: you can redistribute it and/or modify
@@ -27,33 +27,38 @@ namespace CPlatypus.Execution.Executors
 {
     public class IfExecutor : PlatypusNodeExecutor
     {
-        public static IfExecutor Instance { get; } = new IfExecutor();
-
-        private IfExecutor()
-        {
-        }
+        public bool HasReturnedValue { get; private set; }
 
         public override PlatypusInstance Execute(PlatypusNode node, Context currentContext, Symbol currentSymbol)
         {
+            HasReturnedValue = false;
             if (node is IfNode ifNode)
             {
-                var conditionResult =
-                    ExpressionExecutor.Instance.Execute(ifNode.Condition, currentContext, currentSymbol);
+                var conditionResult = new ExpressionExecutor().Execute(ifNode.Condition, currentContext, currentSymbol);
                 if (conditionResult.HasValue && conditionResult.GetValue() is bool)
                 {
                     if (conditionResult.GetValue<bool>())
                     {
-                        var r = BodyExecutor.Instance.Execute(ifNode.Body, currentContext, currentSymbol);
-                        return r != PlatypusNullInstance.Instance ? r : null;
+                        var executor = new BodyExecutor();
+                        var result = executor.Execute(ifNode.Body, currentContext, currentSymbol);
+                        HasReturnedValue = executor.HasReturnedValue;
+                        return result;
                     }
-                    else
+
+                    if (ifNode.ElseIfNode != null)
                     {
-                        //TODO Execute else if
-                        if (ifNode.ElseBody != null)
-                        {
-                            var r = BodyExecutor.Instance.Execute(ifNode.ElseBody, currentContext, currentSymbol);
-                            return r != PlatypusNullInstance.Instance ? r : null;
-                        }
+                        var executor = new IfExecutor();
+                        var result = executor.Execute(ifNode.ElseIfNode, currentContext, currentSymbol);
+                        HasReturnedValue = executor.HasReturnedValue;
+                        return result;
+                    }
+                    
+                    if (ifNode.ElseBody != null)
+                    {
+                        var executor = new BodyExecutor();
+                        var result = executor.Execute(ifNode.ElseBody, currentContext, currentSymbol);
+                        HasReturnedValue = executor.HasReturnedValue;
+                        return result;
                     }
                 }
             }

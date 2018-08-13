@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright (c) 2017 Platypus Language http://platypus.vfrz.fr/
+ * Copyright (c) 2018 Platypus Language http://platypus.vfrz.fr/
  *  This file is part of CPlatypus.
  *
  *     CPlatypus is free software: you can redistribute it and/or modify
@@ -16,6 +16,7 @@
  *     along with CPlatypus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+using CPlatypus.Core;
 using CPlatypus.Framework.Semantic;
 using CPlatypus.Parser;
 using CPlatypus.Parser.Nodes;
@@ -35,13 +36,13 @@ namespace CPlatypus.Semantic
 
         public PlatypusModuleSymbol Analyze()
         {
-            var globalModule = PlatypusModuleSymbol.CreateGlobalModule();
+            var globalModuleSymbol = PlatypusModuleSymbol.CreateGlobalModule();
 
-            _currentSymbol = globalModule;
+            _currentSymbol = globalModuleSymbol;
             
             _ast.Accept(this, _ast);
 
-            return globalModule;
+            return globalModuleSymbol;
         }
 
         public void Visit(ArgumentListNode node, PlatypusNode parent)

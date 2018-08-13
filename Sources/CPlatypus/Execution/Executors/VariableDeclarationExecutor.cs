@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright (c) 2017 Platypus Language http://platypus.vfrz.fr/
+ * Copyright (c) 2018 Platypus Language http://platypus.vfrz.fr/
  *  This file is part of CPlatypus.
  *
  *     CPlatypus is free software: you can redistribute it and/or modify
@@ -27,12 +27,6 @@ namespace CPlatypus.Execution.Executors
 {
     public class VariableDeclarationExecutor : PlatypusNodeExecutor
     {
-        public static VariableDeclarationExecutor Instance { get; } = new VariableDeclarationExecutor();
-
-        private VariableDeclarationExecutor()
-        {
-        }
-
         public override PlatypusInstance Execute(PlatypusNode node, Context currentContext,
             Symbol currentSymbol)
         {

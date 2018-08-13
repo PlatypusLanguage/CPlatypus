@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright (c) 2017 Platypus Language http://platypus.vfrz.fr/
+ * Copyright (c) 2018 Platypus Language http://platypus.vfrz.fr/
  *  This file is part of CPlatypus.
  *
  *     CPlatypus is free software: you can redistribute it and/or modify
@@ -16,19 +16,22 @@
  *     along with CPlatypus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+using System;
 using System.Collections.Generic;
 
 namespace CPlatypus.Framework.Execution
 {
     public class Context
     {
+        public Guid Identifier { get; }
+        
         public string Name { get; }
 
         public Context Parent { get; }
 
         private readonly Dictionary<string, object> _fields;
 
-        public Context GlobalContext
+        public Context TopContext
         {
             get
             {
@@ -46,6 +49,7 @@ namespace CPlatypus.Framework.Execution
 
         public Context(string name, Context parent, object defaultNullValue)
         {
+            Identifier = Guid.NewGuid();
             Name = name;
             Parent = parent;
             _defaultNullValue = defaultNullValue;

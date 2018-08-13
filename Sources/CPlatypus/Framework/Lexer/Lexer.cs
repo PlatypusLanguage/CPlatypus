@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright (c) 2017 Platypus Language http://platypus.vfrz.fr/
+ * Copyright (c) 2018 Platypus Language http://platypus.vfrz.fr/
  *  This file is part of CPlatypus.
  *
  *     CPlatypus is free software: you can redistribute it and/or modify
@@ -24,37 +24,38 @@ namespace CPlatypus.Framework.Lexer
     {
         protected Source Source;
 
-        protected TokenBuffer<TToken> Buffer;
+        private TokenBuffer<TToken> _buffer;
 
-        public TToken CurrentToken => Buffer[0];
+        public TToken CurrentToken => _buffer[0];
 
         protected Lexer(Source source, byte capacity = 1)
         {
             Source = source;
-            Buffer = new TokenBuffer<TToken>(capacity);
+            _buffer = new TokenBuffer<TToken>(capacity);
         }
 
+        //TODO Refactor buffer access to remove this method
         protected void InitializeBuffer()
         {
-            for (var i = 0; i < Buffer.Capacity; i++)
+            for (var i = 0; i < _buffer.Capacity; i++)
             {
-                ExtractToken(Buffer);
+                ExtractToken(_buffer);
             }
         }
 
         public TToken NextToken()
         {
-            return ExtractToken(Buffer);
+            return ExtractToken(_buffer);
         }
 
         public TToken ConsumeToken()
         {
-            var token = Buffer.Peek();
-            ExtractToken(Buffer);
+            var token = _buffer.Peek();
+            ExtractToken(_buffer);
             return token;
         }
 
-        public TToken this[int index] => Buffer[index];
+        public TToken this[int index] => _buffer[index];
 
         protected abstract TToken ExtractToken(TokenBuffer<TToken> buffer);
 

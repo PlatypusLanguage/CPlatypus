@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright (c) 2017 Platypus Language http://platypus.vfrz.fr/
+ * Copyright (c) 2018 Platypus Language http://platypus.vfrz.fr/
  *  This file is part of CPlatypus.
  *
  *     CPlatypus is free software: you can redistribute it and/or modify
@@ -21,8 +21,11 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Text;
+using CPlatypus.Core.Exceptions;
+using CPlatypus.Execution;
 using CPlatypus.Framework.Lexer;
 using CPlatypus.Lexer;
+using CPlatypus.Parser;
 
 namespace CPlatypus.Core
 {
@@ -32,7 +35,7 @@ namespace CPlatypus.Core
         {
             if (objects.Length == 0)
             {
-                return "";
+                return string.Empty;
             }
             var sb = new StringBuilder();
             sb.AppendJoin(" ", objects);
@@ -61,33 +64,83 @@ namespace CPlatypus.Core
 
             return Delegate.CreateDelegate(getType(types.ToArray()), target, methodInfo.Name);
         }
+
+        public static string ToContextName(this PlatypusContextType contextType)
+        {
+            var field = contextType.GetType().GetField(contextType.ToString());
+            var attributes = field.GetCustomAttributes<PlatypusContextNameAttribute>(false).ToList();
+
+            if (attributes.Any())
+            {
+                return attributes.First().ContextName;
+            }
+            
+            throw new MissingAttributeException(contextType.ToString(), nameof(PlatypusContextNameAttribute));
+        }
+        
+        public static string ToOperatorCode(this BinaryOperator binaryOperator)
+        {
+            var field = binaryOperator.GetType().GetField(binaryOperator.ToString());
+            var attributes = field.GetCustomAttributes<OperatorCodeAttribute>(false).ToList();
+
+            if (attributes.Any())
+            {
+                return attributes.First().Code;
+            }
+            
+            throw new MissingAttributeException(binaryOperator.ToString(), nameof(OperatorCodeAttribute));
+        }
         
         public static string ToKeywordIndex(this PlatypusKeywords keyword)
         {
-            var attributes = (KeywordIndex[]) keyword.GetType().GetField(keyword.ToString())
-                .GetCustomAttributes(typeof(KeywordIndex), false);
-            return attributes.Length > 0 ? attributes[0].Index : string.Empty;
+            var field = keyword.GetType().GetField(keyword.ToString());
+            var attributes = field.GetCustomAttributes<PlatypusKeywordIndexAttribute>(false).ToList();
+            
+            if (attributes.Any())
+            {
+                return attributes.First().Index;
+            }
+            
+            throw new MissingAttributeException(keyword.ToString(), nameof(PlatypusKeywordIndexAttribute));
         }
 
         public static PlatypusTokenType GetTokenType(this PlatypusKeywords keyword)
         {
-            var attributes = (KeywordIndex[]) keyword.GetType().GetField(keyword.ToString())
-                .GetCustomAttributes(typeof(KeywordIndex), false);
-            return attributes.Length > 0 ? attributes[0].TokenType : PlatypusTokenType.Unknown;
+            var field = keyword.GetType().GetField(keyword.ToString());
+            var attributes = field.GetCustomAttributes<PlatypusKeywordIndexAttribute>(false).ToList();
+            
+            if (attributes.Any())
+            {
+                return attributes.First().TokenType;
+            }
+
+            throw new MissingAttributeException(keyword.ToString(), nameof(PlatypusKeywordIndexAttribute));
         }
 
         public static bool IsInTokenGroup(this PlatypusTokenType tokenType, PlatypusTokenTypeGroup group)
         {
-            var attributes = (PlatypusTokenGroup[]) tokenType.GetType().GetField(tokenType.ToString())
-                .GetCustomAttributes(typeof(PlatypusTokenGroup), false);
-            return attributes.Length > 0 && attributes[0].Groups.Contains(group);
+            var field = tokenType.GetType().GetField(tokenType.ToString());
+            var attributes = field.GetCustomAttributes<PlatypusTokenGroupAttribute>(false).ToList();
+
+            if (attributes.Any())
+            {
+                return attributes.First().Groups.Contains(group);
+            }
+            
+            throw new MissingAttributeException(tokenType.ToString(), nameof(PlatypusTokenGroupAttribute));
         }
 
         public static bool IsInTokenGroups(this PlatypusTokenType tokenType, PlatypusTokenTypeGroup[] groups)
         {
-            var attributes = (PlatypusTokenGroup[]) tokenType.GetType().GetField(tokenType.ToString())
-                .GetCustomAttributes(typeof(PlatypusTokenGroup), false);
-            return attributes.Length > 0 && !attributes[0].Groups.Except(groups).Any();
+            var field = tokenType.GetType().GetField(tokenType.ToString());
+            var attributes = field.GetCustomAttributes<PlatypusTokenGroupAttribute>(false).ToList();
+
+            if (attributes.Any())
+            {
+                return attributes.First().Groups.Except(groups).Any();
+            }
+            
+            throw new MissingAttributeException(tokenType.ToString(), nameof(PlatypusTokenGroupAttribute));
         }
 
         public static bool IsInTokenGroup(this PlatypusToken token, PlatypusTokenTypeGroup group)
@@ -110,8 +163,11 @@ namespace CPlatypus.Core
             foreach (var key in Enum.GetValues(typeof(PlatypusKeywords)).Cast<PlatypusKeywords>())
             {
                 if (key.ToKeywordIndex() == str)
+                {
                     return key;
+                }
             }
+            
             throw new Exception("Keyword not found with string : " + str);
         }
 

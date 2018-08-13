@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright (c) 2017 Platypus Language http://platypus.vfrz.fr/
+ * Copyright (c) 2018 Platypus Language http://platypus.vfrz.fr/
  *  This file is part of CPlatypus.
  *
  *     CPlatypus is free software: you can redistribute it and/or modify
@@ -24,9 +24,9 @@ namespace CPlatypus.Framework
 {
     public class Source : IDisposable
     {
-        public static char CarriageReturn { get; } = '\r';
-        public static char LineFeed { get; } = '\n';
-        public static char Eos { get; } = '\0';
+        public const char CarriageReturn = '\r';
+        public const char LineFeed = '\n';
+        public const char Eos = '\0';
 
         public bool EndOfStream => _reader.EndOfStream;
 
@@ -101,8 +101,8 @@ namespace CPlatypus.Framework
 
         public void Dispose()
         {
-            _reader?.Dispose();
-            _reader?.DiscardBufferedData();
+            _reader.Dispose();
+            _reader.DiscardBufferedData();
         }
     }
 }

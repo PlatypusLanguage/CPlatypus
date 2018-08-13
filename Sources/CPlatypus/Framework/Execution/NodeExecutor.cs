@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright (c) 2017 Platypus Language http://platypus.vfrz.fr/
+ * Copyright (c) 2018 Platypus Language http://platypus.vfrz.fr/
  *  This file is part of CPlatypus.
  *
  *     CPlatypus is free software: you can redistribute it and/or modify
@@ -16,19 +16,12 @@
  *     along with CPlatypus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-using System;
-using CPlatypus.Lexer;
+using CPlatypus.Framework.Semantic;
 
-namespace CPlatypus.Core
+namespace CPlatypus.Framework.Execution
 {
-    [AttributeUsage(AttributeTargets.Field)]
-    public class PlatypusTokenGroup : Attribute
+    public abstract class NodeExecutor<TNodeType, TReturnType>
     {
-        public PlatypusTokenTypeGroup[] Groups { get; }
-
-        public PlatypusTokenGroup(params PlatypusTokenTypeGroup[] groups)
-        {
-            Groups = groups;
-        }
+        public abstract TReturnType Execute(TNodeType node, Context currentContext, Symbol currentSymbol);
     }
 }

@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright (c) 2017 Platypus Language http://platypus.vfrz.fr/
+ * Copyright (c) 2018 Platypus Language http://platypus.vfrz.fr/
  *  This file is part of CPlatypus.
  *
  *     CPlatypus is free software: you can redistribute it and/or modify
@@ -16,7 +16,6 @@
  *     along with CPlatypus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 using System.Collections.Generic;
 using CPlatypus.Execution.Object;
 using CPlatypus.Framework.Execution;
@@ -29,12 +28,6 @@ namespace CPlatypus.Execution.Executors
 {
     public class NewExecutor : PlatypusNodeExecutor
     {
-        public static NewExecutor Instance { get; } = new NewExecutor();
-
-        private NewExecutor()
-        {
-        }
-
         public override PlatypusInstance Execute(PlatypusNode node, Context currentContext, Symbol currentSymbol)
         {
             var newNode = (NewNode) node;
@@ -43,17 +36,20 @@ namespace CPlatypus.Execution.Executors
 
             var classSymbol = currentSymbol.Get<PlatypusClassSymbol>(functionCallNode.FunctionName.Value);
 
+            var newInstance = new PlatypusInstance(classSymbol, currentContext);
+            
             var constructorSymbol = classSymbol.GetLocal<PlatypusFunctionSymbol>("_constructor");
 
-            var args = new List<object>();
+            var args = new List<PlatypusInstance>();
 
             foreach (var argument in functionCallNode.ArgumentList.Arguments)
             {
-                args.Add(ExpressionExecutor.Instance.Execute(argument, currentContext, currentSymbol));
+                args.Add(new ExpressionExecutor().Execute(argument, newInstance.Context, currentSymbol));
             }
             
-            return FunctionCallExecutor.Instance.Execute(constructorSymbol,
-                currentContext, args.ToArray());
+            new FunctionCallExecutor().Execute(constructorSymbol, newInstance.Context, args.ToArray(), newInstance);
+
+            return newInstance;
         }
     }
 }

@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright (c) 2017 Platypus Language http://platypus.vfrz.fr/
+ * Copyright (c) 2018 Platypus Language http://platypus.vfrz.fr/
  *  This file is part of CPlatypus.
  *
  *     CPlatypus is free software: you can redistribute it and/or modify
@@ -16,27 +16,18 @@
  *     along with CPlatypus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-using System.Collections.Generic;
 using CPlatypus.Execution.Object;
 using CPlatypus.Execution.StandardLibrary.Types;
 using CPlatypus.Framework.Execution;
 using CPlatypus.Framework.Semantic;
 using CPlatypus.Parser;
 using CPlatypus.Parser.Nodes;
-using CPlatypus.Semantic;
 
 namespace CPlatypus.Execution.Executors
 {
     public class ExpressionExecutor : PlatypusNodeExecutor
     {
-        public static ExpressionExecutor Instance { get; } = new ExpressionExecutor();
-
-        private ExpressionExecutor()
-        {
-        }
-
-        public override PlatypusInstance Execute(PlatypusNode node, Context currentContext,
-            Symbol currentSymbol)
+        public override PlatypusInstance Execute(PlatypusNode node, Context currentContext, Symbol currentSymbol)
         {
             if (node is IdentifierNode identifierNode)
             {
@@ -49,35 +40,32 @@ namespace CPlatypus.Execution.Executors
 
             if (node is IntegerNode integerNode)
             {
-                return PlatypusInteger.Singleton.Create(currentContext, currentSymbol,
-                    new Dictionary<string, object> {{"value", integerNode.Value}});
+                return PlatypusInteger.Singleton.Create(currentContext as PlatypusContext, currentSymbol, integerNode.Value);
             }
 
             if (node is StringNode stringNode)
             {
-                return PlatypusString.Singleton.Create(currentContext, currentSymbol,
-                    new Dictionary<string, object> {{"value", stringNode.Value}});
+                return PlatypusString.Singleton.Create(currentContext as PlatypusContext, currentSymbol, stringNode.Value);
             }
 
             if (node is BooleanNode booleanNode)
             {
-                return PlatypusBoolean.Singleton.Create(currentContext, currentSymbol,
-                    new Dictionary<string, object> {{"value", booleanNode.Value}});
+                return PlatypusBoolean.Singleton.Create(currentContext as PlatypusContext, currentSymbol, booleanNode.Value);
             }
 
             if (node is FunctionCallNode functionCallNode)
             {
-                return FunctionCallExecutor.Instance.Execute(functionCallNode, currentContext, currentSymbol);
+                return new FunctionCallExecutor().Execute(functionCallNode, currentContext, currentSymbol);
             }
 
             if (node is NewNode newNode)
             {
-                return NewExecutor.Instance.Execute(newNode, currentContext, currentSymbol);
+                return new NewExecutor().Execute(newNode, currentContext, currentSymbol);
             }
 
             if (node is BinaryOperationNode binaryOperationNode)
             {
-                return BinaryOperationExecutor.Instance.Execute(binaryOperationNode, currentContext, currentSymbol);
+                return new BinaryOperationExecutor().Execute(binaryOperationNode, currentContext, currentSymbol);
             }
 
             return PlatypusNullInstance.Instance;
@@ -109,7 +97,7 @@ namespace CPlatypus.Execution.Executors
             return null;
         }
 
-        public PlatypusInstance ResolveObject(PlatypusNode node, Context context, Symbol symbol)
+        public PlatypusInstance ResolveInstance(PlatypusNode node, Context context, Symbol symbol)
         {
             if (node is IdentifierNode identifierNode)
             {
@@ -121,13 +109,13 @@ namespace CPlatypus.Execution.Executors
 
             if (node is FunctionCallNode functionCallNode)
             {
-                return FunctionCallExecutor.Instance.Execute(functionCallNode, context, symbol);
+                return new FunctionCallExecutor().Execute(functionCallNode, context, symbol);
             }
 
             if (node is AttributeAccessNode attributeAccessNode)
             {
-                var left = ResolveObject(attributeAccessNode.Left, context, symbol);
-                return ResolveObject(attributeAccessNode.Attribute, left.Context, left.Symbol);
+                var left = ResolveInstance(attributeAccessNode.Left, context, symbol);
+                return ResolveInstance(attributeAccessNode.Attribute, left.Context, left.Symbol);
 
                 //TODO CHECK THIS IN MULTIPLE CASES
                 /*

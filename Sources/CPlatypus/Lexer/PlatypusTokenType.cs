@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright (c) 2017 Platypus Language http://platypus.vfrz.fr/
+ * Copyright (c) 2018 Platypus Language http://platypus.vfrz.fr/
  *  This file is part of CPlatypus.
  *
  *     CPlatypus is free software: you can redistribute it and/or modify
@@ -23,7 +23,7 @@ namespace CPlatypus.Lexer
 {
     public enum PlatypusTokenType
     {
-        Identifier,
+        [PlatypusTokenGroup(Common)] Identifier,
         [PlatypusTokenGroup(UserDefined)] VarKeyword,
         [PlatypusTokenGroup(UserDefined)] StaticKeyword,
         [PlatypusTokenGroup(UserDefined)] EndKeyword,
@@ -34,7 +34,6 @@ namespace CPlatypus.Lexer
         [PlatypusTokenGroup(UserDefined)] ThisKeyword,
         [PlatypusTokenGroup(UserDefined)] NewKeyword,
         [PlatypusTokenGroup(UserDefined)] ImportKeyword,
-
         [PlatypusTokenGroup(UserDefined)] ReturnKeyword,
         [PlatypusTokenGroup(UserDefined)] IfKeyword,
         [PlatypusTokenGroup(UserDefined)] ElseKeyword,
@@ -49,22 +48,18 @@ namespace CPlatypus.Lexer
         [PlatypusTokenGroup(UserDefined)] CatchKeyword,
         [PlatypusTokenGroup(UserDefined)] BreakKeyword,
         [PlatypusTokenGroup(UserDefined)] ContinueKeyword,
-
         [PlatypusTokenGroup(Operator, BinaryOperator)] PlusOperator,
         [PlatypusTokenGroup(Operator, BinaryOperator)] MinusOperator,
         [PlatypusTokenGroup(Operator, BinaryOperator)] MultiplyOperator,
         [PlatypusTokenGroup(Operator, BinaryOperator)] DivideOperator,
-
         [PlatypusTokenGroup(Operator, UnaryOperator)] PlusPlusOperator,
         [PlatypusTokenGroup(Operator, UnaryOperator)] MinusMinusOperator,
         [PlatypusTokenGroup(Operator, UnaryOperator)] NotOperator,
-
         [PlatypusTokenGroup(Operator, AssignOperator)] EqualAssignOperator,
         [PlatypusTokenGroup(Operator, AssignOperator)] PlusAssignOperator,
         [PlatypusTokenGroup(Operator, AssignOperator)] MinusAssignOperator,
         [PlatypusTokenGroup(Operator, AssignOperator)] MultiplyAssignOperator,
         [PlatypusTokenGroup(Operator, AssignOperator)] DivideAssignOperator,
-
         [PlatypusTokenGroup(Operator, ComparisonOperator)] IsOperator,
         [PlatypusTokenGroup(Operator, ComparisonOperator)] OrOperator,
         [PlatypusTokenGroup(Operator, ComparisonOperator)] AndOperator,
@@ -74,29 +69,24 @@ namespace CPlatypus.Lexer
         [PlatypusTokenGroup(Operator, ComparisonOperator)] LessOperator,
         [PlatypusTokenGroup(Operator, ComparisonOperator)] GreaterEqualOperator,
         [PlatypusTokenGroup(Operator, ComparisonOperator)] LessEqualOperator,
-
-        Comma,
-        Dot,
-        Colon,
-
+        [PlatypusTokenGroup(Common)] Comma,
+        [PlatypusTokenGroup(Common)] Dot,
+        [PlatypusTokenGroup(Common)] Colon,
         [PlatypusTokenGroup(Literal)] IntegerLiteral,
         [PlatypusTokenGroup(Literal)] RealLiteral,
         [PlatypusTokenGroup(Literal)] CharLiteral,
         [PlatypusTokenGroup(Literal)] TextLiteral,
-
         [PlatypusTokenGroup(UserDefined, Literal, TrueFalse)] TrueLiteral,
         [PlatypusTokenGroup(UserDefined, Literal, TrueFalse)] FalseLiteral,
-
-        OpenParen,
-        CloseParen,
-        OpenSquare,
-        CloseSquare,
-        OpenBracket,
-        CloseBracket,
-
-        Comment,
-        WhiteSpace,
-        Eos,
-        Unknown
+        [PlatypusTokenGroup(Common)] OpenParen,
+        [PlatypusTokenGroup(Common)] CloseParen,
+        [PlatypusTokenGroup(Common)] OpenSquare,
+        [PlatypusTokenGroup(Common)] CloseSquare,
+        [PlatypusTokenGroup(Common)] OpenBracket,
+        [PlatypusTokenGroup(Common)] CloseBracket,
+        [PlatypusTokenGroup(Common)] Comment,
+        [PlatypusTokenGroup(Common)] WhiteSpace,
+        [PlatypusTokenGroup(Common)] Eos,
+        [PlatypusTokenGroup(Common)] Unknown
     }
 }

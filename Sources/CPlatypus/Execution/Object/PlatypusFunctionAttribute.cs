@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright (c) 2017 Platypus Language http://platypus.vfrz.fr/
+ * Copyright (c) 2018 Platypus Language http://platypus.vfrz.fr/
  *  This file is part of CPlatypus.
  *
  *     CPlatypus is free software: you can redistribute it and/or modify
@@ -28,17 +28,10 @@ namespace CPlatypus.Execution.Object
         
         public List<string> Parameters { get; }
 
-        public PlatypusFunctionAttribute(string name)
-        {
-            Name = name;
-            Parameters = new List<string>();
-        }
-
         public PlatypusFunctionAttribute(string name, params string[] parameters)
         {
             Name = name;
             Parameters = parameters.ToList();
         }
-       
     }
 }

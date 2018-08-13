@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright (c) 2017 Platypus Language http://platypus.vfrz.fr/
+ * Copyright (c) 2018 Platypus Language http://platypus.vfrz.fr/
  *  This file is part of CPlatypus.
  *
  *     CPlatypus is free software: you can redistribute it and/or modify
@@ -18,7 +18,6 @@
 
 using System;
 using CPlatypus.Execution.Executors;
-using CPlatypus.Execution.StandardLibrary.Types;
 using CPlatypus.Framework.Execution;
 using CPlatypus.Semantic;
 
@@ -30,24 +29,27 @@ namespace CPlatypus.Execution.Object
 
         public Context Context { get; }
 
+        //TODO Move this (same for "tostring")
+        private const string ValueCode = "_value";
+
         public PlatypusInstance(PlatypusClassSymbol symbol, Context parentContext)
         {
             Symbol = symbol;
-            Context = new PlatypusContext(symbol is null ? "c_null" : "c_" + symbol.Name, parentContext);
+            Context = new PlatypusContext(symbol is null ? PlatypusContextType.Null : PlatypusContextType.ObjectInstance, parentContext);
         }
 
-        public bool HasValue => Context.ContainsLocal("_value");
+        public bool HasValue => Context.ContainsLocal(ValueCode);
 
         public void SetValue(object value)
         {
-            Context.Set("_value", value);
+            Context.Set(ValueCode, value);
         }
 
         public object GetValue()
         {
             if (HasValue)
             {
-                return Context.GetLocal("_value");
+                return Context.GetLocal(ValueCode);
             }
 
             throw new Exception("IMPOSSIBLE EXCEPTION");
@@ -57,7 +59,7 @@ namespace CPlatypus.Execution.Object
         {
             if (HasValue)
             {
-                return Context.GetLocal<T>("_value");
+                return Context.GetLocal<T>(ValueCode);
             }
 
             throw new Exception("IMPOSSIBLE EXCEPTION");
@@ -65,9 +67,9 @@ namespace CPlatypus.Execution.Object
 
         public override string ToString()
         {
-            return FunctionCallExecutor.Instance
-                .Execute(Symbol.GetLocal<PlatypusFunctionSymbol>("tostring"), Context, new object[0], this).Context
-                .GetLocal<string>("_value");
+            return new FunctionCallExecutor()
+                .Execute(Symbol.GetLocal<PlatypusFunctionSymbol>("tostring"), Context, new PlatypusInstance[0], this)
+                .Context.GetLocal<string>(ValueCode);
         }
     }
 }

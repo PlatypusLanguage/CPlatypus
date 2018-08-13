@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright (c) 2017 Platypus Language http://platypus.vfrz.fr/
+ * Copyright (c) 2018 Platypus Language http://platypus.vfrz.fr/
  *  This file is part of CPlatypus.
  *
  *     CPlatypus is free software: you can redistribute it and/or modify
@@ -26,8 +26,6 @@ namespace CPlatypus.Framework.Parser
 {
     public class TokenBuffer<TToken> : IEnumerable<TToken> where TToken : Token
     {
-        //private readonly TToken[] _buffer;
-
         private readonly FixedSizedQueue<TToken> _queue;
 
         public readonly int Capacity;

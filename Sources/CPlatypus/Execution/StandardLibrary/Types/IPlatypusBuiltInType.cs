@@ -1,5 +1,5 @@
-﻿/*
- * Copyright (c) 2017 Platypus Language http://platypus.vfrz.fr/
+/*
+ * Copyright (c) 2018 Platypus Language http://platypus.vfrz.fr/
  *  This file is part of CPlatypus.
  *
  *     CPlatypus is free software: you can redistribute it and/or modify
@@ -16,23 +16,14 @@
  *     along with CPlatypus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace CPlatypus.Parser
+using CPlatypus.Execution.Object;
+using CPlatypus.Framework.Semantic;
+
+namespace CPlatypus.Execution.StandardLibrary.Types
 {
-    public enum BinaryOperation
+    public interface IPlatypusBuiltInType<T>
     {
-        Assignment,
-        Addition,
-        Subtraction,
-        Multiplication,
-        Division,
-        Or,
-        And,
-        Equal,
-        NotEqual,
-        Greater,
-        GreaterEqual,
-        Is,
-        Less,
-        LessEqual
+        //TODO Replace by default implementation when C# 8.0 is out (and if feature is available ofc)
+        PlatypusInstance Create(PlatypusContext currentContext, Symbol currentSymbol, T value);
     }
 }

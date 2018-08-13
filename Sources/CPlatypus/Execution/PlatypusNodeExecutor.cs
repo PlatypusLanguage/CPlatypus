@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright (c) 2017 Platypus Language http://platypus.vfrz.fr/
+ * Copyright (c) 2018 Platypus Language http://platypus.vfrz.fr/
  *  This file is part of CPlatypus.
  *
  *     CPlatypus is free software: you can redistribute it and/or modify
@@ -18,14 +18,11 @@
 
 using CPlatypus.Execution.Object;
 using CPlatypus.Framework.Execution;
-using CPlatypus.Framework.Semantic;
 using CPlatypus.Parser;
 
 namespace CPlatypus.Execution
 {
-    public abstract class PlatypusNodeExecutor
+    public abstract class PlatypusNodeExecutor : NodeExecutor<PlatypusNode, PlatypusInstance>
     {
-        public abstract PlatypusInstance Execute(PlatypusNode node, Context currentContext,
-            Symbol currentSymbol);
     }
 }

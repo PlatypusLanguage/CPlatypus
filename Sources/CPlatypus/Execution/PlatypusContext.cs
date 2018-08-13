@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright (c) 2017 Platypus Language http://platypus.vfrz.fr/
+ * Copyright (c) 2018 Platypus Language http://platypus.vfrz.fr/
  *  This file is part of CPlatypus.
  *
  *     CPlatypus is free software: you can redistribute it and/or modify
@@ -16,6 +16,8 @@
  *     along with CPlatypus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+using CPlatypus.Core;
+using CPlatypus.Core.Exceptions;
 using CPlatypus.Execution.StandardLibrary.Types;
 using CPlatypus.Framework.Execution;
 
@@ -23,8 +25,21 @@ namespace CPlatypus.Execution
 {
     public class PlatypusContext : Context
     {
-        public PlatypusContext(string name, Context parent) : base(name, parent, PlatypusNullInstance.Instance)
+        public PlatypusContextType Type { get; }
+        
+        public PlatypusContext(PlatypusContextType type, Context parent) : base(type.ToContextName(), parent, PlatypusNullInstance.Instance)
         {
+            Type = type;
+        }
+
+        public PlatypusContext GetFirstParentContextOfType(PlatypusContextType contextType)
+        {
+            if (Parent is PlatypusContext parentContext)
+            {
+                return parentContext.Type == contextType ? parentContext : parentContext.GetFirstParentContextOfType(contextType);
+            }
+
+            throw new ParentContextNotFoundException(contextType);
         }
     }
 }

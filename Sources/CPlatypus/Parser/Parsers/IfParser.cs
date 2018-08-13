@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright (c) 2017 Platypus Language http://platypus.vfrz.fr/
+ * Copyright (c) 2018 Platypus Language http://platypus.vfrz.fr/
  *  This file is part of CPlatypus.
  *
  *     CPlatypus is free software: you can redistribute it and/or modify
@@ -43,10 +43,7 @@ namespace CPlatypus.Parser.Parsers
             var condition = ExpressionParser.Instance.Parse(parser);
             parser.ConsumeType(PlatypusTokenType.CloseParen);
 
-            PlatypusTokenType outType;
-
-            var body = CodeParser.Instance.ParseTill(parser,
-                new List<PlatypusTokenType> {PlatypusTokenType.EndKeyword, PlatypusTokenType.ElseKeyword}, out outType);
+            var body = CodeParser.Instance.ParseTill(parser, new List<PlatypusTokenType> {PlatypusTokenType.EndKeyword, PlatypusTokenType.ElseKeyword}, out var outType);
 
             CodeNode elseBody = null;
             IfNode elseIfNode = null;

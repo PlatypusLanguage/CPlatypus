@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright (c) 2017 Platypus Language http://platypus.vfrz.fr/
+ * Copyright (c) 2018 Platypus Language http://platypus.vfrz.fr/
  *  This file is part of CPlatypus.
  *
  *     CPlatypus is free software: you can redistribute it and/or modify
@@ -68,12 +68,7 @@ namespace CPlatypus.Framework.Parser
             return true;
         }
 
-        public TToken Peek()
-        {
-            return Peek(0);
-        }
-
-        public TToken Peek(int offset)
+        public TToken Peek(int offset = 0)
         {
             return Lexer[offset];
         }

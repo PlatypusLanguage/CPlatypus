@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright (c) 2017 Platypus Language http://platypus.vfrz.fr/
+ * Copyright (c) 2018 Platypus Language http://platypus.vfrz.fr/
  *  This file is part of CPlatypus.
  *
  *     CPlatypus is free software: you can redistribute it and/or modify
@@ -23,8 +23,7 @@ namespace CPlatypus.Lexer
 {
     public class PlatypusToken : Token
     {
-        public PlatypusToken(PlatypusTokenType tokenType, string value, SourceLocation sourceLocation) : base(tokenType,
-            value, sourceLocation)
+        public PlatypusToken(PlatypusTokenType tokenType, string value, SourceLocation sourceLocation) : base(tokenType, value, sourceLocation)
         {
         }
 
@@ -41,8 +40,7 @@ namespace CPlatypus.Lexer
 
         public override string ToString()
         {
-            return
-                $"{nameof(TokenType)}: {TokenType}, {nameof(Value)}: {Value.Replace("\n", "\\n").Replace("\r", "\\r")}, {nameof(SourceLocation)}: {SourceLocation}";
+            return $"{nameof(TokenType)}: {TokenType}, {nameof(Value)}: {Value.Replace("\n", "\\n").Replace("\r", "\\r")}, {nameof(SourceLocation)}: {SourceLocation}";
         }
     }
 }
