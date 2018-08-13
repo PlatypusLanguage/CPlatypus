@@ -45,7 +45,14 @@ namespace CPlatypus.Execution.Executors
                         return result;
                     }
 
-                    //TODO Execute else if
+                    if (ifNode.ElseIfNode != null)
+                    {
+                        var executor = new IfExecutor();
+                        var result = executor.Execute(ifNode.ElseIfNode, currentContext, currentSymbol);
+                        HasReturnedValue = executor.HasReturnedValue;
+                        return result;
+                    }
+                    
                     if (ifNode.ElseBody != null)
                     {
                         var executor = new BodyExecutor();
