@@ -59,7 +59,6 @@ namespace CPlatypus.Lexer
                 new EosMatcher()
             };
 
-            //Never forget to initialize the buffer !
             InitializeBuffer();
         }
 
@@ -69,8 +68,10 @@ namespace CPlatypus.Lexer
 
             foreach (var matcher in _matchers)
             {
-                PlatypusToken token;
-                if ((token = matcher.Match(location, Source)) == null) continue;
+                var token = matcher.Match(location, Source);
+                
+                if (token == null)
+                    continue;
 
                 if (token.TokenType == PlatypusTokenType.WhiteSpace && _config.IgnoreWhiteSpaces ||
                     token.TokenType == PlatypusTokenType.Comment && _config.IgnoreComments)

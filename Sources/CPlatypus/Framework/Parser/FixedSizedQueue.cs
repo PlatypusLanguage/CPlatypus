@@ -16,31 +16,25 @@
  *     along with CPlatypus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-using System.Collections.Concurrent;
+using System.Collections.Generic;
 
 namespace CPlatypus.Framework.Parser
 {
-    //TODO Reimplement this in a more readable way (and less hacky if possible)
-    public class FixedSizedQueue<T> : ConcurrentQueue<T>
+    public class FixedSizedQueue<T> : Queue<T>
     {
-        private readonly object _syncObject = new object();
+        private int Capacity { get; }
 
-        public int Size { get; }
-
-        public FixedSizedQueue(int size)
+        public FixedSizedQueue(int capacity)
         {
-            Size = size;
+            Capacity = capacity;
         }
 
-        public new void Enqueue(T obj)
+        public new void Enqueue(T item)
         {
-            base.Enqueue(obj);
-            lock (_syncObject)
+            base.Enqueue(item);
+            if (Count > Capacity)
             {
-                while (Count > Size)
-                {
-                    TryDequeue(out _);
-                }
+                Dequeue();
             }
         }
     }
