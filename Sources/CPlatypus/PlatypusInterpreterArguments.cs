@@ -16,14 +16,19 @@
  *     along with CPlatypus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+using PowerArgs;
+
 namespace CPlatypus
 {
-    public class ApplicationArguments
+    public class PlatypusInterpreterArguments
     {
+        [ArgRequired, ArgShortcut("-f"), ArgDescription("Code file to be executed"), ArgPosition(1)]
         public string File { get; set; } = "";
         
+        [ArgShortcut("-g"), ArgDescription("Dot graph file of AST"), ArgPosition(2)]
         public string DotGraphFile { get; set; } = "";
         
+        [ArgShortcut("-iut"), ArgDescription("Ignore unknown tokens instead of throwing errors"), ArgPosition(3)]
         public bool IgnoreUnknownTokens { get; set; }
     }
 }

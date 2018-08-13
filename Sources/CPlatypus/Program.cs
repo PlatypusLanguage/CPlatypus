@@ -17,10 +17,10 @@
  */
 
 using System;
-using CPlatypus.Lexer;
-using Fclp;
 using System.IO;
+using CPlatypus.Lexer;
 using CPlatypus.Parser;
+using PowerArgs;
 
 namespace CPlatypus
 {
@@ -28,35 +28,26 @@ namespace CPlatypus
     {
         private static void Main(string[] args)
         {
-            var commandLineParser = new FluentCommandLineParser<ApplicationArguments>();
-
-            var arguments = new ApplicationArguments();
-
-            commandLineParser.Setup(arg => arg.File).As('f', "file").Required().WithDescription("Input file to process")
-                .Callback(result => arguments.File = result);
-            commandLineParser.Setup(arg => arg.DotGraphFile).As('g', "dgf").WithDescription("Generate dot graph of AST")
-                .Callback(result => arguments.DotGraphFile = result);
-            commandLineParser.Setup(arg => arg.IgnoreUnknownTokens).As("iut")
-                .Callback(result => arguments.IgnoreUnknownTokens = result);
-
-            var cmArgs = commandLineParser.Parse(args);
-
-            if (cmArgs.HasErrors)
+            try
             {
-                Console.WriteLine(cmArgs.ErrorText);
-                return;
+                var parsedArguments = Args.Parse<PlatypusInterpreterArguments>(args);
+
+                var platypus = new Platypus();
+                platypus.InterpretFile(parsedArguments.File, FileMode.Open, new PlatypusLexerConfig
+                {
+                    IgnoreComments = true,
+                    IgnoreWhiteSpaces = true,
+                    IgnoreUnknownTokens = parsedArguments.IgnoreUnknownTokens
+                }, new PlatypusParserConfig
+                {
+                    DotGraphFile = parsedArguments.DotGraphFile
+                });
             }
-
-            var platypus = new Platypus();
-            platypus.InterpretFile(arguments.File, FileMode.Open, new PlatypusLexerConfig
+            catch (ArgException ex)
             {
-                IgnoreComments = true,
-                IgnoreWhiteSpaces = true,
-                IgnoreUnknownTokens = arguments.IgnoreUnknownTokens
-            }, new PlatypusParserConfig
-            {
-                DotGraphFile = arguments.DotGraphFile
-            });
+                //TODO Improve this
+                Console.WriteLine($"Error trying to parse arguments: {ex}");
+            }
         }
     }
 }
