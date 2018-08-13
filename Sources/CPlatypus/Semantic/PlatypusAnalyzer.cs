@@ -36,13 +36,13 @@ namespace CPlatypus.Semantic
 
         public PlatypusModuleSymbol Analyze()
         {
-            var globalModule = PlatypusModuleSymbol.CreateGlobalModule();
+            var globalModuleSymbol = PlatypusModuleSymbol.CreateGlobalModule();
 
-            _currentSymbol = globalModule;
+            _currentSymbol = globalModuleSymbol;
             
             _ast.Accept(this, _ast);
 
-            return globalModule;
+            return globalModuleSymbol;
         }
 
         public void Visit(ArgumentListNode node, PlatypusNode parent)

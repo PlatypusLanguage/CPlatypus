@@ -16,31 +16,23 @@
  *     along with CPlatypus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-using CPlatypus.Framework;
-using CPlatypus.Framework.Lexer;
-
-namespace CPlatypus.Lexer
+namespace CPlatypus.Parser
 {
-    public class PlatypusToken : Token
+    public enum BinaryOperator
     {
-        public PlatypusToken(PlatypusTokenType tokenType, string value, SourceLocation sourceLocation) : base(tokenType, value, sourceLocation)
-        {
-        }
-
-        public new PlatypusTokenType TokenType
-        {
-            get
-            {
-                var type = base.TokenType;
-                if (type is PlatypusTokenType t)
-                    return t;
-                return PlatypusTokenType.Unknown;
-            }
-        }
-
-        public override string ToString()
-        {
-            return $"{nameof(TokenType)}: {TokenType}, {nameof(Value)}: {Value.Replace("\n", "\\n").Replace("\r", "\\r")}, {nameof(SourceLocation)}: {SourceLocation}";
-        }
+        [OperatorCode("_assignoperator")] Assign,
+        [OperatorCode("_plusoperator")] Plus,
+        [OperatorCode("_minusoperator")] Minus,
+        [OperatorCode("_multiplyoperator")] Multiply,
+        [OperatorCode("_divideoperator")] Divide,
+        [OperatorCode("_oroperator")] Or,
+        [OperatorCode("_andoperator")] And,
+        [OperatorCode("_equaloperator")] Equal,
+        [OperatorCode("_notequaloperator")] NotEqual,
+        [OperatorCode("_greateroperator")] Greater,
+        [OperatorCode("_greaterequaloperator")] GreaterEqual,
+        [OperatorCode("_isoperator")] Is,
+        [OperatorCode("_lessoperator")] Less,
+        [OperatorCode("_lessequaloperator")] LessEqual
     }
 }

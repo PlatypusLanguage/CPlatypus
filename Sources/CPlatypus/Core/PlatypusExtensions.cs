@@ -21,9 +21,11 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Text;
+using CPlatypus.Core.Exceptions;
 using CPlatypus.Execution;
 using CPlatypus.Framework.Lexer;
 using CPlatypus.Lexer;
+using CPlatypus.Parser;
 
 namespace CPlatypus.Core
 {
@@ -73,7 +75,20 @@ namespace CPlatypus.Core
                 return attributes.First().ContextName;
             }
             
-            throw new CustomAttributeFormatException($"{contextType.ToString()} has no {nameof(PlatypusContextNameAttribute)} attribute");
+            throw new MissingAttributeException(contextType.ToString(), nameof(PlatypusContextNameAttribute));
+        }
+        
+        public static string ToOperatorCode(this BinaryOperator binaryOperator)
+        {
+            var field = binaryOperator.GetType().GetField(binaryOperator.ToString());
+            var attributes = field.GetCustomAttributes<OperatorCodeAttribute>(false).ToList();
+
+            if (attributes.Any())
+            {
+                return attributes.First().Code;
+            }
+            
+            throw new MissingAttributeException(binaryOperator.ToString(), nameof(OperatorCodeAttribute));
         }
         
         public static string ToKeywordIndex(this PlatypusKeywords keyword)
@@ -86,7 +101,7 @@ namespace CPlatypus.Core
                 return attributes.First().Index;
             }
             
-            throw new CustomAttributeFormatException($"{keyword.ToString()} has no {nameof(PlatypusKeywordIndexAttribute)} attribute");
+            throw new MissingAttributeException(keyword.ToString(), nameof(PlatypusKeywordIndexAttribute));
         }
 
         public static PlatypusTokenType GetTokenType(this PlatypusKeywords keyword)
@@ -98,8 +113,8 @@ namespace CPlatypus.Core
             {
                 return attributes.First().TokenType;
             }
-            
-            throw new CustomAttributeFormatException($"{keyword.ToString()} has no {nameof(PlatypusKeywordIndexAttribute)} attribute");
+
+            throw new MissingAttributeException(keyword.ToString(), nameof(PlatypusKeywordIndexAttribute));
         }
 
         public static bool IsInTokenGroup(this PlatypusTokenType tokenType, PlatypusTokenTypeGroup group)
@@ -112,7 +127,7 @@ namespace CPlatypus.Core
                 return attributes.First().Groups.Contains(group);
             }
             
-            throw new CustomAttributeFormatException($"{tokenType.ToString()} has no {nameof(PlatypusTokenGroupAttribute)} attribute");
+            throw new MissingAttributeException(tokenType.ToString(), nameof(PlatypusTokenGroupAttribute));
         }
 
         public static bool IsInTokenGroups(this PlatypusTokenType tokenType, PlatypusTokenTypeGroup[] groups)
@@ -125,7 +140,7 @@ namespace CPlatypus.Core
                 return attributes.First().Groups.Except(groups).Any();
             }
             
-            throw new CustomAttributeFormatException($"{tokenType.ToString()} has no {nameof(PlatypusTokenGroupAttribute)} attribute");
+            throw new MissingAttributeException(tokenType.ToString(), nameof(PlatypusTokenGroupAttribute));
         }
 
         public static bool IsInTokenGroup(this PlatypusToken token, PlatypusTokenTypeGroup group)
@@ -152,6 +167,7 @@ namespace CPlatypus.Core
                     return key;
                 }
             }
+            
             throw new Exception("Keyword not found with string : " + str);
         }
 

@@ -31,8 +31,7 @@ namespace CPlatypus.Parser.Parsers
 
         public override bool Match(PlatypusParser parser)
         {
-            return parser.MatchType(PlatypusTokenType.ConstructorKeyword) &&
-                   parser.MatchType(1, PlatypusTokenType.OpenParen);
+            return parser.MatchType(PlatypusTokenType.ConstructorKeyword) && parser.MatchType(1, PlatypusTokenType.OpenParen);
         }
 
         public override PlatypusNode Parse(PlatypusParser parser)

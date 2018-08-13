@@ -1,4 +1,4 @@
-﻿/*
+/*
  * Copyright (c) 2018 Platypus Language http://platypus.vfrz.fr/
  *  This file is part of CPlatypus.
  *
@@ -16,31 +16,18 @@
  *     along with CPlatypus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-using CPlatypus.Framework;
-using CPlatypus.Framework.Lexer;
+using System;
 
-namespace CPlatypus.Lexer
+namespace CPlatypus.Parser
 {
-    public class PlatypusToken : Token
+    [AttributeUsage(AttributeTargets.Field)]
+    public class OperatorCodeAttribute : Attribute
     {
-        public PlatypusToken(PlatypusTokenType tokenType, string value, SourceLocation sourceLocation) : base(tokenType, value, sourceLocation)
-        {
-        }
+        public string Code { get; }
 
-        public new PlatypusTokenType TokenType
+        public OperatorCodeAttribute(string code)
         {
-            get
-            {
-                var type = base.TokenType;
-                if (type is PlatypusTokenType t)
-                    return t;
-                return PlatypusTokenType.Unknown;
-            }
-        }
-
-        public override string ToString()
-        {
-            return $"{nameof(TokenType)}: {TokenType}, {nameof(Value)}: {Value.Replace("\n", "\\n").Replace("\r", "\\r")}, {nameof(SourceLocation)}: {SourceLocation}";
+            Code = code;
         }
     }
 }

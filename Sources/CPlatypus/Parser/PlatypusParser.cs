@@ -26,7 +26,7 @@ namespace CPlatypus.Parser
 {
     public class PlatypusParser : Parser<PlatypusToken, PlatypusNode>
     {
-        public readonly List<NodeParser> Parsers;
+        public List<NodeParser> Parsers;
 
         private int _counter;
 

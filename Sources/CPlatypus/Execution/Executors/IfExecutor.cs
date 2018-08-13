@@ -34,8 +34,7 @@ namespace CPlatypus.Execution.Executors
             HasReturnedValue = false;
             if (node is IfNode ifNode)
             {
-                var conditionResult =
-                    new ExpressionExecutor().Execute(ifNode.Condition, currentContext, currentSymbol);
+                var conditionResult = new ExpressionExecutor().Execute(ifNode.Condition, currentContext, currentSymbol);
                 if (conditionResult.HasValue && conditionResult.GetValue() is bool)
                 {
                     if (conditionResult.GetValue<bool>())
@@ -45,16 +44,14 @@ namespace CPlatypus.Execution.Executors
                         HasReturnedValue = executor.HasReturnedValue;
                         return result;
                     }
-                    else
+
+                    //TODO Execute else if
+                    if (ifNode.ElseBody != null)
                     {
-                        //TODO Execute else if
-                        if (ifNode.ElseBody != null)
-                        {
-                            var executor = new BodyExecutor();
-                            var result = executor.Execute(ifNode.ElseBody, currentContext, currentSymbol);
-                            HasReturnedValue = executor.HasReturnedValue;
-                            return result;
-                        }
+                        var executor = new BodyExecutor();
+                        var result = executor.Execute(ifNode.ElseBody, currentContext, currentSymbol);
+                        HasReturnedValue = executor.HasReturnedValue;
+                        return result;
                     }
                 }
             }

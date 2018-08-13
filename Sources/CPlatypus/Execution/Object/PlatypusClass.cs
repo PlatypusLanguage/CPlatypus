@@ -21,6 +21,7 @@ using System.Linq;
 using System.Reflection;
 using CPlatypus.Core;
 using CPlatypus.Framework.Semantic;
+using CPlatypus.Parser;
 using CPlatypus.Semantic;
 
 namespace CPlatypus.Execution.Object
@@ -70,23 +71,23 @@ namespace CPlatypus.Execution.Object
                         classSymbol));
             }
 
-            var methods = new List<(string RealName, string Name, List<string> Parameters)>
+            var methods = new List<(string MethodName, string Name, List<string> Parameters)>
             {
-                (nameof(PlusOperator), "_plusoperator", new List<string> {"right"}),
-                (nameof(MinusOperator), "_minusoperator", new List<string> {"right"}),
-                (nameof(DivideOperator), "_divideoperator", new List<string> {"right"}),
-                (nameof(MultiplyOperator), "_multiplyoperator", new List<string> {"right"}),
-                (nameof(EqualOperator), "_equaloperator", new List<string> {"right"}),
-                (nameof(GreaterOperator), "_greateroperator", new List<string> {"right"}),
-                (nameof(GreaterEqualOperator), "_greaterequaloperator", new List<string> {"right"}),
-                (nameof(LessOperator), "_lessoperator", new List<string> {"right"}),
-                (nameof(LessEqualOperator), "_lessequaloperator", new List<string> {"right"}),
+                (nameof(PlusOperator), BinaryOperator.Plus.ToOperatorCode(), new List<string> {"right"}),
+                (nameof(MinusOperator), BinaryOperator.Minus.ToOperatorCode(), new List<string> {"right"}),
+                (nameof(DivideOperator), BinaryOperator.Divide.ToOperatorCode(), new List<string> {"right"}),
+                (nameof(MultiplyOperator), BinaryOperator.Multiply.ToOperatorCode(), new List<string> {"right"}),
+                (nameof(EqualOperator), BinaryOperator.Equal.ToOperatorCode(), new List<string> {"right"}),
+                (nameof(GreaterOperator), BinaryOperator.Greater.ToOperatorCode(), new List<string> {"right"}),
+                (nameof(GreaterEqualOperator), BinaryOperator.GreaterEqual.ToOperatorCode(), new List<string> {"right"}),
+                (nameof(LessOperator), BinaryOperator.Less.ToOperatorCode(), new List<string> {"right"}),
+                (nameof(LessEqualOperator), BinaryOperator.LessEqual.ToOperatorCode(), new List<string> {"right"}),
                 (nameof(ToStringInstance), "tostring", new List<string>())
             };
 
             foreach (var method in methods)
             {
-                classSymbol.Add(new PlatypusFunction(method.Name, method.Parameters, GetType().GetMethod(method.RealName).CreateDelegate(this)).ToSymbol(classSymbol));
+                classSymbol.Add(new PlatypusFunction(method.Name, method.Parameters, GetType().GetMethod(method.MethodName).CreateDelegate(this)).ToSymbol(classSymbol));
             }
 
             return classSymbol;

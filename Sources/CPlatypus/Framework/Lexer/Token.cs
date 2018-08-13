@@ -35,8 +35,7 @@ namespace CPlatypus.Framework.Lexer
 
         public override string ToString()
         {
-            return
-                $"{nameof(TokenType)}: {TokenType}, {nameof(Value)}: {Value}, {nameof(SourceLocation)}: {SourceLocation}";
+            return $"{nameof(TokenType)}: {TokenType}, {nameof(Value)}: {Value}, {nameof(SourceLocation)}: {SourceLocation}";
         }
     }
 }

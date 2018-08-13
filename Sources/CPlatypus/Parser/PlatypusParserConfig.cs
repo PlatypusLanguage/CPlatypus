@@ -20,6 +20,6 @@ namespace CPlatypus.Parser
 {
     public class PlatypusParserConfig
     {
-        public string TreeDotFile { get; set; } = "";
+        public string DotGraphFile { get; set; } = "";
     }
 }

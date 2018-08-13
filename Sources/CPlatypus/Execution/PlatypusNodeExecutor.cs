@@ -18,7 +18,6 @@
 
 using CPlatypus.Execution.Object;
 using CPlatypus.Framework.Execution;
-using CPlatypus.Framework.Semantic;
 using CPlatypus.Parser;
 
 namespace CPlatypus.Execution

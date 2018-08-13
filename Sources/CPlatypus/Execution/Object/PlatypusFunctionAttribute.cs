@@ -28,17 +28,10 @@ namespace CPlatypus.Execution.Object
         
         public List<string> Parameters { get; }
 
-        public PlatypusFunctionAttribute(string name)
-        {
-            Name = name;
-            Parameters = new List<string>();
-        }
-
         public PlatypusFunctionAttribute(string name, params string[] parameters)
         {
             Name = name;
             Parameters = parameters.ToList();
         }
-       
     }
 }

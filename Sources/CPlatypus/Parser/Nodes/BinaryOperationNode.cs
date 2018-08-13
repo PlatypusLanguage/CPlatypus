@@ -23,16 +23,16 @@ namespace CPlatypus.Parser.Nodes
 {
     public class BinaryOperationNode : PlatypusNode
     {
-        public readonly BinaryOperation OperationType;
+        public readonly BinaryOperator OperatorType;
 
         public PlatypusNode Left => Children[0];
 
         public PlatypusNode Right => Children[1];
 
-        public BinaryOperationNode(int id, BinaryOperation operationType, PlatypusNode left, PlatypusNode right,
+        public BinaryOperationNode(int id, BinaryOperator operatorType, PlatypusNode left, PlatypusNode right,
             SourceLocation sourceLocation) : base(id, sourceLocation)
         {
-            OperationType = operationType;
+            OperatorType = operatorType;
             Children.Add(left);
             Children.Add(right);
         }

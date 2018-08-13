@@ -39,8 +39,7 @@ namespace CPlatypus.Execution.Executors
 
                 var expressionExecutor = new ExpressionExecutor();
 
-                while ((conditionResult =
-                           expressionExecutor.Execute(whileNode.Condition, currentContext, currentSymbol)).HasValue &&
+                while ((conditionResult = expressionExecutor.Execute(whileNode.Condition, currentContext, currentSymbol)).HasValue &&
                        conditionResult.GetValue() is bool && conditionResult.GetValue<bool>())
                 {
                     var executor = new BodyExecutor();

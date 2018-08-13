@@ -1,4 +1,4 @@
-﻿/*
+/*
  * Copyright (c) 2018 Platypus Language http://platypus.vfrz.fr/
  *  This file is part of CPlatypus.
  *
@@ -16,23 +16,15 @@
  *     along with CPlatypus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace CPlatypus.Parser
+using System;
+
+namespace CPlatypus.Core.Exceptions
 {
-    public enum BinaryOperation
+    public class MissingAttributeException : Exception
     {
-        Assignment,
-        Addition,
-        Subtraction,
-        Multiplication,
-        Division,
-        Or,
-        And,
-        Equal,
-        NotEqual,
-        Greater,
-        GreaterEqual,
-        Is,
-        Less,
-        LessEqual
+        public MissingAttributeException(string targetName, string attributeName)
+            : base($"{targetName} is missing {attributeName} attribute")
+        {
+        }
     }
 }

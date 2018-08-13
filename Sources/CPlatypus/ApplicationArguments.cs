@@ -22,7 +22,7 @@ namespace CPlatypus
     {
         public string File { get; set; } = "";
         
-        public string DotTree { get; set; } = "";
+        public string DotGraphFile { get; set; } = "";
         
         public bool IgnoreUnknownTokens { get; set; }
     }

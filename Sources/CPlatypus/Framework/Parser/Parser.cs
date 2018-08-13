@@ -68,12 +68,7 @@ namespace CPlatypus.Framework.Parser
             return true;
         }
 
-        public TToken Peek()
-        {
-            return Peek(0);
-        }
-
-        public TToken Peek(int offset)
+        public TToken Peek(int offset = 0)
         {
             return Lexer[offset];
         }

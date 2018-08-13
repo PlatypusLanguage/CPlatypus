@@ -80,7 +80,7 @@ namespace CPlatypus.Graphviz
         {
             _graph.Add(new DotNode("node" + node.Id)
             {
-                Label = "Binary Operation : " + node.OperationType,
+                Label = "Binary Operation : " + node.OperatorType,
                 FontColor = DotColor.White,
                 FillColor = DotColor.Red3,
                 Style = DotNodeStyle.Filled,

@@ -71,9 +71,9 @@ namespace CPlatypus
 
                 var ast = parser.Parse();
 
-                if (!string.IsNullOrWhiteSpace(parserConfig.TreeDotFile))
+                if (!string.IsNullOrWhiteSpace(parserConfig.DotGraphFile))
                 {
-                    new DotCompiler(ast).Compile(parserConfig.TreeDotFile);
+                    new DotCompiler(ast).Compile(parserConfig.DotGraphFile);
                 }
                 
                 var analyzer = new PlatypusAnalyzer(ast);

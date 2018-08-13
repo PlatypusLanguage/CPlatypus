@@ -36,7 +36,9 @@ namespace CPlatypus.Lexer.Matcher
             while (char.IsDigit(currentChar) || currentChar == '.')
             {
                 if (currentChar == '.' && number.ToString().Contains("."))
+                {
                     break;
+                }
 
                 number.Append(currentChar);
                 currentChar = source.NextChar();

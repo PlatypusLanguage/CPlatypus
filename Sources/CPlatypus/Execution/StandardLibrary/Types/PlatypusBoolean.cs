@@ -52,15 +52,11 @@ namespace CPlatypus.Execution.StandardLibrary.Types
 
         public override PlatypusInstance PlusOperator(PlatypusContext currentContext, Symbol currentSymbol, Dictionary<string, PlatypusInstance> args)
         {
-            var left = args["this"];
+            throw new NotImplementedException();
+            
+            /*var left = args["this"];
             var right = args["right"];
-
-            //TODO CHECK WHY THIS CODE IS HERE???
-            if (right.Symbol.Name != "string")
-            {
-                return PlatypusNullInstance.Instance;
-            }
-
+            
             return PlatypusString.Singleton.Create(
                 currentContext, currentSymbol,
                 new FunctionCallExecutor().Execute(
@@ -69,7 +65,7 @@ namespace CPlatypus.Execution.StandardLibrary.Types
                 new FunctionCallExecutor().Execute(
                     right.Symbol.Get<PlatypusFunctionSymbol>("tostring"),
                     currentContext, new PlatypusInstance[0], right).GetValue<string>()
-            );
+            );*/
         }
 
         public override PlatypusInstance MinusOperator(PlatypusContext currentContext, Symbol currentSymbol, Dictionary<string, PlatypusInstance> args)

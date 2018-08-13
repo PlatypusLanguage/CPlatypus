@@ -34,8 +34,8 @@ namespace CPlatypus
 
             commandLineParser.Setup(arg => arg.File).As('f', "file").Required().WithDescription("Input file to process")
                 .Callback(result => arguments.File = result);
-            commandLineParser.Setup(arg => arg.DotTree).As('d', "dottree")
-                .Callback(result => arguments.DotTree = result);
+            commandLineParser.Setup(arg => arg.DotGraphFile).As('g', "dgf").WithDescription("Generate dot graph of AST")
+                .Callback(result => arguments.DotGraphFile = result);
             commandLineParser.Setup(arg => arg.IgnoreUnknownTokens).As("iut")
                 .Callback(result => arguments.IgnoreUnknownTokens = result);
 
@@ -55,7 +55,7 @@ namespace CPlatypus
                 IgnoreUnknownTokens = arguments.IgnoreUnknownTokens
             }, new PlatypusParserConfig
             {
-                TreeDotFile = arguments.DotTree
+                DotGraphFile = arguments.DotGraphFile
             });
         }
     }

@@ -20,6 +20,7 @@ using System.Collections.Concurrent;
 
 namespace CPlatypus.Framework.Parser
 {
+    //TODO Reimplement this in a more readable way (and less hacky if possible)
     public class FixedSizedQueue<T> : ConcurrentQueue<T>
     {
         private readonly object _syncObject = new object();

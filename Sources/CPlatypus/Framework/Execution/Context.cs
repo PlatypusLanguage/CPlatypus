@@ -31,7 +31,7 @@ namespace CPlatypus.Framework.Execution
 
         private readonly Dictionary<string, object> _fields;
 
-        public Context GlobalContext
+        public Context TopContext
         {
             get
             {

@@ -26,7 +26,7 @@ digraph g {
 	node0->node13 [ ];
 	node12 [ shape=box label="Identifier : me" fillcolor=steelblue fontcolor=white style=filled ];
 	node13->node12 [ ];
-	node15 [ shape=box label="Binary Operation : Assignment" fillcolor=red3 fontcolor=white style=filled ];
+	node15 [ shape=box label="Binary Operation : Assign" fillcolor=red3 fontcolor=white style=filled ];
 	node0->node15 [ ];
 	node14 [ shape=box label="Identifier : me" fillcolor=steelblue fontcolor=white style=filled ];
 	node15->node14 [ ];
@@ -68,7 +68,7 @@ digraph g {
 	node46->node31 [ ];
 	node45 [ shape=box label="Return" ];
 	node31->node45 [ ];
-	node38 [ shape=box label="Binary Operation : Addition" fillcolor=red3 fontcolor=white style=filled ];
+	node38 [ shape=box label="Binary Operation : Plus" fillcolor=red3 fontcolor=white style=filled ];
 	node45->node38 [ ];
 	node33 [ shape=box label="Function Call" fillcolor=orange fontcolor=white style=filled ];
 	node38->node33 [ ];
@@ -76,7 +76,7 @@ digraph g {
 	node33->node32 [ ];
 	node34 [ shape=box label="Argument List" ];
 	node33->node34 [ ];
-	node36 [ shape=box label="Binary Operation : Subtraction" fillcolor=red3 fontcolor=white style=filled ];
+	node36 [ shape=box label="Binary Operation : Minus" fillcolor=red3 fontcolor=white style=filled ];
 	node34->node36 [ ];
 	node35 [ shape=box label="Identifier : n" fillcolor=steelblue fontcolor=white style=filled ];
 	node36->node35 [ ];
@@ -88,7 +88,7 @@ digraph g {
 	node40->node39 [ ];
 	node41 [ shape=box label="Argument List" ];
 	node40->node41 [ ];
-	node43 [ shape=box label="Binary Operation : Subtraction" fillcolor=red3 fontcolor=white style=filled ];
+	node43 [ shape=box label="Binary Operation : Minus" fillcolor=red3 fontcolor=white style=filled ];
 	node41->node43 [ ];
 	node42 [ shape=box label="Identifier : n" fillcolor=steelblue fontcolor=white style=filled ];
 	node43->node42 [ ];
@@ -98,7 +98,7 @@ digraph g {
 	node0->node49 [ ];
 	node48 [ shape=box label="Identifier : i" fillcolor=steelblue fontcolor=white style=filled ];
 	node49->node48 [ ];
-	node51 [ shape=box label="Binary Operation : Assignment" fillcolor=red3 fontcolor=white style=filled ];
+	node51 [ shape=box label="Binary Operation : Assign" fillcolor=red3 fontcolor=white style=filled ];
 	node0->node51 [ ];
 	node50 [ shape=box label="Identifier : i" fillcolor=steelblue fontcolor=white style=filled ];
 	node51->node50 [ ];
@@ -128,11 +128,11 @@ digraph g {
 	node61->node62 [ ];
 	node63 [ shape=box label="Identifier : i" fillcolor=steelblue fontcolor=white style=filled ];
 	node62->node63 [ ];
-	node65 [ shape=box label="Binary Operation : Assignment" fillcolor=red3 fontcolor=white style=filled ];
+	node65 [ shape=box label="Binary Operation : Assign" fillcolor=red3 fontcolor=white style=filled ];
 	node56->node65 [ ];
 	node64 [ shape=box label="Identifier : i" fillcolor=steelblue fontcolor=white style=filled ];
 	node65->node64 [ ];
-	node67 [ shape=box label="Binary Operation : Addition" fillcolor=red3 fontcolor=white style=filled ];
+	node67 [ shape=box label="Binary Operation : Plus" fillcolor=red3 fontcolor=white style=filled ];
 	node65->node67 [ ];
 	node66 [ shape=box label="Identifier : i" fillcolor=steelblue fontcolor=white style=filled ];
 	node67->node66 [ ];

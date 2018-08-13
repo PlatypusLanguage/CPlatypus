@@ -26,8 +26,6 @@ namespace CPlatypus.Framework.Parser
 {
     public class TokenBuffer<TToken> : IEnumerable<TToken> where TToken : Token
     {
-        //private readonly TToken[] _buffer;
-
         private readonly FixedSizedQueue<TToken> _queue;
 
         public readonly int Capacity;
