@@ -16,6 +16,10 @@
  *     along with CPlatypus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+using CPlatypus.Execution.Object;
+using CPlatypus.Execution.StandardLibrary.Core;
+using CPlatypus.Execution.StandardLibrary.IO;
+using CPlatypus.Execution.StandardLibrary.Types;
 using CPlatypus.Framework.Semantic;
 using CPlatypus.Parser.Nodes;
 
@@ -33,7 +37,28 @@ namespace CPlatypus.Semantic
 
         public static PlatypusModuleSymbol CreateGlobalModule(string name = "Global Module")
         {
-            return new PlatypusModuleSymbol(name);
+            var globalModule = new PlatypusModuleSymbol(name);
+            
+            // Inject built in types, standard library classes and functions
+            globalModule.InjectClass(PlatypusBoolean.Singleton);
+            globalModule.InjectClass(PlatypusInteger.Singleton);
+            globalModule.InjectClass(PlatypusString.Singleton);
+            
+            globalModule.InjectFunction(PlatypusPrintFunction.Singleton);
+            globalModule.InjectFunction(PlatypusReadFunction.Singleton);
+            globalModule.InjectFunction(PlatypusExitFunction.Singleton);
+            
+            return globalModule;
+        }
+        
+        public void InjectClass(PlatypusClass clazz)
+        {
+            Add(clazz.ToSymbol(this));
+        }
+
+        public void InjectFunction(PlatypusFunction function)
+        {
+            Add(function.ToSymbol(this));
         }
         
         private PlatypusModuleSymbol(string name) : base(null)

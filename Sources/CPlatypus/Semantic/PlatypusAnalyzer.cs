@@ -25,24 +25,27 @@ namespace CPlatypus.Semantic
 {
     public class PlatypusAnalyzer : IPlatypusVisitor
     {
-        private readonly PlatypusNode _ast;
-
         private Symbol _currentSymbol;
 
-        public PlatypusAnalyzer(PlatypusNode ast)
+        private PlatypusModuleSymbol _globalModuleSymbol;
+        
+        public PlatypusAnalyzer()
         {
-            _ast = ast;
+            Reset();
         }
 
-        public PlatypusModuleSymbol Analyze()
+        public PlatypusModuleSymbol Analyze(PlatypusNode ast)
         {
-            var globalModuleSymbol = PlatypusModuleSymbol.CreateGlobalModule();
-
-            _currentSymbol = globalModuleSymbol;
+            _currentSymbol = _globalModuleSymbol;
             
-            _ast.Accept(this, _ast);
+            ast.Accept(this, ast);
 
-            return globalModuleSymbol;
+            return _globalModuleSymbol;
+        }
+
+        public void Reset()
+        {
+            _globalModuleSymbol = PlatypusModuleSymbol.CreateGlobalModule();
         }
 
         public void Visit(ArgumentListNode node, PlatypusNode parent)

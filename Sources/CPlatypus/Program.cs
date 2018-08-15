@@ -18,6 +18,8 @@
 
 using System;
 using System.IO;
+using System.Linq;
+using CPlatypus.Core.Errors;
 using CPlatypus.Lexer;
 using CPlatypus.Parser;
 using PowerArgs;
@@ -28,25 +30,48 @@ namespace CPlatypus
     {
         private static void Main(string[] args)
         {
+            var parsedArguments = new PlatypusInterpreterArguments();
+
             try
             {
-                var parsedArguments = Args.Parse<PlatypusInterpreterArguments>(args);
-
-                var platypus = new Platypus();
-                platypus.InterpretFile(parsedArguments.File, FileMode.Open, new PlatypusLexerConfig
-                {
-                    IgnoreComments = true,
-                    IgnoreWhiteSpaces = true,
-                    IgnoreUnknownTokens = parsedArguments.IgnoreUnknownTokens
-                }, new PlatypusParserConfig
-                {
-                    DotGraphFile = parsedArguments.DotGraphFile
-                });
+                parsedArguments = Args.Parse<PlatypusInterpreterArguments>(args);
             }
             catch (ArgException ex)
             {
-                //TODO Improve this
-                Console.WriteLine($"Error trying to parse arguments: {ex}");
+                ErrorManager.Instance.Add(new PlatypusError(PlatypusErrorPrimaryType.RunArgumentsError, ex.Message));
+            }
+
+            if (ErrorManager.Instance.Get(PlatypusErrorPrimaryType.RunArgumentsError).Any())
+            {
+                ErrorManager.Instance.Print(PlatypusErrorPrimaryType.RunArgumentsError);
+                return;
+            }
+
+            var platypus = new Platypus();
+
+            var lexerConfig = new PlatypusLexerConfig
+            {
+                IgnoreComments = true,
+                IgnoreWhiteSpaces = true,
+                IgnoreUnknownTokens = parsedArguments.IgnoreUnknownTokens
+            };
+
+            var parserConfig = new PlatypusParserConfig
+            {
+                DotGraphFile = parsedArguments.DotGraphFile
+            };
+
+            if (parsedArguments.Interactive)
+            {
+                while (true)
+                {
+                    Console.Write('>');
+                    platypus.InterpretString(Console.ReadLine(), lexerConfig, parserConfig);
+                }
+            }
+            else
+            {
+                platypus.InterpretFile(parsedArguments.File, FileMode.Open, lexerConfig, parserConfig);
             }
         }
     }

@@ -1,4 +1,4 @@
-﻿/*
+/*
  * Copyright (c) 2018 Platypus Language http://platypus.vfrz.fr/
  *  This file is part of CPlatypus.
  *
@@ -16,22 +16,23 @@
  *     along with CPlatypus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-using PowerArgs;
-
-namespace CPlatypus
+namespace CPlatypus.Core.Errors
 {
-    public class PlatypusInterpreterArguments
+    public class PlatypusError
     {
-        [ArgRequired(IfNot = "Interactive"), ArgShortcut("-f"), ArgDescription("Code file to be executed"), ArgPosition(1)]
-        public string File { get; set; }
+        public PlatypusErrorPrimaryType PrimaryType { get; }
 
-        [ArgRequired(IfNot = "File"), ArgShortcut("-i"), ArgDescription("Interactive mode"), ArgPosition(2)]
-        public bool Interactive { get; set; }
-
-        [ArgShortcut("-g"), ArgDescription("Dot graph file of AST"), ArgPosition(3)]
-        public string DotGraphFile { get; set; }
+        public string Message { get; }
         
-        [ArgShortcut("-iut"), ArgDescription("Ignore unknown tokens instead of throwing errors"), ArgPosition(4)]
-        public bool IgnoreUnknownTokens { get; set; }
+        public PlatypusError(PlatypusErrorPrimaryType primaryType, string message)
+        {
+            PrimaryType = primaryType;
+            Message = message;
+        }
+
+        public override string ToString()
+        {
+            return $"[{PrimaryType.ToString()}] {Message}";
+        }
     }
 }

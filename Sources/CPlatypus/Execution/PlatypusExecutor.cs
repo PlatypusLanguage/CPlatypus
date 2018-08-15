@@ -18,9 +18,6 @@
 
 using System;
 using CPlatypus.Execution.Executors;
-using CPlatypus.Execution.Object;
-using CPlatypus.Execution.StandardLibrary.IO;
-using CPlatypus.Execution.StandardLibrary.Types;
 using CPlatypus.Framework.Execution;
 using CPlatypus.Parser;
 using CPlatypus.Parser.Nodes;
@@ -30,44 +27,23 @@ namespace CPlatypus.Execution
 {
     public class PlatypusExecutor
     {
-        private readonly PlatypusModuleSymbol _moduleSymbol;
-
         private readonly Context _context;
         
-        public PlatypusExecutor(PlatypusModuleSymbol globalModuleSymbol = null)
+        public PlatypusExecutor()
         {
-            _moduleSymbol = globalModuleSymbol ?? PlatypusModuleSymbol.CreateGlobalModule();
-            
             _context = new PlatypusContext(PlatypusContextType.Global, null);
+        }
 
-            // Inject built in types, standard library classes and functions
+        public void Execute(PlatypusNode ast, PlatypusModuleSymbol moduleSymbol = null)
+        {
+            moduleSymbol = moduleSymbol ?? PlatypusModuleSymbol.CreateGlobalModule();
             
-            InjectClass(PlatypusBoolean.Singleton);
-            InjectClass(PlatypusInteger.Singleton);
-            InjectClass(PlatypusString.Singleton);
-            
-            InjectFunction(PlatypusPrintFunction.Singleton);
-            InjectFunction(PlatypusReadFunction.Singleton);
-        }
-
-        public void InjectClass(PlatypusClass clazz)
-        {
-            _moduleSymbol.Add(clazz.ToSymbol(_moduleSymbol));
-        }
-
-        public void InjectFunction(PlatypusFunction function)
-        {
-            _moduleSymbol.Add(function.ToSymbol(_moduleSymbol));
-        }
-
-        public void Execute(PlatypusNode ast)
-        {
             if (!(ast is CodeNode))
             {
                 throw new ArgumentException();
             }
 
-            new BodyExecutor().Execute(ast, _context, _moduleSymbol);
+            new BodyExecutor().Execute(ast, _context, moduleSymbol);
         }
     }
 }

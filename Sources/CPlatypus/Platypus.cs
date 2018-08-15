@@ -16,7 +16,6 @@
  *     along with CPlatypus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-using System;
 using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -32,30 +31,32 @@ namespace CPlatypus
 {
     public class Platypus
     {
+        private PlatypusAnalyzer _analyzer;
+
+        private PlatypusExecutor _executor;
+
         public Platypus()
         {
+            _analyzer = new PlatypusAnalyzer();
+            _executor = new PlatypusExecutor();
         }
 
-        public void InterpretFile(string file, FileMode fileMode = FileMode.Open,
-            PlatypusLexerConfig lexerConfig = null, PlatypusParserConfig parserConfig = null)
+        public void InterpretFile(string file, FileMode fileMode = FileMode.Open, PlatypusLexerConfig lexerConfig = null, PlatypusParserConfig parserConfig = null)
         {
             InterpretSource(Source.FromFile(file, fileMode), lexerConfig, parserConfig);
         }
 
-        public void InterpretString(string content, PlatypusLexerConfig lexerConfig = null,
-            PlatypusParserConfig parserConfig = null)
+        public void InterpretString(string content, PlatypusLexerConfig lexerConfig = null, PlatypusParserConfig parserConfig = null)
         {
             InterpretSource(new Source(content), lexerConfig, parserConfig);
         }
 
-        public void InterpretString(string content, Encoding encoding, PlatypusLexerConfig lexerConfig = null,
-            PlatypusParserConfig parserConfig = null)
+        public void InterpretString(string content, Encoding encoding, PlatypusLexerConfig lexerConfig = null, PlatypusParserConfig parserConfig = null)
         {
             InterpretSource(new Source(content, encoding), lexerConfig, parserConfig);
         }
 
-        public void InterpretSource(Source source, PlatypusLexerConfig lexerConfig = null,
-            PlatypusParserConfig parserConfig = null)
+        public void InterpretSource(Source source, PlatypusLexerConfig lexerConfig = null, PlatypusParserConfig parserConfig = null)
         {
             if (lexerConfig == null)
                 lexerConfig = new PlatypusLexerConfig();
@@ -76,19 +77,9 @@ namespace CPlatypus
                     new DotCompiler(ast).Compile(parserConfig.DotGraphFile);
                 }
                 
-                var analyzer = new PlatypusAnalyzer(ast);
+                var globalModule = _analyzer.Analyze(ast);
 
-                var globalModule = analyzer.Analyze();
-
-                var executor = new PlatypusExecutor(globalModule);
-                
-                executor.Execute(ast);
-
-                Console.ForegroundColor = ConsoleColor.Green;
-                Console.WriteLine("========================");
-                Console.WriteLine("Executed without error !");
-                Console.ResetColor();
-
+                _executor.Execute(ast, globalModule);
             }
         }
 
