@@ -4,10 +4,6 @@
 
 **CPlatypus** is an official interpreter written in C# and running on .Net Core
 
-Website: https://platypus.vfrz.fr/
-
-Contact: contact@vfrz.fr
-
 ## Code samples
 
 **Hello world**
